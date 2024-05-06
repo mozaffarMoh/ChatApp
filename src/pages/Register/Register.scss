@@ -1,0 +1,51 @@
+.register {
+    width: 100%;
+    height: 100vh;
+
+
+    .register-field {
+        width: 400px;
+        padding: 20px;
+
+        h1 {
+            font-weight: 800;
+            color : rgb(49, 48, 48);
+        }
+
+        input {
+            width: 100%;
+            height: 70px;
+            padding: 14px;
+            font-size: 18px;
+            padding-right: 50px;
+            border-radius: 5px;
+            margin-top: 20px;
+            background: white;
+            border: none;
+
+            &:focus {
+                border: 1px solid;
+            }
+        }
+
+        button{
+            width : 100%;
+            height: 50px;
+            margin-top: 20px;
+
+            &:hover{
+                background-color: rgb(243, 243, 28);
+            }
+        }
+
+        a{
+            text-decoration: none;
+            font-size: 18px;
+            color : rgb(53, 53, 206);
+            margin-top: 20px;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
+}
