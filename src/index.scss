@@ -1,3 +1,5 @@
+@import url('./assets/styles/FlexStyles.css');
+
 * {
   margin: 0px;
   padding: 0px;
@@ -8,32 +10,6 @@
 
 body {
   background-color: rgb(216, 214, 214);
-}
-
-.flexCenter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.flexStart {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.flexCenterColumn {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.flexBetweenColumn {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
 }
 
 
@@ -47,10 +23,11 @@ body {
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(189, 173, 145);
+  background-color: rgb(73, 100, 160);
   border-radius: 10px;
 }
 

@@ -1,0 +1,85 @@
+.users {
+    width: 30%;
+    height: 100vh;
+    background-color: rgb(34, 34, 34);
+    color: white;
+    padding: 20px;
+    overflow-y: auto;
+
+    h1 {
+        margin: 15px 0px;
+    }
+
+    .search-section {
+        position: relative;
+
+        input {
+            width: 100%;
+            height: 20px;
+            padding: 7px 15px;
+            font-size: 17px;
+            border-radius: 5px;
+            border: none;
+            background-color: rgb(231, 239, 240);
+        }
+
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            transition: all .5s ease;
+            color: rgb(110, 110, 236);
+
+            &:hover {
+                color: rgb(188, 188, 248);
+            }
+        }
+    }
+
+    button {
+        width: 30%;
+    }
+
+    .user-section {
+        overflow-x: auto;
+        overflow-y: hidden;
+        width: 100%;
+        height: 50px;
+        border-radius: 10px;
+        background-color: white;
+        color: black;
+        cursor: pointer;
+        padding: 30px 10px;
+        transition: all .5s ease;
+        margin-top: 10px;
+
+        .user-details {
+            margin-left: 10px;
+
+            p {
+                font-size: 21px;
+            }
+
+            span {
+                font-size: 14px;
+            }
+        }
+
+        &:hover {
+            background-color: rgb(223, 216, 216);
+        }
+    }
+
+}
+
+
+
+
+@media (max-width : 600px) {
+    .users {
+        width: 100%;
+    }
+}

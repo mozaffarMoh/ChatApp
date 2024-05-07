@@ -1,0 +1,67 @@
+/* Flex Row styles */
+.flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flexStart {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.flexBetween {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flexEvenly {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.flexCenterItemsStart {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
+/* Flex Column styles */
+
+.flexStartColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.flexCenterColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flexBetweenColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.flexCenterColumnItemsStart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.flexStartColumnItemsCenter {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}

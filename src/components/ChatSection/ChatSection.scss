@@ -1,0 +1,15 @@
+.chat-section {
+    width: 70%;
+    height: 100vh;
+    background-color: rgb(11, 11, 189);
+    color: white;
+}
+
+
+
+
+@media (max-width : 600px) {
+    .chat-section {
+        width : 100%;
+    }
+}
