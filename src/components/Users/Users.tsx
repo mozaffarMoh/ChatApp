@@ -9,6 +9,7 @@ const Users = ({ isSmallScreen, setShowUserChat }: any) => {
   const handleShowUserChat = () => {
     isSmallScreen && setShowUserChat(true);
   };
+  console.log(name);
 
   return (
     <div className="users flexStartColumnItemsCenter">
