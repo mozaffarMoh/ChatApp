@@ -1,4 +1,4 @@
-import { Avatar, Icon, TextField } from "@mui/material";
+import { Avatar, TextField } from "@mui/material";
 import "./Users.scss";
 import React from "react";
 import { FaSearch } from "react-icons/fa";
