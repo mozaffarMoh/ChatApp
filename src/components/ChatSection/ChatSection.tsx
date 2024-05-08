@@ -1,9 +1,9 @@
-import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
+import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import "./ChatSection.scss";
 import UserDetails from "../UserDetails/UserDetails";
 import ChatMessages from "../ChatMessages/ChatMessages";
-import { TextField } from "@mui/material";
+import { IconButton, TextField, Tooltip, Zoom } from "@mui/material";
 
 const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   return (
@@ -15,11 +15,20 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
           isInChatSection={true}
         />
         {isSmallScreen && (
-          <FaArrowAltCircleLeft
-            size={35}
-            className="back-icon"
-            onClick={() => setShowUserChat(false)}
-          />
+          <Tooltip
+            title="Back"
+            arrow
+            TransitionComponent={Zoom}
+            placement="left"
+          >
+            <IconButton className="back-icon-button">
+              <FaArrowAltCircleLeft
+                size={35}
+                className="back-icon"
+                onClick={() => setShowUserChat(false)}
+              />
+            </IconButton>
+          </Tooltip>
         )}
         <ChatMessages />
         <div className="message-input-field">

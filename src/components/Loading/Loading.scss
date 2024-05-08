@@ -1,15 +1,15 @@
 .loading {
     width: 100%;
     height: 100%;
+    position: fixed;
+    background-color: #00000066;
 
-    .linear-progress {
-        width: 80%;
-        margin-top: 50px;
-        height: 10px !important;
-        border-radius: 50px;
+    z-index: 10000;
+
+    .loading-circle {
+        width: 100px !important;
+        height: 100px !important;
     }
 
-    p{
-        margin-top: 10px;
-    }
+
 }

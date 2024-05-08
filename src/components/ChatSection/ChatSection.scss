@@ -9,16 +9,19 @@
         position: relative;
         width: 100%;
 
-        .back-icon {
+        .back-icon-button {
             position: absolute;
-            right: 23px;
-            top: 23px;
-            cursor: pointer;
-            color: rgb(212, 205, 205);
-            transition: all .5s ease;
+            top: 15px;
+            right: 15px;
 
-            &:hover {
-                color: rgb(209, 190, 190);
+            .back-icon {
+                cursor: pointer;
+                color: rgb(212, 205, 205);
+                transition: all .5s ease;
+
+                &:hover {
+                    color: rgb(243, 234, 234);
+                }
             }
         }
     }

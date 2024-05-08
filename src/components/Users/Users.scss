@@ -6,6 +6,23 @@
     padding: 20px;
     overflow-y: auto;
 
+    .logout-icon-button {
+        width: fit-content;
+        position: absolute;
+        top: 30px;
+        left: 30px;
+
+        .logout-icon {
+            color: rgb(214, 208, 208);
+            cursor: pointer;
+            transition: all .8s ease;
+
+            &:hover {
+                color: rgb(0, 119, 255);
+            }
+        }
+    }
+
     h1 {
         margin: 15px 0px;
     }
