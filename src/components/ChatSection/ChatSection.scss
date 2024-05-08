@@ -1,15 +1,60 @@
 .chat-section {
     width: 70%;
     height: 100vh;
-    background-color: rgb(11, 11, 189);
+    background-color: rgb(10, 10, 88);
     color: white;
+    padding: 10px;
+
+    .user-section {
+        position: relative;
+        width: 100%;
+
+        .back-icon {
+            position: absolute;
+            right: 23px;
+            top: 23px;
+            cursor: pointer;
+            color: rgb(212, 205, 205);
+            transition: all .5s ease;
+
+            &:hover {
+                color: rgb(209, 190, 190);
+            }
+        }
+    }
+
+
+    .message-input-field {
+        width: 100%;
+        position: relative;
+
+        .message-input {
+            width: 100%;
+            background-color: #e4e0e9;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .send-message-icon {
+            position: absolute;
+            top: 22px;
+            right: 20px;
+            cursor: pointer;
+            color: rgb(45, 184, 219);
+            transition: all .8s ease;
+
+            &:hover {
+                color: rgb(137, 225, 247);
+            }
+        }
+    }
 }
 
 
 
 
-@media (max-width : 600px) {
+@media (max-width : 700px) {
     .chat-section {
-        width : 100%;
+        width: 100%;
     }
 }

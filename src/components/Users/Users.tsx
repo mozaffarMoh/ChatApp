@@ -1,7 +1,9 @@
-import { Avatar, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import "./Users.scss";
 import React from "react";
 import { FaSearch } from "react-icons/fa";
+import { Footer } from "../../sections";
+import UserDetails from "../UserDetails/UserDetails";
 
 const Users = ({ isSmallScreen, setShowUserChat }: any) => {
   const [name, setName] = React.useState("");
@@ -21,76 +23,20 @@ const Users = ({ isSmallScreen, setShowUserChat }: any) => {
         />
         <FaSearch className="search-icon" />
       </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
-      <div className="user-section flexStart" onClick={handleShowUserChat}>
-        <Avatar />
-        <div className="user-details">
-          <p>Feras</p>
-          <span>ferawwwess@gmail.com</span>
-        </div>
-      </div>
+
+      {Array(12)
+        .fill("")
+        .map((_, index) => {
+          return (
+            <UserDetails
+              handleShowUserChat={handleShowUserChat}
+              key={index}
+              name="Feras"
+              email="ferawwwess@gmail.com"
+            />
+          );
+        })}
+      <Footer />
     </div>
   );
 };

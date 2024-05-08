@@ -7,7 +7,7 @@ const Home = () => {
   const [showUserChat, setShowUserChat] = React.useState(false);
 
   React.useEffect(() => {
-    if (window.innerWidth <= 600) {
+    if (window.innerWidth <= 700) {
       setIsSmallScreen(true);
     } else {
       setIsSmallScreen(false);
