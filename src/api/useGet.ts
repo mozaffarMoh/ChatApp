@@ -13,7 +13,6 @@ const useGet = (endPoint: string) => {
     const getData = () => {
         setSuccess(false)
         setLoading(true)
-        setData([])
         baseApi.get(endPoint).then((res) => {
             setSuccess(true)
             setLoading(false)
@@ -34,7 +33,7 @@ const useGet = (endPoint: string) => {
     React.useEffect(() => {
         getData()
     }, [])
-    return [data, loading, getData, success, errorMessage]
+    return [data, loading, getData, success, errorMessage, setData]
 }
 
 export default useGet;

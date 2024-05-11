@@ -11,19 +11,23 @@ import { useSelector } from "react-redux";
 import { RootType } from "../../store";
 import React from "react";
 import usePost from "../../api/usePost";
+import getCurrentTime from "../../assets/constants/getCurrentTime";
 
 const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   const userId: any = Cookies.get("userId");
   const [message, setMessage] = React.useState("");
   const [messageDetailsForm, setMessageDetailsForm] = React.useState({});
   const receiverId: any = useSelector((state: RootType) => state.id.value);
-  const [data, loading, getData]: any = useGet(endPoint.oneUser + receiverId);
-  const [handleSendMessage, loadingSendMessage, successMessage]: any = usePost(
+  const [data, loading, getData, , , setData]: any = useGet(
+    endPoint.oneUser + receiverId
+  );
+  const [sendMessagePost, loadingSendMessage, successMessage]: any = usePost(
     endPoint.sendMessage,
     messageDetailsForm
   );
 
   React.useEffect(() => {
+    setData([]);
     getData();
   }, [receiverId]);
 
@@ -32,14 +36,20 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
       message,
       sender: userId,
       receiver: receiverId,
-      timestamp: 11111,
+      timestamp: getCurrentTime(),
     });
   }, [message]);
 
   const handleEnterKey = (e: any) => {
     if (e.key == "Enter") {
+      setMessage("");
       handleSendMessage();
     }
+  };
+
+  const handleSendMessage = () => {
+    setMessage("");
+    sendMessagePost();
   };
 
   return (
@@ -67,7 +77,6 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
           userId={userId}
           loadingSendMessage={loadingSendMessage}
           successMessage={successMessage}
-          setMessage={setMessage}
         />
         <div className="message-input-field">
           <TextField

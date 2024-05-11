@@ -30,7 +30,11 @@ const UserDetails = ({
     >
       <Avatar />
       {loading && (
-        <CircularProgress color="warning" className="myData-loading" />
+        <CircularProgress
+          color="primary"
+          size={20}
+          className="myData-loading"
+        />
       )}
       <div className="user-text">
         {item && userId === item?._id ? (

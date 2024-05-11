@@ -11,8 +11,8 @@ const ChatMessages = ({
   userId,
   loadingSendMessage,
   successMessage,
-  setMessage,
 }: any) => {
+  const messageBoxRef: any = React.useRef(null);
   const [data, loading, getData, success]: any = useGet(
     endPoint.allMessages + `/${userId}/${receiverId}`
   );
@@ -23,13 +23,21 @@ const ChatMessages = ({
 
   React.useEffect(() => {
     if (successMessage) {
-      setMessage("");
       getData();
     }
   }, [successMessage]);
 
+  React.useEffect(() => {
+    if (success && messageBoxRef.current) {
+      messageBoxRef.current.scrollTo({
+        top: messageBoxRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [success, loadingSendMessage]);
+
   return (
-    <div className="chat-messages">
+    <div className="chat-messages" ref={messageBoxRef}>
       {data &&
         data.map((item: any, index: number) => {
           return (
@@ -43,10 +51,12 @@ const ChatMessages = ({
               ) : (
                 <IoMdArrowDropright className="right-indicator" />
               )}
-              <Avatar />
-              <div className="message-content flexCenter">
+
+              <Avatar className="avatar-section" />
+
+              <div className="message-content">
                 <p>{item.message}</p>
-                <span
+                <p
                   className="message-timestamp"
                   style={{
                     marginLeft: item?.sender == userId ? "10px" : "",
@@ -54,13 +64,13 @@ const ChatMessages = ({
                   }}
                 >
                   {item.timestamp}
-                </span>
+                </p>
               </div>
             </div>
           );
         })}
 
-      {data.length == 0 && (
+      {data.length == 0 && !loadingSendMessage && (
         <div className="sub-container flexCenter">
           {loading && <CircularProgress />}
           {success && <h2>Start your first message</h2>}
@@ -68,7 +78,7 @@ const ChatMessages = ({
       )}
       {loadingSendMessage && (
         <div className="flexCenter">
-          <CircularProgress />{" "}
+          <CircularProgress size={25} />{" "}
         </div>
       )}
     </div>

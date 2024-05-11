@@ -18,7 +18,7 @@ const Login = () => {
   const loginFail = () => toast(errorMessage);
 
   const inputArray = [
-    { placeholder: "Email", name: "email", type: "text" },
+    { placeholder: "Email", name: "email", type: "email" },
     { placeholder: "Password", name: "password", type: "password" },
   ];
 

@@ -1,6 +1,6 @@
 .chat-messages {
     width: 100%;
-    height: 450px;
+    height: 75%;
     border-radius: 10px;
     margin-top: 5px;
     background-color: rgb(18, 190, 247);
@@ -10,8 +10,14 @@
     .message-content-container {
         position: relative;
         width: 100%;
-
+        height: fit-content;
         margin-top: 5px;
+        word-wrap: break-word;
+
+        .avatar-section {
+            align-self: flex-start;
+            margin-top: 3px;
+        }
 
         .right-indicator,
         .left-indicator {
@@ -33,21 +39,20 @@
         .message-content {
             background-color: #346a85;
             padding: 10px;
-            max-width: 90%;
-            overflow-x: auto;
-            overflow-y: hidden;
-            max-height: 100% !important;
-            text-align: center;
+            overflow-x: hidden;
+            height: 100%;
+            max-width: 60%;
+            padding-bottom: 5px;
             border-radius: 5px;
-            height: 30px;
             margin: 10px;
-        }
-    }
 
-    .message-timestamp {
-        margin-top: 20px;
-        font-size: 10px;
-        color: rgb(185, 185, 185);
+            .message-timestamp {
+                text-align: end;
+                font-size: 10px;
+                color: rgb(185, 185, 185);
+            }
+
+        }
     }
 
     .sub-container {
