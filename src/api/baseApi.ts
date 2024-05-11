@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 
 const baseApi = axios.create({
-    baseURL: "https://fakestoreapi.com",
+    baseURL: "https://test-node-js-ze6q.onrender.com",
     headers: {
         "Content-Type": "application/json",
     },

@@ -5,10 +5,12 @@
     margin-top: 5px;
     background-color: rgb(18, 190, 247);
     padding: 20px;
+    overflow-y: auto;
 
     .message-content-container {
         position: relative;
         width: 100%;
+
         margin-top: 5px;
 
         .right-indicator,
@@ -31,10 +33,26 @@
         .message-content {
             background-color: #346a85;
             padding: 10px;
-            width: fit-content;
+            max-width: 90%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-height: 100% !important;
+            text-align: center;
             border-radius: 5px;
             height: 30px;
             margin: 10px;
         }
+    }
+
+    .message-timestamp {
+        margin-top: 20px;
+        font-size: 10px;
+        color: rgb(185, 185, 185);
+    }
+
+    .sub-container {
+        height: 100%;
+        color: rgb(172, 213, 247);
+        text-shadow: 10px 10px 10px rgb(93, 78, 223);
     }
 }

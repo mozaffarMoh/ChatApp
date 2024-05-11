@@ -1,7 +1,7 @@
 import React from "react";
-import postApi from "./postApi";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import baseApi from "./baseApi";
 
 const usePost = (endPoint: string, body: Object) => {
     const navigate = useNavigate()
@@ -12,20 +12,23 @@ const usePost = (endPoint: string, body: Object) => {
 
     const handlePost = () => {
         setLoading(true)
-        postApi.post(endPoint, body).then((res) => {
+        setSuccess(false)
+        baseApi.post(endPoint, body).then((res) => {
             setLoading(false)
             setData(res.data)
             setSuccess(true)
-            setTimeout(() => {
-                setSuccess(false)
-                if (location.pathname.includes('login')) {
+
+            if (location.pathname.includes('login') || location.pathname.includes("register")) {
+                setTimeout(() => {
+                    setSuccess(false)
                     Cookies.set('token', res.data.token)
-                    navigate('/')
-                }
-            }, 3000);
+                    Cookies.set('userId', res.data.userId)
+                    navigate("/")
+                }, 3000);
+            }
         }).catch((err) => {
             setLoading(false);
-            setErrorMessage(err.response.data.detail);
+            setErrorMessage(err.response.data);
             setTimeout(() => {
                 setErrorMessage("")
             }, 4000);

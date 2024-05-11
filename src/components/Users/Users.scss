@@ -6,11 +6,17 @@
     padding: 20px;
     overflow-y: auto;
 
+    .header-container {
+        width: 100%;
+
+        .header-container-text {
+            width: 100%;
+        }
+    }
+
     .logout-icon-button {
         width: fit-content;
-        position: absolute;
-        top: 30px;
-        left: 30px;
+
 
         .logout-icon {
             color: rgb(214, 208, 208);
@@ -18,7 +24,7 @@
             transition: all .8s ease;
 
             &:hover {
-                color: rgb(0, 119, 255);
+                color: rgb(47, 131, 228);
             }
         }
     }
@@ -58,6 +64,10 @@
 
     button {
         width: 30%;
+    }
+
+    .circle-progress-loading {
+        margin-top: 50px;
     }
 
     .user-section {

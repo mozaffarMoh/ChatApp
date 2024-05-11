@@ -1,5 +1,10 @@
 export const endPoint = {
-    allProducts: '/products',
-    login : '/login',
-    register: '/signup'
+    login: '/login',
+    register: '/register',
+    allUsers: '/users',
+    oneUser: '/users/',
+    deleteUser: '/users/',
+    allMessages: '/messages',
+    sendMessage: 'messages/send-message'
+
 }
