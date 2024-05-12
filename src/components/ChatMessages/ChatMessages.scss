@@ -23,21 +23,22 @@
         .left-indicator {
             position: absolute;
             top: 5px;
-            color: #346a85;
             width: 30px;
             height: 30px;
         }
 
         .right-indicator {
             right: 35px;
+            color: #192642;
         }
 
         .left-indicator {
             left: 35px;
+            color: #346a85;
         }
 
         .message-content {
-            background-color: #346a85;
+            background-color: #192642;
             padding: 10px;
             overflow-x: hidden;
             height: 100%;
@@ -45,6 +46,7 @@
             padding-bottom: 5px;
             border-radius: 5px;
             margin: 10px;
+            box-shadow: 7px 7px 20px rgb(102, 100, 218);
 
             .message-timestamp {
                 text-align: end;

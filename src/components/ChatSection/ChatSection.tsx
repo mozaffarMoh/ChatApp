@@ -12,10 +12,13 @@ import { RootType } from "../../store";
 import React from "react";
 import usePost from "../../api/usePost";
 import getCurrentTime from "../../assets/constants/getCurrentTime";
+import EmojiPicker from "emoji-picker-react";
+import { BsEmojiSmile, BsEmojiSmileFill } from "react-icons/bs";
 
 const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   const userId: any = Cookies.get("userId");
   const [message, setMessage] = React.useState("");
+  const [showEmojis, setShowEmojis] = React.useState(false);
   const [messageDetailsForm, setMessageDetailsForm] = React.useState({});
   const receiverId: any = useSelector((state: RootType) => state.id.value);
   const [data, loading, getData, , , setData]: any = useGet(
@@ -50,6 +53,10 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   const handleSendMessage = () => {
     setMessage("");
     sendMessagePost();
+  };
+
+  const handleEmojiSelect = (emoji: any) => {
+    setMessage((prev: any) => prev + emoji.emoji);
   };
 
   return (
@@ -87,6 +94,24 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
             value={message}
             onKeyDown={handleEnterKey}
           />
+          <div
+            onClick={() => setShowEmojis(!showEmojis)}
+            className="emoji-icon"
+          >
+            {!showEmojis ? (
+              <BsEmojiSmile size={25} color="#2db8db" />
+            ) : (
+              <BsEmojiSmileFill size={25} color="#2db8ff" />
+            )}
+          </div>
+
+          {showEmojis && (
+            <EmojiPicker
+              lazyLoadEmojis
+              className="emojis-field"
+              onEmojiClick={(emoji: any) => handleEmojiSelect(emoji)}
+            />
+          )}
           <IoSend
             size={25}
             className="send-message-icon"

@@ -54,7 +54,12 @@ const ChatMessages = ({
 
               <Avatar className="avatar-section" />
 
-              <div className="message-content">
+              <div
+                className="message-content"
+                style={{
+                  backgroundColor: item?.sender == userId ? "#346a85" : "",
+                }}
+              >
                 <p>{item.message}</p>
                 <p
                   className="message-timestamp"
