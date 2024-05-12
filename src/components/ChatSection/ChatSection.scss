@@ -48,12 +48,12 @@
             top: 22px;
             right: 20px;
             cursor: pointer;
-            color: #2db8db;
-            transition: all .8s ease;
+            color: rgb(137, 225, 247);
+            transition: all .4s ease;
+        }
 
-            &:hover {
-                color: rgb(137, 225, 247);
-            }
+        .send-active {
+            color: #2db8db;
         }
 
         .emoji-icon {
@@ -66,8 +66,8 @@
 
     .emojis-field {
         position: absolute;
-        bottom: 50px;
-        right: 50px;
+        bottom: 155px;
+        right: 120px;
         width: 300px !important;
         height: 350px !important;
     }
@@ -79,5 +79,16 @@
 @media (max-width : 700px) {
     .chat-section {
         width: 100%;
+    }
+
+    .chat-section {
+        .emojis-field {
+            right: 10px;
+            bottom: 165px;
+        }
+
+        .EmojiPickerReact {
+            width: 300px !important;
+        }
     }
 }

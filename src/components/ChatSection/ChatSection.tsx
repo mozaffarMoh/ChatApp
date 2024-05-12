@@ -17,6 +17,7 @@ import { BsEmojiSmile, BsEmojiSmileFill } from "react-icons/bs";
 
 const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   const userId: any = Cookies.get("userId");
+  const emojiRef: any = React.useRef(null);
   const [message, setMessage] = React.useState("");
   const [showEmojis, setShowEmojis] = React.useState(false);
   const [messageDetailsForm, setMessageDetailsForm] = React.useState({});
@@ -29,11 +30,13 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     messageDetailsForm
   );
 
+  /* refresh messages when receiverId changed */
   React.useEffect(() => {
     setData([]);
     getData();
   }, [receiverId]);
 
+  /* set the message details inside form */
   React.useEffect(() => {
     setMessageDetailsForm({
       message,
@@ -43,6 +46,7 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     });
   }, [message]);
 
+  /* Send message when enter key */
   const handleEnterKey = (e: any) => {
     if (e.key == "Enter") {
       setMessage("");
@@ -50,14 +54,31 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     }
   };
 
+  /* Handle send message */
   const handleSendMessage = () => {
-    setMessage("");
-    sendMessagePost();
+    if (message) {
+      setMessage("");
+      sendMessagePost();
+    }
   };
 
+  /* Select emoji */
   const handleEmojiSelect = (emoji: any) => {
     setMessage((prev: any) => prev + emoji.emoji);
   };
+
+  /* Hide emojies if click outside */
+  React.useEffect(() => {
+    const hideEmojiesWhenClickOutside = (e: any) => {
+      if (emojiRef && !emojiRef.current?.contains(e.target)) {
+        setShowEmojis(false);
+      }
+    };
+    document.addEventListener("mousedown", hideEmojiesWhenClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", hideEmojiesWhenClickOutside);
+    };
+  }, []);
 
   return (
     <div className="chat-section flexStartColumnItemsCenter">
@@ -106,15 +127,16 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
           </div>
 
           {showEmojis && (
-            <EmojiPicker
-              lazyLoadEmojis
-              className="emojis-field"
-              onEmojiClick={(emoji: any) => handleEmojiSelect(emoji)}
-            />
+            <div className="emojis-field" ref={emojiRef}>
+              <EmojiPicker
+                lazyLoadEmojis
+                onEmojiClick={(emoji: any) => handleEmojiSelect(emoji)}
+              />
+            </div>
           )}
           <IoSend
             size={25}
-            className="send-message-icon"
+            className={`send-message-icon ${message ? "send-active" : ""}`}
             onClick={handleSendMessage}
           />
         </div>
