@@ -52,10 +52,10 @@ const Login = () => {
             />
           );
         })}
-        <Button type="submit" variant="contained" color="success">
+        <Button type="submit" variant="contained" color="info">
           Login
         </Button>
-        <Link to={"/register"}>dont have an account !!</Link>
+        <Link to={"/register"}>Create account</Link>
       </form>
     </div>
   );

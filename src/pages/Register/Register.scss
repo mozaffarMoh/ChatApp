@@ -1,6 +1,7 @@
 .register {
     width: 100%;
     height: 100vh;
+    background-image: linear-gradient(to left, rgb(62, 160, 216), rgb(163, 163, 228));
 
 
     .register-field {
@@ -9,7 +10,9 @@
 
         h1 {
             font-weight: 800;
-            color: rgb(49, 48, 48);
+            color: rgb(24, 32, 78);
+            font-style: italic;
+
         }
 
         input {
@@ -33,19 +36,24 @@
             height: 50px;
             margin-top: 20px;
 
+            background-color: #7b46dd;
+
             &:hover {
-                background-color: rgb(243, 243, 28);
+                background-color: #7b46dd99;
             }
         }
 
         a {
             text-decoration: none;
             font-size: 18px;
-            color: rgb(53, 53, 206);
+            color: #12128a;
             margin-top: 20px;
+            font-weight: 800;
+            transition: all .3s ease;
 
             &:hover {
                 text-decoration: underline;
+                color: #12128a99;
             }
         }
     }

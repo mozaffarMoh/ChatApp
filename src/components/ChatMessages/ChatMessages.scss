@@ -17,6 +17,8 @@
         .avatar-section {
             align-self: flex-start;
             margin-top: 3px;
+            color: #cfd7e7;
+            background-color: #555596;
         }
 
         .right-indicator,
@@ -37,6 +39,8 @@
             color: #346a85;
         }
 
+
+
         .message-content {
             background-color: #192642;
             padding: 10px;
@@ -47,6 +51,7 @@
             border-radius: 5px;
             margin: 10px;
             box-shadow: 4px 4px 20px rgb(102, 100, 218);
+            transition: padding .5s ease;
 
             .message-timestamp {
                 text-align: end;
@@ -55,7 +60,30 @@
             }
 
         }
+
+        .message-content-sender {
+            background-color: #346a85;
+            cursor: pointer;
+
+
+        }
+
+        .sender-hover {
+
+            &:hover {
+                padding-bottom: 7px;
+                background-color: #2c5468;
+
+                &:hover .left-indicator {
+                    color: #2c5468;
+                }
+            }
+        }
+
+
+
     }
+
 
     .sub-container {
         height: 100%;

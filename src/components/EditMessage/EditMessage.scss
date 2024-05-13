@@ -1,0 +1,36 @@
+.edit-message {
+    margin-bottom: 5px;
+
+    input {
+        width: 100px;
+        height: 30px;
+        border-radius: 5px;
+        border: none;
+        background-color: rgb(77, 75, 75);
+        color: white;
+        padding: 10px;
+    }
+
+    button {
+        background-color: #3f3e3e;
+        border: none;
+        color: white;
+        padding: 7px;
+        border-radius: 5px;
+        margin-left: 3px;
+        cursor: pointer;
+        transition: all .5s ease;
+
+        &:hover {
+            background-color: #1f1e1e;
+        }
+    }
+
+    .cancel-button {
+        background-color: #752020;
+
+        &:hover {
+            background-color: #461919;
+        }
+    }
+}

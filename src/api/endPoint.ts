@@ -5,6 +5,7 @@ export const endPoint = {
     oneUser: '/users/',
     deleteUser: '/users/',
     allMessages: '/messages',
-    sendMessage: 'messages/send-message'
-
+    sendMessage: 'messages/send-message',
+    editMessage: '/messages/edit-message/',
+    deleteMessage: '/messages/delete-message/',
 }

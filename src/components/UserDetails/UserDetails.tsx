@@ -28,7 +28,7 @@ const UserDetails = ({
         cursor: isInChatSection ? "default" : "",
       }}
     >
-      <Avatar />
+       <Avatar className="avatar-section" />
       {loading && (
         <CircularProgress
           color="primary"

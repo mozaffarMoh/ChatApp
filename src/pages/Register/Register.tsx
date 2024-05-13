@@ -56,10 +56,10 @@ const Register = () => {
             />
           );
         })}
-        <Button type="submit" variant="contained" color="warning">
+        <Button type="submit" variant="contained" color="info">
           Register
         </Button>
-        <Link to={"/login"}>I have an account !!</Link>
+        <Link to={"/login"}>Login</Link>
       </form>
     </div>
   );
