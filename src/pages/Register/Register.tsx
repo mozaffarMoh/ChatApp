@@ -14,7 +14,7 @@ const Register = () => {
     endPoint.register,
     inputFormData
   );
-  const loginSuccess = () => toast("Create account success");
+  const loginSuccess = () => toast("Account has been successfully created");
   const loginFail = () => toast(errorMessage);
 
   const inputArray = [

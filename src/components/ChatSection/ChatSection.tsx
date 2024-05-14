@@ -41,8 +41,8 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     src: [receiveMessageSoundFile],
   });
 
-  const socket = io("https://test-node-js-ze6q.onrender.com");
   React.useEffect(() => {
+    const socket = io("http://localhost:4000");
     const handleReceiveMessage = (messageReceiverID: string) => {
       if (userId == messageReceiverID) {
         setIsMessageReceived(true);
@@ -52,8 +52,9 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
 
     return () => {
       socket.off("receiveMessage", handleReceiveMessage);
+      socket.disconnect();
     };
-  }, [socket]);
+  }, []);
 
   /* refresh messages when receiverId changed */
   React.useEffect(() => {
@@ -82,6 +83,7 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   /* Handle send message */
   const handleSendMessage = () => {
     if (message) {
+      const socket = io("http://localhost:4000");
       socket.emit("sendMessage", receiverId);
       sendMessageSound.play();
       setMessage("");
@@ -135,7 +137,6 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
           isMessageReceived={isMessageReceived}
           setIsMessageReceived={setIsMessageReceived}
           receiveMessageSound={receiveMessageSound}
-          socket={socket}
         />
         <div className="message-input-field">
           <TextField

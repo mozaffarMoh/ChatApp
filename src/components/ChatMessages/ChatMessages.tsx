@@ -15,7 +15,6 @@ const ChatMessages = ({
   isMessageReceived,
   setIsMessageReceived,
   receiveMessageSound,
-  socket,
 }: any) => {
   const messageBoxRef: any = React.useRef(null);
   const [showEditMessage, setShowEditMessage] = React.useState(false);
@@ -30,7 +29,6 @@ const ChatMessages = ({
       receiveMessageSound.play();
       getData();
       setIsMessageReceived(false);
-      socket.disconnect();
     }
   }, [isMessageReceived]);
 
