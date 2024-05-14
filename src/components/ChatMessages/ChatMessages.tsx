@@ -6,15 +6,16 @@ import useGet from "../../api/useGet";
 import { endPoint } from "../../api/endPoint";
 import React from "react";
 import EditMessage from "../EditMessage/EditMessage";
-import io from "socket.io-client";
-
-const socket = io("http://your-backend-server-url");
 
 const ChatMessages = ({
   receiverId,
   userId,
   loadingSendMessage,
   successMessage,
+  isMessageReceived,
+  setIsMessageReceived,
+  receiveMessageSound,
+  socket,
 }: any) => {
   const messageBoxRef: any = React.useRef(null);
   const [showEditMessage, setShowEditMessage] = React.useState(false);
@@ -25,16 +26,13 @@ const ChatMessages = ({
   );
 
   React.useEffect(() => {
-    if (receiverId) {
-      // Fetch initial messages
-      socket.emit("joinRoom", { userId, receiverId });
-
-      // Clean up function
-      return () => {
-        socket.emit("leaveRoom", { userId, receiverId });
-      };
+    if (isMessageReceived) {
+      receiveMessageSound.play();
+      getData();
+      setIsMessageReceived(false);
+      socket.disconnect();
     }
-  }, [receiverId]);
+  }, [isMessageReceived]);
 
   /* get data when receiverId value change */
   React.useEffect(() => {

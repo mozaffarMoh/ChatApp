@@ -20,7 +20,7 @@ const UserDetails = ({
       onClick={() => handleShowUserChat(item?._id)}
       style={{
         background: isInChatSection
-          ? "#7737bf"
+          ? "#7737bf88"
           : receiverId == item?._id
           ? "#418eb6"
           : "",
@@ -28,7 +28,7 @@ const UserDetails = ({
         cursor: isInChatSection ? "default" : "",
       }}
     >
-       <Avatar className="avatar-section" />
+      <Avatar className="avatar-section" />
       {loading && (
         <CircularProgress
           color="primary"

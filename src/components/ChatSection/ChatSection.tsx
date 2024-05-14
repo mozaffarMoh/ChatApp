@@ -14,6 +14,10 @@ import usePost from "../../api/usePost";
 import getCurrentTime from "../../assets/constants/getCurrentTime";
 import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmile, BsEmojiSmileFill } from "react-icons/bs";
+import { Howl } from "howler";
+import sendMessageSoundFile from "../../assets/sounds/sendMessage.mp3";
+import receiveMessageSoundFile from "../../assets/sounds/receiveMessage.mp3";
+import { io } from "socket.io-client";
 
 const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   const userId: any = Cookies.get("userId");
@@ -21,6 +25,7 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   const [message, setMessage] = React.useState("");
   const [showEmojis, setShowEmojis] = React.useState(false);
   const [messageDetailsForm, setMessageDetailsForm] = React.useState({});
+  const [isMessageReceived, setIsMessageReceived] = React.useState({});
   const receiverId: any = useSelector((state: RootType) => state.id.value);
   const [data, loading, getData, , , setData]: any = useGet(
     endPoint.oneUser + receiverId
@@ -29,6 +34,26 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     endPoint.sendMessage,
     messageDetailsForm
   );
+  const sendMessageSound = new Howl({
+    src: [sendMessageSoundFile],
+  });
+  const receiveMessageSound = new Howl({
+    src: [receiveMessageSoundFile],
+  });
+
+  const socket = io("http://localhost:4000");
+  React.useEffect(() => {
+    const handleReceiveMessage = (messageReceiverID: string) => {
+      if (userId == messageReceiverID) {
+        setIsMessageReceived(true);
+      }
+    };
+    socket.on("receiveMessage", handleReceiveMessage);
+
+    return () => {
+      socket.off("receiveMessage", handleReceiveMessage);
+    };
+  }, [socket]);
 
   /* refresh messages when receiverId changed */
   React.useEffect(() => {
@@ -57,6 +82,8 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   /* Handle send message */
   const handleSendMessage = () => {
     if (message) {
+      socket.emit("sendMessage", receiverId);
+      sendMessageSound.play();
       setMessage("");
       sendMessagePost();
     }
@@ -105,6 +132,10 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
           userId={userId}
           loadingSendMessage={loadingSendMessage}
           successMessage={successMessage}
+          isMessageReceived={isMessageReceived}
+          setIsMessageReceived={setIsMessageReceived}
+          receiveMessageSound={receiveMessageSound}
+          socket={socket}
         />
         <div className="message-input-field">
           <TextField

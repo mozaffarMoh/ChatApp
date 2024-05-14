@@ -8,6 +8,8 @@ const baseApi = axios.create({
     },
 });
 
+//https://test-node-js-ze6q.onrender.com
+//http://localhost:4000
 
 baseApi.interceptors.request.use(
     (config: any) => {
