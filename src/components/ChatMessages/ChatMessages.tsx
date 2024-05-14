@@ -25,7 +25,7 @@ const ChatMessages = ({
   );
 
   React.useEffect(() => {
-    if (isMessageReceived) {
+    if (isMessageReceived === true) {
       receiveMessageSound.play();
       getData();
       setIsMessageReceived(false);
