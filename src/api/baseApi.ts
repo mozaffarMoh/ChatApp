@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 
 const baseApi = axios.create({
-    baseURL: "http://localhost:4000",
+    baseURL: "https://test-node-js-ze6q.onrender.com",
     headers: {
         "Content-Type": "application/json",
     },

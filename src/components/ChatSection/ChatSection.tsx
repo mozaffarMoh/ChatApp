@@ -42,7 +42,7 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   });
 
   React.useEffect(() => {
-    const socket = io("http://localhost:4000");
+    const socket = io("https://test-node-js-ze6q.onrender.com");
     const handleReceiveMessage = (messageReceiverID: string) => {
       if (userId == messageReceiverID) {
         setIsMessageReceived(true);
@@ -83,7 +83,7 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   /* Handle send message */
   const handleSendMessage = () => {
     if (message) {
-      const socket = io("http://localhost:4000");
+      const socket = io("https://test-node-js-ze6q.onrender.com");
       socket.emit("sendMessage", receiverId);
       sendMessageSound.play();
       setMessage("");
