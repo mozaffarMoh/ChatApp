@@ -20,9 +20,12 @@ const ChatMessages = ({
   const [showEditMessage, setShowEditMessage] = React.useState(false);
   const [isMessageEdited, setIsMessageEdited] = React.useState(false);
   const [currentMessageID, setCurrentMessageID] = React.useState("");
+  const [page, setPage] = React.useState(1);
   const [data, loading, getData, success]: any = useGet(
-    endPoint.allMessages + `/${userId}/${receiverId}`
+    endPoint.allMessages + `/${userId}/${receiverId}?page=${page}`
   );
+  const [filteredData, setFilteredData]: any = React.useState([]);
+  const [filteredLoading, setFilteredLoading]: any = React.useState(false);
 
   React.useEffect(() => {
     if (isMessageReceived === true) {
@@ -34,6 +37,22 @@ const ChatMessages = ({
 
   /* get data when receiverId value change */
   React.useEffect(() => {
+    const fetchData = async () => {
+      if (page > 1) {
+        setFilteredLoading(true);
+        await getData();
+        setFilteredLoading(false);
+        setFilteredData((prevArray: any) => [...data, ...prevArray]);
+      }
+    };
+
+    fetchData();
+  }, [page]); // Dependency array includes 'page'
+
+  /* get data when receiverId value change */
+  React.useEffect(() => {
+    setFilteredData([]);
+    setPage(1);
     getData();
   }, [receiverId]);
 
@@ -52,13 +71,35 @@ const ChatMessages = ({
   }, [successMessage]);
 
   React.useEffect(() => {
-    if (success && messageBoxRef.current) {
+    if (success && filteredData.length === 0 && messageBoxRef.current) {
       messageBoxRef.current.scrollTo({
         top: messageBoxRef.current.scrollHeight,
         behavior: "smooth",
       });
     }
   }, [success, loadingSendMessage]);
+
+  React.useEffect(() => {
+    if (messageBoxRef && messageBoxRef?.current) {
+      const current = messageBoxRef.current;
+      const handleScroll = () => {
+        if (messageBoxRef?.current?.scrollTop == 0) {
+          setPage((prev) => prev + 1);
+        }
+      };
+
+      if (current) {
+        current.addEventListener("scroll", handleScroll);
+      }
+
+      // Clean up the event listener on component unmount
+      return () => {
+        if (current) {
+          current.removeEventListener("scroll", handleScroll);
+        }
+      };
+    }
+  }, []);
 
   const handleShowEditMessage = (isSender: Boolean, messageID: string) => {
     if (isSender) {
@@ -69,57 +110,63 @@ const ChatMessages = ({
 
   return (
     <div className="chat-messages" ref={messageBoxRef}>
+      {filteredLoading && (
+        <div className="flexCenter">
+          <CircularProgress size={25} />{" "}
+        </div>
+      )}
       {data &&
-        data.map((item: any, index: number) => {
-          let isSender = item?.sender == userId;
-          return (
-            <div
-              className="message-content-container flexStart"
-              dir={isSender ? "ltr" : "rtl"}
-              key={index}
-            >
-              <Avatar className="avatar-section" />
-
+        (filteredData.length > 0 ? filteredData : data).map(
+          (item: any, index: number) => {
+            let isSender = item?.sender == userId;
+            return (
               <div
-                className={`message-content ${
-                  isSender && "message-content-sender"
-                } ${isSender && !showEditMessage && "sender-hover"}`}
-                onClick={() => handleShowEditMessage(isSender, item?._id)}
+                className="message-content-container flexStart"
+                dir={isSender ? "ltr" : "rtl"}
+                key={index}
               >
-                {isSender ? (
-                  <IoMdArrowDropleft className="left-indicator" />
-                ) : (
-                  <IoMdArrowDropright className="right-indicator" />
-                )}
-                {isSender &&
-                showEditMessage &&
-                currentMessageID === item?._id ? (
-                  <EditMessage
-                    message={item?.message}
-                    messageId={item?._id}
-                    setShowEditMessage={setShowEditMessage}
-                    setIsMessageEdited={setIsMessageEdited}
-                  />
-                ) : (
-                  <div>
-                    <p>{item.message}</p>
-                    <p
-                      className="message-timestamp"
-                      style={{
-                        marginLeft: isSender ? "10px" : "",
-                        marginRight: item?.sender !== userId ? "10px" : "",
-                      }}
-                    >
-                      {item.timestamp}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
+                <Avatar className="avatar-section" />
 
-      {data.length == 0 && !loadingSendMessage && (
+                <div
+                  className={`message-content ${
+                    isSender && "message-content-sender"
+                  } ${isSender && !showEditMessage && "sender-hover"}`}
+                  onClick={() => handleShowEditMessage(isSender, item?._id)}
+                >
+                  {isSender ? (
+                    <IoMdArrowDropleft className="left-indicator" />
+                  ) : (
+                    <IoMdArrowDropright className="right-indicator" />
+                  )}
+                  {isSender &&
+                  showEditMessage &&
+                  currentMessageID === item?._id ? (
+                    <EditMessage
+                      message={item?.message}
+                      messageId={item?._id}
+                      setShowEditMessage={setShowEditMessage}
+                      setIsMessageEdited={setIsMessageEdited}
+                    />
+                  ) : (
+                    <div>
+                      <p>{item.message}</p>
+                      <p
+                        className="message-timestamp"
+                        style={{
+                          marginLeft: isSender ? "10px" : "",
+                          marginRight: item?.sender !== userId ? "10px" : "",
+                        }}
+                      >
+                        {item.timestamp}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          }
+        )}
+      {data.length == 0 && page == 1 && !loadingSendMessage && (
         <div className="sub-container flexCenter">
           {loading && <CircularProgress />}
           {success && <h2>Start your first message</h2>}
@@ -129,7 +176,7 @@ const ChatMessages = ({
         <div className="flexCenter">
           <CircularProgress size={25} />{" "}
         </div>
-      )}
+      )}{" "}
     </div>
   );
 };

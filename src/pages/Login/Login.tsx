@@ -14,7 +14,7 @@ const Login = () => {
     endPoint.login,
     inputFormData
   );
-  const loginSuccess = () => toast("Login success");
+  const loginSuccess = () => toast("Login successful. Welcome!");
   const loginFail = () => toast(errorMessage);
 
   const inputArray = [
