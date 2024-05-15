@@ -24,9 +24,20 @@ const ChatMessages = ({
   const [data, loading, getData, success]: any = useGet(
     endPoint.allMessages + `/${userId}/${receiverId}?page=${page}`
   );
-  const [filteredData, setFilteredData]: any = React.useState([]);
   const [filteredLoading, setFilteredLoading]: any = React.useState(false);
 
+  /* get data when page value change */
+  React.useEffect(() => {
+    if (page > 1) {
+      setFilteredLoading(true);
+      getData();
+      setTimeout(() => {
+        setFilteredLoading(false);
+      }, 2000);
+    }
+  }, [page]);
+
+  /* Get Data when message received by web stock */
   React.useEffect(() => {
     if (isMessageReceived === true) {
       receiveMessageSound.play();
@@ -37,21 +48,6 @@ const ChatMessages = ({
 
   /* get data when receiverId value change */
   React.useEffect(() => {
-    const fetchData = async () => {
-      if (page > 1) {
-        setFilteredLoading(true);
-        await getData();
-        setFilteredLoading(false);
-        setFilteredData((prevArray: any) => [...data, ...prevArray]);
-      }
-    };
-
-    fetchData();
-  }, [page]); // Dependency array includes 'page'
-
-  /* get data when receiverId value change */
-  React.useEffect(() => {
-    setFilteredData([]);
     setPage(1);
     getData();
   }, [receiverId]);
@@ -64,14 +60,16 @@ const ChatMessages = ({
     }
   }, [isMessageEdited]);
 
+  /* Get data when message sent success */
   React.useEffect(() => {
     if (successMessage) {
       getData();
     }
   }, [successMessage]);
 
+  /* Scroll to bottom */
   React.useEffect(() => {
-    if (success && filteredData.length === 0 && messageBoxRef.current) {
+    if (success && page == 1 && messageBoxRef.current) {
       messageBoxRef.current.scrollTo({
         top: messageBoxRef.current.scrollHeight,
         behavior: "smooth",
@@ -79,6 +77,7 @@ const ChatMessages = ({
     }
   }, [success, loadingSendMessage]);
 
+  /* Get filtered data when scroll is go to top */
   React.useEffect(() => {
     if (messageBoxRef && messageBoxRef?.current) {
       const current = messageBoxRef.current;
@@ -116,56 +115,54 @@ const ChatMessages = ({
         </div>
       )}
       {data &&
-        (filteredData.length > 0 ? filteredData : data).map(
-          (item: any, index: number) => {
-            let isSender = item?.sender == userId;
-            return (
-              <div
-                className="message-content-container flexStart"
-                dir={isSender ? "ltr" : "rtl"}
-                key={index}
-              >
-                <Avatar className="avatar-section" />
+        data.map((item: any, index: number) => {
+          let isSender = item?.sender == userId;
+          return (
+            <div
+              className="message-content-container flexStart"
+              dir={isSender ? "ltr" : "rtl"}
+              key={index}
+            >
+              <Avatar className="avatar-section" />
 
-                <div
-                  className={`message-content ${
-                    isSender && "message-content-sender"
-                  } ${isSender && !showEditMessage && "sender-hover"}`}
-                  onClick={() => handleShowEditMessage(isSender, item?._id)}
-                >
-                  {isSender ? (
-                    <IoMdArrowDropleft className="left-indicator" />
-                  ) : (
-                    <IoMdArrowDropright className="right-indicator" />
-                  )}
-                  {isSender &&
-                  showEditMessage &&
-                  currentMessageID === item?._id ? (
-                    <EditMessage
-                      message={item?.message}
-                      messageId={item?._id}
-                      setShowEditMessage={setShowEditMessage}
-                      setIsMessageEdited={setIsMessageEdited}
-                    />
-                  ) : (
-                    <div>
-                      <p>{item.message}</p>
-                      <p
-                        className="message-timestamp"
-                        style={{
-                          marginLeft: isSender ? "10px" : "",
-                          marginRight: item?.sender !== userId ? "10px" : "",
-                        }}
-                      >
-                        {item.timestamp}
-                      </p>
-                    </div>
-                  )}
-                </div>
+              <div
+                className={`message-content ${
+                  isSender && "message-content-sender"
+                } ${isSender && !showEditMessage && "sender-hover"}`}
+                onClick={() => handleShowEditMessage(isSender, item?._id)}
+              >
+                {isSender ? (
+                  <IoMdArrowDropleft className="left-indicator" />
+                ) : (
+                  <IoMdArrowDropright className="right-indicator" />
+                )}
+                {isSender &&
+                showEditMessage &&
+                currentMessageID === item?._id ? (
+                  <EditMessage
+                    message={item?.message}
+                    messageId={item?._id}
+                    setShowEditMessage={setShowEditMessage}
+                    setIsMessageEdited={setIsMessageEdited}
+                  />
+                ) : (
+                  <div>
+                    <p>{item.message}</p>
+                    <p
+                      className="message-timestamp"
+                      style={{
+                        marginLeft: isSender ? "10px" : "",
+                        marginRight: item?.sender !== userId ? "10px" : "",
+                      }}
+                    >
+                      {item.timestamp}
+                    </p>
+                  </div>
+                )}
               </div>
-            );
-          }
-        )}
+            </div>
+          );
+        })}
       {data.length == 0 && page == 1 && !loadingSendMessage && (
         <div className="sub-container flexCenter">
           {loading && <CircularProgress />}
