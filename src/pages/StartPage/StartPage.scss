@@ -16,13 +16,14 @@
 
             h2 {
                 font-size: 30px;
+                color: rgb(55, 55, 110);
             }
 
         }
 
         .description-section {
             font-size: 20px;
-            color: rgb(87, 54, 11);
+            color: rgb(43, 31, 15);
             margin: 20px 0px;
         }
 
@@ -67,6 +68,13 @@
 
         .action-section {
             margin-top: 100px;
+
+            .buttons-section {
+                button {
+                    width: 200px;
+                    height: 45px;
+                }
+            }
         }
 
         .image-section {
