@@ -20,7 +20,7 @@ const Home = () => {
 
   React.useEffect(() => {
     if (!token) {
-      navigate("/login");
+      navigate("/start-page");
     }
   }, [token]);
 
