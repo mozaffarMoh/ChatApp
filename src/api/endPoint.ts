@@ -4,6 +4,7 @@ export const endPoint = {
     allUsers: '/users',
     oneUser: '/users/',
     deleteUser: '/users/',
+    updateProfilePhoto: '/users/profile-photo',
     allMessages: '/messages',
     sendMessage: 'messages/send-message',
     editMessage: '/messages/edit-message/',

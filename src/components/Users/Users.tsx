@@ -23,6 +23,7 @@ const Users = ({ isSmallScreen, setShowUserChat }: any) => {
   const dispatch = useDispatch();
   const [users, setUsers]: any = React.useState([]);
   const [name, setName] = React.useState("");
+  const userId = Cookies.get("userId");
   const [data, loading]: any = useGet(endPoint.allUsers);
 
   /* Choose user */
@@ -33,10 +34,13 @@ const Users = ({ isSmallScreen, setShowUserChat }: any) => {
 
   /* Store data in users array when first initial page */
   React.useEffect(() => {
-    if (data) {
-      setUsers([...data]);
+    if ((data && users.length == 0) || (data && !name)) {
+      const srotedUsers = data.sort((item: any) =>
+        item._id == userId ? -1 : 1
+      );
+      setUsers([...srotedUsers]);
     }
-  }, [data]);
+  }, [data, name]);
 
   /* Store the first value of users to user details in chat section*/
   React.useEffect(() => {
