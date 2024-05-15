@@ -28,7 +28,11 @@ const UserDetails = ({
         cursor: isInChatSection ? "default" : "",
       }}
     >
-      <Avatar className="avatar-section" />
+      {!item?.profilePhoto ? (
+        <Avatar className="avatar-section" />
+      ) : (
+        <img src={item?.profilePhoto} alt="" />
+      )}
       {loading && (
         <CircularProgress
           color="primary"

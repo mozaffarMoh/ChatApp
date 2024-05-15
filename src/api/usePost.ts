@@ -17,7 +17,9 @@ const usePost = (endPoint: string, body: Object) => {
             setLoading(false)
             setData(res.data)
             setSuccess(true)
-
+            setTimeout(() => {
+                setSuccess(false)
+            }, 2000);
             if (location.pathname.includes('login') || location.pathname.includes("register")) {
                 setTimeout(() => {
                     setSuccess(false)

@@ -69,13 +69,16 @@ const ChatMessages = ({
 
   /* Scroll to bottom */
   React.useEffect(() => {
-    if (success && page == 1 && messageBoxRef.current) {
+    if (
+      (success && page == 1 && messageBoxRef.current) ||
+      (successMessage && messageBoxRef.current)
+    ) {
       messageBoxRef.current.scrollTo({
         top: messageBoxRef.current.scrollHeight,
         behavior: "smooth",
       });
     }
-  }, [success, loadingSendMessage]);
+  }, [success, successMessage]);
 
   /* Get filtered data when scroll is go to top */
   React.useEffect(() => {

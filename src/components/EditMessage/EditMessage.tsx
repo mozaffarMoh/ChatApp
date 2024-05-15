@@ -14,7 +14,7 @@ const EditMessage = ({
   const [updatedMessage, setUpdatedMessage] = React.useState("");
   const [editMessageForm, setEditMessageForm] = React.useState({});
   const [editMessage, loading, success, errorMessage]: any = usePut(
-    endPoint.editMessage + messageId ,
+    endPoint.editMessage + messageId,
     editMessageForm
   );
 
@@ -30,6 +30,12 @@ const EditMessage = ({
 
   const handleEditMessage = () => {
     editMessage();
+  };
+
+  const handleEditMessageWhenEnter = (e: any) => {
+    if (e.key == "Enter") {
+      editMessage();
+    }
   };
 
   /* refresh messages when success */
@@ -54,6 +60,7 @@ const EditMessage = ({
       <input
         value={updatedMessage}
         onChange={(e: any) => setUpdatedMessage(e.target.value)}
+        onKeyDown={handleEditMessageWhenEnter}
       />
       <button onClick={handleEditMessage}>ok</button>
       <button onClick={handleClose} className="cancel-button">
