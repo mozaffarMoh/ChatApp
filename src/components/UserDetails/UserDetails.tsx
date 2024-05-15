@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import "./UserDetails.scss";
 import { useSelector } from "react-redux";
 import { RootType } from "../../store";
+import React from "react";
+import UpdateProfile from "../UpdateProfile/UpdateProfile";
 
 const UserDetails = ({
   handleShowUserChat,
@@ -13,7 +15,13 @@ const UserDetails = ({
 }: any) => {
   const userId = Cookies.get("userId");
   const receiverId: any = useSelector((state: RootType) => state.id.value);
+  const [showUpdateProfile, setShowUpdateProfile] = React.useState(false);
 
+  const handleShowUpdateProfile = () => {
+    if (myData && myData?._id == userId) {
+      setShowUpdateProfile(false);
+    }
+  };
   return (
     <div
       className="user-details flexStart"
@@ -25,14 +33,15 @@ const UserDetails = ({
           ? "#418eb6"
           : "",
         color: isInChatSection ? "white" : "",
-        cursor: isInChatSection ? "default" : "",
       }}
     >
-      {!item?.profilePhoto ? (
-        <Avatar className="avatar-section" />
-      ) : (
-        <img src={item?.profilePhoto} alt="" />
-      )}
+      <div onClick={handleShowUpdateProfile}>
+        {!item?.profilePhoto ? (
+          <Avatar className="avatar-section" />
+        ) : (
+          <img src={item?.profilePhoto} alt="" />
+        )}
+      </div>
       {loading && (
         <CircularProgress
           color="primary"
@@ -50,6 +59,7 @@ const UserDetails = ({
           </div>
         )}
       </div>
+      {showUpdateProfile && <UpdateProfile />}
     </div>
   );
 };

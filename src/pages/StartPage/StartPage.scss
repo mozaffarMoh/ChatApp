@@ -17,6 +17,7 @@
             h2 {
                 font-size: 30px;
                 color: rgb(55, 55, 110);
+                margin-top: 10px;
             }
 
         }
@@ -68,6 +69,7 @@
 
         .action-section {
             margin-top: 100px;
+            text-align: center;
 
             .buttons-section {
                 button {
@@ -79,6 +81,9 @@
 
         .image-section {
             margin: 40px;
+            img{
+                height: 250px;
+            }
         }
     }
 }
