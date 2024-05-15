@@ -29,7 +29,7 @@ const StartPage = () => {
           <Button
             variant="contained"
             color="warning"
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/sign-up")}
           >
             Sign-UP
           </Button>

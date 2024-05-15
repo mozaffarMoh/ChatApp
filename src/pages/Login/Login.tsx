@@ -55,7 +55,7 @@ const Login = () => {
         <Button type="submit" variant="contained" color="info">
           Login
         </Button>
-        <Link to={"/register"}>Create account</Link>
+        <Link to={"/sign-up"}>Create account</Link>
       </form>
     </div>
   );

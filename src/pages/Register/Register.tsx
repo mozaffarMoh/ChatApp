@@ -43,7 +43,7 @@ const Register = () => {
         className="register-field flexCenterColumn"
         onSubmit={handleRegister}
       >
-        <h1>Register</h1>
+        <h1>SIGN-UP</h1>
         {inputArray.map((item: any, index: number) => {
           return (
             <input
@@ -57,7 +57,7 @@ const Register = () => {
           );
         })}
         <Button type="submit" variant="contained" color="info">
-          Register
+          Create account
         </Button>
         <Link to={"/login"}>Login</Link>
       </form>
