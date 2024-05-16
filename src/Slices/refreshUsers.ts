@@ -10,9 +10,6 @@ export const refreshUsers = createSlice({
     reducers: {
         setRefreshUsers: (state, action) => {
             state.value = action.payload;
-            setTimeout(() => {
-                setRefreshUsers(false)
-            }, 1000);
         },
     },
 });

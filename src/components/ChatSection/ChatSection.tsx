@@ -7,7 +7,7 @@ import { IconButton, TextField, Tooltip, Zoom } from "@mui/material";
 import { endPoint } from "../../api/endPoint";
 import Cookies from "js-cookie";
 import useGet from "../../api/useGet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootType } from "../../store";
 import React from "react";
 import usePost from "../../api/usePost";
@@ -18,8 +18,10 @@ import { Howl } from "howler";
 import sendMessageSoundFile from "../../assets/sounds/sendMessage.mp3";
 import receiveMessageSoundFile from "../../assets/sounds/receiveMessage.mp3";
 import { io } from "socket.io-client";
+import { setRefreshUsers } from "../../Slices/refreshUsers";
 
 const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
+  const dispatch = useDispatch();
   const userId: any = Cookies.get("userId");
   const emojiRef: any = React.useRef(null);
   const [message, setMessage] = React.useState("");
@@ -65,14 +67,17 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     getData();
   }, [receiverId]);
 
-  /* get */
+  /* refersh user data when profile updated */
   React.useEffect(() => {
     if (isProfileUpdated) {
       setData({});
       getData();
+      setTimeout(() => {
+        dispatch(setRefreshUsers(false));
+      }, 1000);
     }
   }, [isProfileUpdated]);
-  
+
   /* set the message details inside form */
   React.useEffect(() => {
     setMessageDetailsForm({
