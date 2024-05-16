@@ -16,19 +16,14 @@ const usePut = (endPoint: string, body: any) => {
             setSuccess(true);
         }).catch((err: any) => {
             setLoading(false);
-            console.log(err?.response?.data?.error);
 
-            if (err?.request && !err?.response?.data?.error) {
-                setErrorMessage('Error in upload : check Image size it should be 70KB or less');
+            if (err?.response?.data) {
+                setErrorMessage(err.response.data);
+
+                setTimeout(() => {
+                    setErrorMessage("")
+                }, 4000);
             }
-
-            if (err?.response?.data?.error) {
-                setErrorMessage(err.response.data.error);
-            }
-
-            setTimeout(() => {
-                setErrorMessage("")
-            }, 4000);
         })
     }
 

@@ -20,7 +20,7 @@ const usePost = (endPoint: string, body: Object) => {
             setTimeout(() => {
                 setSuccess(false)
             }, 2000);
-            if (location.pathname.includes('login') || location.pathname.includes("register")) {
+            if (location.pathname.includes('login') || location.pathname.includes("sign-up")) {
                 setTimeout(() => {
                     setSuccess(false)
                     Cookies.set('token', res.data.token)

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootType } from "../../store";
 import React from "react";
 import UpdateProfile from "../UpdateProfile/UpdateProfile";
+import 'lazysizes'
 
 const UserDetails = ({
   handleShowUserChat,
@@ -59,7 +60,11 @@ const UserDetails = ({
         {!item?.profilePhoto && !myData?.profilePhoto ? (
           <Avatar className="avatar-section" />
         ) : (
-          <img src={(item ? item : myData)?.profilePhoto} alt="" />
+          <img
+            src={(item ? item : myData)?.profilePhoto}
+            alt=""
+            loading="lazy"
+          />
         )}
       </div>
 
