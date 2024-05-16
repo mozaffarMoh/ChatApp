@@ -42,6 +42,8 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
       setInputFormData({
         username: myData?.username,
         profilePhoto: myData?.profilePhoto,
+        oldPassword: "",
+        newPassword: "",
       });
     }
   }, []);
@@ -60,7 +62,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
         dispatch(setRefreshUsers(true));
         setTimeout(() => {
           setShowUpdateProfile(false);
-        }, 1000);
+        }, 3000);
       }
       errorMessage && updateFailMessage();
     }

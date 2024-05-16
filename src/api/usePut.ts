@@ -8,6 +8,7 @@ const usePut = (endPoint: string, body: any) => {
     const [errorMessage, setErrorMessage] = React.useState("");
 
     const putData = () => {
+        setErrorMessage("")
         setLoading(true)
         setSuccess(false)
         baseApi.put(endPoint, body).then(() => {
@@ -15,14 +16,25 @@ const usePut = (endPoint: string, body: any) => {
             setSuccess(true);
         }).catch((err: any) => {
             setLoading(false);
-            setErrorMessage(err.response.data.error);
-            console.log(err);
+            console.log(err?.response?.data?.error);
+
+            if (err?.request && !err?.response?.data?.error) {
+                setErrorMessage('Error in upload : check Image size it should be 70KB or less');
+            }
+
+            if (err?.response?.data?.error) {
+                setErrorMessage(err.response.data.error);
+            }
 
             setTimeout(() => {
                 setErrorMessage("")
             }, 4000);
         })
     }
+
+
+
+
     return [putData, loading, success, errorMessage]
 }
 
