@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import receiverIdReducer from './Slices/receiverIdSlice';
+import refreshUsersReducer from './Slices/refreshUsers';
 
 const store = configureStore({
     reducer: {
-        id: receiverIdReducer
+        id: receiverIdReducer,
+        refreshUsers: refreshUsersReducer
     }
 })
 

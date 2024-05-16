@@ -15,16 +15,21 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import useGet from "../../api/useGet";
 import { endPoint } from "../../api/endPoint";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setReceiverId } from "../../Slices/receiverIdSlice";
+import { RootType } from "../../store";
 
 const Users = ({ isSmallScreen, setShowUserChat }: any) => {
   const router = useNavigate();
   const dispatch = useDispatch();
   const [users, setUsers]: any = React.useState([]);
+
+  const isProfileUpdated: any = useSelector(
+    (state: RootType) => state.refreshUsers.value
+  );
   const [name, setName] = React.useState("");
   const userId = Cookies.get("userId");
-  const [data, loading]: any = useGet(endPoint.allUsers);
+  const [data, loading, getAllUsers]: any = useGet(endPoint.allUsers);
 
   /* Choose user */
   const handleShowUserChat = (id: string) => {
@@ -74,6 +79,14 @@ const Users = ({ isSmallScreen, setShowUserChat }: any) => {
     Cookies.remove("userId");
     router("/login");
   };
+
+  /* Get users when profile updates */
+  React.useEffect(() => {
+    if (isProfileUpdated) {
+      setUsers([]);
+      getAllUsers();
+    }
+  }, [isProfileUpdated]);
 
   return (
     <div className="users flexStartColumnItemsCenter">

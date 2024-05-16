@@ -14,7 +14,7 @@ const useInput = () => {
             return { ...prev, [name]: value };
         });
     };
-    return [formData, handleCahnge];
+    return [formData, handleCahnge,setFormData];
 };
 
 export default useInput;

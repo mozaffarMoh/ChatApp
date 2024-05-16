@@ -16,32 +16,53 @@ const UserDetails = ({
   const userId = Cookies.get("userId");
   const receiverId: any = useSelector((state: RootType) => state.id.value);
   const [showUpdateProfile, setShowUpdateProfile] = React.useState(false);
+  const [isHover, setIsHover] = React.useState(false);
 
   const handleShowUpdateProfile = () => {
     if (myData && myData?._id == userId) {
-      setShowUpdateProfile(false);
+      !showUpdateProfile && setShowUpdateProfile(true);
+    } else {
+      handleShowUserChat(item?._id);
     }
   };
+
+  const handleBackgroundColor = () => {
+    if (isInChatSection) {
+      if (myData?._id !== userId) {
+        return "#7737bf88";
+      }
+      if (!isHover) {
+        return "#7737bf88";
+      }
+      if (isHover && myData?._id == userId) {
+        return "#7737bf";
+      }
+    }
+    if (item && receiverId == item?._id) {
+      return "#418eb6";
+    }
+  };
+
   return (
     <div
       className="user-details flexStart"
-      onClick={() => handleShowUserChat(item?._id)}
+      onClick={handleShowUpdateProfile}
       style={{
-        background: isInChatSection
-          ? "#7737bf88"
-          : receiverId == item?._id
-          ? "#418eb6"
-          : "",
+        background: handleBackgroundColor(),
         color: isInChatSection ? "white" : "",
+        cursor: isInChatSection && myData?._id !== userId ? "" : "pointer",
       }}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
     >
-      <div onClick={handleShowUpdateProfile}>
-        {!item?.profilePhoto ? (
+      <div className="profile-section">
+        {!item?.profilePhoto && !myData?.profilePhoto ? (
           <Avatar className="avatar-section" />
         ) : (
-          <img src={item?.profilePhoto} alt="" />
+          <img src={(item ? item : myData)?.profilePhoto} alt="" />
         )}
       </div>
+
       {loading && (
         <CircularProgress
           color="primary"
@@ -59,7 +80,13 @@ const UserDetails = ({
           </div>
         )}
       </div>
-      {showUpdateProfile && <UpdateProfile />}
+      {showUpdateProfile && (
+        <UpdateProfile
+          myData={myData && myData}
+          setShowUpdateProfile={setShowUpdateProfile}
+          userId={userId}
+        />
+      )}
     </div>
   );
 };

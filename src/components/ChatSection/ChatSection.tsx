@@ -27,6 +27,9 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   const [messageDetailsForm, setMessageDetailsForm] = React.useState({});
   const [isMessageReceived, setIsMessageReceived] = React.useState({});
   const receiverId: any = useSelector((state: RootType) => state.id.value);
+  const isProfileUpdated: any = useSelector(
+    (state: RootType) => state.refreshUsers.value
+  );
   const [data, loading, getData, , , setData]: any = useGet(
     endPoint.oneUser + receiverId
   );
@@ -56,12 +59,20 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     };
   }, []);
 
-  /* refresh messages when receiverId changed */
+  /* refresh user details when receiverId changed */
   React.useEffect(() => {
-    setData([]);
+    setData({});
     getData();
   }, [receiverId]);
 
+  /* get */
+  React.useEffect(() => {
+    if (isProfileUpdated) {
+      setData({});
+      getData();
+    }
+  }, [isProfileUpdated]);
+  
   /* set the message details inside form */
   React.useEffect(() => {
     setMessageDetailsForm({

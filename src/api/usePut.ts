@@ -16,6 +16,8 @@ const usePut = (endPoint: string, body: any) => {
         }).catch((err: any) => {
             setLoading(false);
             setErrorMessage(err.response.data.error);
+            console.log(err);
+
             setTimeout(() => {
                 setErrorMessage("")
             }, 4000);
