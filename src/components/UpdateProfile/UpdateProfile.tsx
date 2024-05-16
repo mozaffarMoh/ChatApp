@@ -1,4 +1,10 @@
-import { Avatar, Button, TextField } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import { endPoint } from "../../api/endPoint";
 import usePut from "../../api/usePut";
 import "./UpdateProfile.scss";
@@ -9,10 +15,16 @@ import Loading from "../Loading/Loading";
 import Base64 from "../../assets/constants/Base64";
 import { useDispatch } from "react-redux";
 import { setRefreshUsers } from "../../Slices/refreshUsers";
+import { IoMdEye } from "react-icons/io";
+import { IoMdEyeOff } from "react-icons/io";
 
 const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
   const dispatch = useDispatch();
   const [imgFile, setImgFile]: any = React.useState("");
+  const [isOldPasswordVisible, setIsOldPasswordVisible]: any =
+    React.useState(false);
+  const [isNewPasswordVisible, setIsNewPasswordVisible]: any =
+    React.useState(false);
   const [inputFormData, handleChangeInputData, setInputFormData]: any =
     useInput();
   const [handleUpdateProfile, loading, success, errorMessage]: any = usePut(
@@ -27,8 +39,16 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
       type: "text",
       value: inputFormData?.username,
     },
-    { placeholder: "Old password", name: "oldPassword", type: "password" },
-    { placeholder: "New password", name: "newPassword", type: "password" },
+    {
+      placeholder: "Old password",
+      name: "oldPassword",
+      type: isOldPasswordVisible ? "text" : "password",
+    },
+    {
+      placeholder: "New password",
+      name: "newPassword",
+      type: isNewPasswordVisible ? "text" : "password",
+    },
   ];
 
   /* Message for success or fail */
@@ -86,6 +106,14 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
     setInputFormData({ ...inputFormData, profilePhoto: "" });
   };
 
+  const handleClickShowPassword = (name: any) => {
+    if (name == "newPassword") {
+      setIsNewPasswordVisible(!isNewPasswordVisible);
+    } else if (name == "oldPassword") {
+      setIsOldPasswordVisible(!isOldPasswordVisible);
+    }
+  };
+
   return (
     <div className="update-profile flexCenterColumn">
       {loading && <Loading />}
@@ -125,6 +153,23 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
               type={item.type}
               value={item.value}
               onChange={(e: any) => handleChangeInputData(e.target)}
+              InputProps={{
+                endAdornment: item?.name !== "username" && (
+                  <InputAdornment position="end" className="show-password">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => handleClickShowPassword(item?.name)}
+                    >
+                      {(isOldPasswordVisible && item?.name == "oldPassword") ||
+                      (isNewPasswordVisible && item?.name == "newPassword") ? (
+                        <IoMdEye />
+                      ) : (
+                        <IoMdEyeOff />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           );
         })}

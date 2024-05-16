@@ -8,11 +8,14 @@ import usePost from "../../api/usePost";
 import useInput from "../../api/useInput";
 import { endPoint } from "../../api/endPoint";
 import Base64 from "../../assets/constants/Base64";
+import { IoMdEye } from "react-icons/io";
+import { IoMdEyeOff } from "react-icons/io";
 
 const Register = () => {
   const [inputFormData, handleChangeInputData, setInputFormData]: any =
     useInput();
   const [imgFile, setImgFile]: any = React.useState("");
+  const [isPasswordVisible, setIsPasswordVisible]: any = React.useState(false);
   const [handleRegisterPost, loading, success, errorMessage]: any = usePost(
     endPoint.register,
     inputFormData
@@ -23,7 +26,11 @@ const Register = () => {
   const inputArray = [
     { placeholder: "Username", name: "username", type: "text" },
     { placeholder: "Email", name: "email", type: "email" },
-    { placeholder: "Password", name: "password", type: "password" },
+    {
+      placeholder: "Password",
+      name: "password",
+      type: isPasswordVisible ? "text" : "password",
+    },
   ];
 
   const handleRegister = (e: any) => {
@@ -88,14 +95,28 @@ const Register = () => {
         )}
         {inputArray.map((item: any, index: number) => {
           return (
-            <input
-              required
-              key={index}
-              placeholder={item.placeholder}
-              name={item.name}
-              type={item.type}
-              onChange={(e: any) => handleChangeInputData(e.target)}
-            />
+            <div className="input-fields">
+              <input
+                required
+                key={index}
+                placeholder={item.placeholder}
+                name={item.name}
+                type={item.type}
+                onChange={(e: any) => handleChangeInputData(e.target)}
+              />
+              {item?.name == "password" && (
+                <div
+                  className="show-passord-control flexCenter"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                >
+                  {isPasswordVisible ? (
+                    <IoMdEye size={30} color="#3543be" />
+                  ) : (
+                    <IoMdEyeOff size={30} color="#3543be" />
+                  )}
+                </div>
+              )}{" "}
+            </div>
           );
         })}
 
