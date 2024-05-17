@@ -61,6 +61,12 @@ const Login = () => {
     handleLoginPost();
   };
 
+  const disableEnterKey = (e: any) => {
+    if (e.key == "Enter") {
+      e.preventDefault();
+    }
+  };
+
   React.useEffect(() => {
     if (!loading) {
       success && loginSuccess();
@@ -87,6 +93,7 @@ const Login = () => {
                 type={item.type}
                 {...item?.validation}
                 onChange={(e: any) => handleChangeInputData(e.target)}
+                onKeyDown={disableEnterKey}
               />
               {item?.name == "password" && (
                 <div
