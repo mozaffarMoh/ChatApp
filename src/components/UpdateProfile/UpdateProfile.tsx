@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { setRefreshUsers } from "../../Slices/refreshUsers";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
+import { useForm } from "react-hook-form";
 
 const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
   const dispatch = useDispatch();
@@ -31,23 +32,51 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
     endPoint.updateProfilePhoto + "/" + userId,
     inputFormData
   );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  }: any = useForm();
 
   const inputArray = [
     {
       placeholder: "Username",
       name: "username",
       type: "text",
-      value: inputFormData?.username,
+      value: inputFormData?.username || myData?.username,
+      validation: {
+        ...register("username", {
+          required: "Username required",
+        }),
+      },
     },
     {
       placeholder: "Old password",
       name: "oldPassword",
       type: isOldPasswordVisible ? "text" : "password",
+      validation: inputFormData?.newPassword && {
+        ...register("oldPassword", {
+          required: "Old password required !!",
+          minLength: {
+            value: 5,
+            message: "Old password must contain at least 5 values",
+          },
+        }),
+      },
     },
     {
       placeholder: "New password",
       name: "newPassword",
       type: isNewPasswordVisible ? "text" : "password",
+      validation: inputFormData?.oldPassword && {
+        ...register("newPassword", {
+          required: "New password required !!",
+          minLength: {
+            value: 5,
+            message: "New password must contain at least 5 values",
+          },
+        }),
+      },
     },
   ];
 
@@ -69,8 +98,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
   }, []);
 
   /* Start update profile */
-  const handleUpdate = (e: any) => {
-    e.preventDefault();
+  const handleUpdate = () => {
     handleUpdateProfile();
   };
 
@@ -82,7 +110,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
         dispatch(setRefreshUsers(true));
         setTimeout(() => {
           setShowUpdateProfile(false);
-        }, 3000);
+        }, 2000);
       }
       errorMessage && updateFailMessage();
     }
@@ -142,7 +170,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
       </Button>
       <form
         className="update-profile-field flexCenterColumn"
-        onSubmit={handleUpdate}
+        onSubmit={handleSubmit(handleUpdate)}
       >
         {inputArray.map((item: any, index: number) => {
           return (
@@ -151,7 +179,8 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
               placeholder={item.placeholder}
               name={item.name}
               type={item.type}
-              value={item.value}
+              value={item?.value}
+              {...item?.validation}
               onChange={(e: any) => handleChangeInputData(e.target)}
               InputProps={{
                 endAdornment: item?.name !== "username" && (
@@ -173,6 +202,13 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
             />
           );
         })}
+        {(errors.username || errors.oldPassword || errors.newPassword) && (
+          <div className="error-message-validation-profile">
+            {errors.username?.message ||
+              errors.oldPassword?.message ||
+              errors.newPassword?.message}
+          </div>
+        )}{" "}
         <div className="buttons-field flexBetween ">
           <Button type="submit" variant="contained" color="info">
             Update

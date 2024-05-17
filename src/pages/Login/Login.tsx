@@ -9,6 +9,7 @@ import useInput from "../../api/useInput";
 import { endPoint } from "../../api/endPoint";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
   const [inputFormData, handleChangeInputData]: any = useInput();
@@ -17,20 +18,46 @@ const Login = () => {
     endPoint.login,
     inputFormData
   );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  }: any = useForm();
   const loginSuccess = () => toast("Login successful. Welcome!");
   const loginFail = () => toast(errorMessage);
 
   const inputArray = [
-    { placeholder: "Email", name: "email", type: "email" },
+    {
+      placeholder: "Email",
+      name: "email",
+      type: "text",
+      validation: {
+        ...register("email", {
+          required: "Email required!!",
+          pattern: {
+            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            message: "Please enter a valid email address!!",
+          },
+        }),
+      },
+    },
     {
       placeholder: "Password",
       name: "password",
       type: isPasswordVisible ? "text" : "password",
+      validation: {
+        ...register("password", {
+          required: "Password required!!",
+          minLength: {
+            value: 5,
+            message: "Password must contain at least 5 values!!",
+          },
+        }),
+      },
     },
   ];
 
-  const handleLogin = (e: any) => {
-    e.preventDefault();
+  const handleLogin = () => {
     handleLoginPost();
   };
 
@@ -45,17 +72,20 @@ const Login = () => {
     <div className="login flexCenter">
       {loading && <Loading />}
       <ToastContainer />
-      <form className="login-field flexCenterColumn" onSubmit={handleLogin}>
+      <form
+        className="login-field flexCenterColumn"
+        onSubmit={handleSubmit(handleLogin)}
+      >
         <h1>Login</h1>
         {inputArray.map((item: any, index: number) => {
           return (
             <div className="input-fields">
               <input
-                required
                 key={index}
                 placeholder={item.placeholder}
                 name={item.name}
                 type={item.type}
+                {...item?.validation}
                 onChange={(e: any) => handleChangeInputData(e.target)}
               />
               {item?.name == "password" && (
@@ -72,7 +102,12 @@ const Login = () => {
               )}
             </div>
           );
-        })}
+        })}{" "}
+        {(errors.email || errors.password) && (
+          <div className="error-message-validation">
+            {errors.email?.message || errors.password?.message}
+          </div>
+        )}
         <Button type="submit" variant="contained" color="info">
           Login
         </Button>

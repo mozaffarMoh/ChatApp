@@ -8,7 +8,18 @@
 }
 
 body {
-  background-color: rgb(216, 214, 214);
+  background-color: rgb(51, 11, 11);
+
+  .error-message-validation,
+  .error-message-validation-profile {
+    color: rgb(92, 11, 11);
+    font-size: 15px;
+    margin-top: 10px;
+  }
+
+  .error-message-validation-profile {
+    color: red;
+  }
 }
 
 
