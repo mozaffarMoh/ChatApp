@@ -43,7 +43,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
       placeholder: "Username",
       name: "username",
       type: "text",
-      value: inputFormData?.username || myData?.username,
+      value: inputFormData?.username,
       validation: {
         ...register("username", {
           required: "Username required",
