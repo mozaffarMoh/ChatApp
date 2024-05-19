@@ -44,6 +44,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
       name: "username",
       type: "text",
       value: inputFormData?.username,
+      focus: true,
       validation: {
         ...register("username", {
           required: "Username required",
@@ -54,6 +55,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
       placeholder: "Old password",
       name: "oldPassword",
       type: isOldPasswordVisible ? "text" : "password",
+      focus: false,
       validation: inputFormData?.newPassword && {
         ...register("oldPassword", {
           required: "Old password required !!",
@@ -68,6 +70,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
       placeholder: "New password",
       name: "newPassword",
       type: isNewPasswordVisible ? "text" : "password",
+      focus: false,
       validation: inputFormData?.oldPassword && {
         ...register("newPassword", {
           required: "New password required !!",
@@ -175,9 +178,11 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
         {inputArray.map((item: any, index: number) => {
           return (
             <TextField
+              autoFocus={item?.focus}
               key={index}
               placeholder={item.placeholder}
               name={item.name}
+              defaultValue={item?.value}
               type={item.type}
               value={item?.value}
               {...item?.validation}

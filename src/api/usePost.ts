@@ -30,10 +30,21 @@ const usePost = (endPoint: string, body: Object) => {
             }
         }).catch((err) => {
             setLoading(false);
-            setErrorMessage(err.response.data);
-            setTimeout(() => {
-                setErrorMessage("")
-            }, 4000);
+            if (err?.message && err?.message == "Network Error") {
+                setErrorMessage("Server cannot response, check internet connection");
+            }
+
+            if (err?.response?.status == 500) {
+                setErrorMessage("Server cannot response, check internet connection");
+            }
+
+            if (err?.response?.data) {
+                setErrorMessage(err.response.data);
+
+                setTimeout(() => {
+                    setErrorMessage("")
+                }, 4000);
+            }
         })
     }
     return [handlePost, loading, success, errorMessage, data]

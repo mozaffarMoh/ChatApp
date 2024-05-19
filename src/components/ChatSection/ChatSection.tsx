@@ -46,21 +46,6 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     src: [receiveMessageSoundFile],
   });
 
-  React.useEffect(() => {
-    const socket = io("https://test-node-js-ze6q.onrender.com");
-    const handleReceiveMessage = (messageReceiverID: string) => {
-      if (userId == messageReceiverID) {
-        setIsMessageReceived(true);
-      }
-    };
-    socket.on("receiveMessage", handleReceiveMessage);
-
-    return () => {
-      socket.off("receiveMessage", handleReceiveMessage);
-      socket.disconnect();
-    };
-  }, []);
-
   /* refresh user details when receiverId changed */
   React.useEffect(() => {
     setData({});
@@ -122,6 +107,22 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     document.addEventListener("mousedown", hideEmojiesWhenClickOutside);
     return () => {
       document.removeEventListener("mousedown", hideEmojiesWhenClickOutside);
+    };
+  }, []);
+
+  // Socket Code
+  React.useEffect(() => {
+    const socket = io("https://test-node-js-ze6q.onrender.com");
+    const handleReceiveMessage = (messageReceiverID: string) => {
+      if (userId == messageReceiverID) {
+        setIsMessageReceived(true);
+      }
+    };
+    socket.on("receiveMessage", handleReceiveMessage);
+
+    return () => {
+      socket.off("receiveMessage", handleReceiveMessage);
+      socket.disconnect();
     };
   }, []);
 

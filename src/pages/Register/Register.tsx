@@ -17,6 +17,7 @@ const Register = () => {
     useInput();
   const [imgFile, setImgFile]: any = React.useState("");
   const [isPasswordVisible, setIsPasswordVisible]: any = React.useState(false);
+  const [isStartEnterKey, setStartEnterKey]: any = React.useState(false);
   const [handleRegisterPost, loading, success, errorMessage]: any = usePost(
     endPoint.register,
     inputFormData
@@ -24,6 +25,7 @@ const Register = () => {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors },
   }: any = useForm();
   const loginSuccess = () => toast("Account has been successfully created");
@@ -74,11 +76,34 @@ const Register = () => {
     handleRegisterPost();
   };
 
-  const disableEnterKey = (e: any) => {
-    if (e.key == "Enter") {
-      e.preventDefault();
+  /* Focus and blur inputs to trigger validation errors */
+  const focusAndBlur = () => {
+    return Object.keys(errors).forEach((errorKey) => {
+      const element = document.getElementsByName(errorKey)[0];
+      if (element) {
+        element.blur();
+        element.focus();
+      }
+    });
+  };
+
+  /* check Register validation after enter key */
+  const handleRegisterEnterKey = async (e: any) => {
+    if (e.key === "Enter") {
+      await trigger("email");
+      await trigger("password");
+      focusAndBlur();
+      setStartEnterKey(true);
     }
   };
+
+  /* Start Register after enter key for first enter press */
+  React.useEffect(() => {
+    if (isStartEnterKey) {
+      handleSubmit(handleRegister)();
+      focusAndBlur();
+    }
+  }, [isStartEnterKey]);
 
   React.useEffect(() => {
     if (!loading) {
@@ -145,7 +170,7 @@ const Register = () => {
                 type={item.type}
                 {...item?.validation}
                 onChange={(e: any) => handleChangeInputData(e.target)}
-                onKeyDown={disableEnterKey}
+                onKeyDown={handleRegisterEnterKey}
               />
               {item?.name == "password" && (
                 <div

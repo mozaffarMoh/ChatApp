@@ -14,14 +14,16 @@ import { useForm } from "react-hook-form";
 const Login = () => {
   const [inputFormData, handleChangeInputData]: any = useInput();
   const [isPasswordVisible, setIsPasswordVisible]: any = React.useState(false);
+  const [isStartEnterKey, setStartEnterKey]: any = React.useState(false);
   const [handleLoginPost, loading, success, errorMessage]: any = usePost(
     endPoint.login,
     inputFormData
   );
-  const {
+  let {
     register,
     handleSubmit,
     formState: { errors },
+    trigger,
   }: any = useForm();
   const loginSuccess = () => toast("Login successful. Welcome!");
   const loginFail = () => toast(errorMessage);
@@ -61,11 +63,34 @@ const Login = () => {
     handleLoginPost();
   };
 
-  const disableEnterKey = (e: any) => {
-    if (e.key == "Enter") {
-      e.preventDefault();
+  /* Focus and blur inputs to trigger validation errors */
+  const focusAndBlur = () => {
+    return Object.keys(errors).forEach((errorKey) => {
+      const element = document.getElementsByName(errorKey)[0];
+      if (element) {
+        element.blur();
+        element.focus();
+      }
+    });
+  };
+
+  /* check login validation after enter key */
+  const handleLoginEnterKey = async (e: any) => {
+    if (e.key === "Enter") {
+      await trigger("email");
+      await trigger("password");
+      focusAndBlur();
+      setStartEnterKey(true);
     }
   };
+
+  /* Start login after enter key for first enter press */
+  React.useEffect(() => {
+    if (isStartEnterKey) {
+      handleSubmit(handleLogin)();
+      focusAndBlur();
+    }
+  }, [isStartEnterKey]);
 
   React.useEffect(() => {
     if (!loading) {
@@ -93,7 +118,7 @@ const Login = () => {
                 type={item.type}
                 {...item?.validation}
                 onChange={(e: any) => handleChangeInputData(e.target)}
-                onKeyDown={disableEnterKey}
+                onKeyDown={handleLoginEnterKey}
               />
               {item?.name == "password" && (
                 <div

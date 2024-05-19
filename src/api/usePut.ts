@@ -16,13 +16,18 @@ const usePut = (endPoint: string, body: any) => {
             setSuccess(true);
         }).catch((err: any) => {
             setLoading(false);
-
+            if (err?.message && err?.message == "Network Error") {
+                setErrorMessage("Server cannot response, check internet connection");
+            }
             if (err?.response?.data) {
                 setErrorMessage(err.response.data);
 
                 setTimeout(() => {
                     setErrorMessage("")
                 }, 4000);
+            }
+            if (err?.response?.status == 500) {
+                setErrorMessage("Server cannot response, check internet connection");
             }
         })
     }

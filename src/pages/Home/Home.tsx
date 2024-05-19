@@ -14,13 +14,14 @@ const Home = () => {
     const handleResize = () => {
       setIsSmallScreen(window.innerWidth <= 700);
     };
-
+    handleResize();
     window.addEventListener("resize", handleResize);
     // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   React.useEffect(() => {
     if (!token) {
       navigate("/start-page");
