@@ -7,6 +7,7 @@ import { BiBlock } from "react-icons/bi";
 import { io } from "socket.io-client";
 
 function VoiceCall({
+  stream,
   isVoiceCall,
   setIsVoiceCall,
   isVideoCall,
@@ -21,7 +22,7 @@ function VoiceCall({
   callerSignal,
   isReceiveCall,
   setIsReceiveCall,
-  stream,
+  setShowUserChat,
 }: any) {
   const myAudio: any = useRef();
   const userAudio: any = useRef();
@@ -118,6 +119,7 @@ function VoiceCall({
 
   /* Leave the call */
   const leaveCall = () => {
+    setShowUserChat(false);
     setCallEnded(true);
     setIsCallStart(false);
     setCallAccepted(false);
