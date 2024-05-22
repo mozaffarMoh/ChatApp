@@ -4,15 +4,15 @@ import { Link } from "react-router-dom";
 import { Loading } from "../../components";
 import { ToastContainer, toast } from "react-toastify";
 import React from "react";
-import usePost from "../../api/usePost";
-import useInput from "../../api/useInput";
 import { endPoint } from "../../api/endPoint";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { useForm } from "react-hook-form";
+import { useInput, usePost } from "../../Custom-Hooks";
 
 const Login = () => {
-  const [inputFormData, handleChangeInputData]: any = useInput();
+  const [inputFormData, handleChangeInputData, setInputFormData]: any =
+    useInput();
   const [isPasswordVisible, setIsPasswordVisible]: any = React.useState(false);
   const [isStartEnterKey, setStartEnterKey]: any = React.useState(false);
   const [handleLoginPost, loading, success, errorMessage]: any = usePost(
@@ -33,6 +33,7 @@ const Login = () => {
       placeholder: "Email",
       name: "email",
       type: "text",
+      value: inputFormData?.email || "",
       validation: {
         ...register("email", {
           required: "Email required!!",
@@ -47,6 +48,7 @@ const Login = () => {
       placeholder: "Password",
       name: "password",
       type: isPasswordVisible ? "text" : "password",
+      value: inputFormData?.password || "",
       validation: {
         ...register("password", {
           required: "Password required!!",
@@ -94,7 +96,10 @@ const Login = () => {
 
   React.useEffect(() => {
     if (!loading) {
-      success && loginSuccess();
+      if (success) {
+        setInputFormData(null);
+        loginSuccess();
+      }
       errorMessage && loginFail();
     }
   }, [success, errorMessage]);
@@ -110,12 +115,12 @@ const Login = () => {
         <h1>Login</h1>
         {inputArray.map((item: any, index: number) => {
           return (
-            <div className="input-fields">
+            <div className="input-fields" key={index}>
               <input
-                key={index}
                 placeholder={item.placeholder}
                 name={item.name}
                 type={item.type}
+                value={item?.value}
                 {...item?.validation}
                 onChange={(e: any) => handleChangeInputData(e.target)}
                 onKeyDown={handleLoginEnterKey}

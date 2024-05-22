@@ -6,10 +6,9 @@ import {
   TextField,
 } from "@mui/material";
 import { endPoint } from "../../api/endPoint";
-import usePut from "../../api/usePut";
+import { usePut, useInput } from "../../Custom-Hooks";
 import "./UpdateProfile.scss";
 import React from "react";
-import useInput from "../../api/useInput";
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../Loading/Loading";
 import Base64 from "../../assets/constants/Base64";

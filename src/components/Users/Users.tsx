@@ -13,11 +13,12 @@ import { Footer } from "../../sections";
 import UserDetails from "../UserDetails/UserDetails";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import useGet from "../../api/useGet";
+import { useGet } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
 import { useDispatch, useSelector } from "react-redux";
 import { setReceiverId } from "../../Slices/receiverIdSlice";
 import { RootType } from "../../store";
+import { setCallerName } from "../../Slices/callerNameSlice";
 
 const Users = ({ isSmallScreen, setShowUserChat }: any) => {
   const router = useNavigate();
@@ -51,6 +52,7 @@ const Users = ({ isSmallScreen, setShowUserChat }: any) => {
   React.useEffect(() => {
     if (users.length > 0) {
       dispatch(setReceiverId(users[0]?._id));
+      dispatch(setCallerName(users[0]?.username));
     }
   }, [users]);
 

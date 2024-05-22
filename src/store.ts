@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import receiverIdReducer from './Slices/receiverIdSlice';
 import refreshUsersReducer from './Slices/refreshUsers';
+import CallerNameReducer from './Slices/callerNameSlice';
+
+
 
 const store = configureStore({
     reducer: {
         id: receiverIdReducer,
+        CallerName: CallerNameReducer,
         refreshUsers: refreshUsersReducer
     }
 })

@@ -6,11 +6,11 @@ import ChatMessages from "../ChatMessages/ChatMessages";
 import { IconButton, TextField, Tooltip, Zoom } from "@mui/material";
 import { endPoint } from "../../api/endPoint";
 import Cookies from "js-cookie";
-import useGet from "../../api/useGet";
+import { useGet } from "../../Custom-Hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { RootType } from "../../store";
 import React from "react";
-import usePost from "../../api/usePost";
+import { usePost } from "../../Custom-Hooks";
 import getCurrentTime from "../../assets/constants/getCurrentTime";
 import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmile, BsEmojiSmileFill } from "react-icons/bs";
@@ -19,20 +19,30 @@ import sendMessageSoundFile from "../../assets/sounds/sendMessage.mp3";
 import receiveMessageSoundFile from "../../assets/sounds/receiveMessage.mp3";
 import { io } from "socket.io-client";
 import { setRefreshUsers } from "../../Slices/refreshUsers";
+import VoiceCall from "../VoiceCall/VoiceCall";
+import { BiPhoneCall, BiVideo } from "react-icons/bi";
 
 const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   const dispatch = useDispatch();
   const userId: any = Cookies.get("userId");
   const emojiRef: any = React.useRef(null);
+  const socketRef: any = React.useRef();
   const [message, setMessage] = React.useState("");
   const [showEmojis, setShowEmojis] = React.useState(false);
+  const [isCallStart, setIsCallStart] = React.useState(false);
+  const [isVideoCall, setIsVideoCall] = React.useState(false);
+  const [isVoiceCall, setIsVoiceCall] = React.useState(false);
   const [messageDetailsForm, setMessageDetailsForm] = React.useState({});
   const [isMessageReceived, setIsMessageReceived] = React.useState({});
+
   const receiverId: any = useSelector((state: RootType) => state.id.value);
   const isProfileUpdated: any = useSelector(
     (state: RootType) => state.refreshUsers.value
   );
-  const [data, loading, getData, , , setData]: any = useGet(
+  const CallerName: any = useSelector(
+    (state: RootType) => state.CallerName.value
+  );
+  const [data, loading, getData, success, , setData]: any = useGet(
     endPoint.oneUser + receiverId
   );
   const [sendMessagePost, loadingSendMessage, successMessage]: any = usePost(
@@ -84,8 +94,7 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   /* Handle send message */
   const handleSendMessage = () => {
     if (message) {
-      const socket = io("https://test-node-js-ze6q.onrender.com");
-      socket.emit("sendMessage", receiverId);
+      socketRef.current.emit("sendMessage", receiverId);
       sendMessageSound.play();
       setMessage("");
       sendMessagePost();
@@ -111,14 +120,41 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   }, []);
 
   // Socket Code
+  const [name, setName] = React.useState("");
+  const [caller, setCaller] = React.useState("");
+  const [callerSignal, setCallerSignal]: any = React.useState();
+  const [isReceiveCall, setIsReceiveCall] = React.useState(false);
+  const [stream, setStream]: any = React.useState();
+
   React.useEffect(() => {
     const socket = io("https://test-node-js-ze6q.onrender.com");
+    socketRef.current = socket;
+
     const handleReceiveMessage = (messageReceiverID: string) => {
       if (userId == messageReceiverID) {
         setIsMessageReceived(true);
       }
     };
+
+    const handleReceiveCall = (data: any) => {
+      if (userId == data.userToCall) {
+        setIsVideoCall(data.video);
+        setIsVoiceCall(data.voice);
+        setIsReceiveCall(true);
+        setCaller(data.from);
+        setName(data.name);
+        setCallerSignal(data.signal);
+      }
+    };
+
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        setStream(stream);
+      });
+
     socket.on("receiveMessage", handleReceiveMessage);
+    socket.on("callUser", handleReceiveCall);
 
     return () => {
       socket.off("receiveMessage", handleReceiveMessage);
@@ -126,26 +162,82 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
     };
   }, []);
 
+  const handleShowVideoCall = () => {
+    if (!isCallStart) {
+      setIsCallStart(true);
+      setIsVideoCall(true);
+    }
+  };
+
+  const handleShowVoiceCall = () => {
+    if (!isCallStart) {
+      setIsCallStart(true);
+      setIsVoiceCall(true);
+    }
+  };
+
   return (
     <div className="chat-section flexStartColumnItemsCenter">
+      {(isCallStart || isReceiveCall) && (
+        <VoiceCall
+          stream={stream}
+          isVoiceCall={isVoiceCall}
+          setIsVoiceCall={setIsVoiceCall}
+          isVideoCall={isVideoCall}
+          setIsVideoCall={setIsVideoCall}
+          isCallStart={isCallStart}
+          setIsCallStart={setIsCallStart}
+          userId={userId}
+          receiverId={receiverId}
+          CallerName={CallerName}
+          name={name}
+          caller={caller}
+          callerSignal={callerSignal}
+          isReceiveCall={isReceiveCall}
+          setIsReceiveCall={setIsReceiveCall}
+        />
+      )}
+
       <div className="user-section">
         <UserDetails isInChatSection={true} myData={data} loading={loading} />
-        {isSmallScreen && (
-          <Tooltip
-            title="Back"
-            arrow
-            TransitionComponent={Zoom}
-            placement="left"
-          >
-            <IconButton className="back-icon-button">
-              <FaArrowAltCircleLeft
-                size={35}
-                className="back-icon"
-                onClick={() => setShowUserChat(false)}
-              />
-            </IconButton>
-          </Tooltip>
-        )}
+        <div className="header-tools">
+          {userId !== receiverId && success && (
+            <Tooltip
+              title="Video Call"
+              arrow
+              TransitionComponent={Zoom}
+              placement="bottom"
+            >
+              <IconButton onClick={handleShowVideoCall}>
+                <BiVideo className="call-icon" size={30} />
+              </IconButton>
+            </Tooltip>
+          )}
+          {userId !== receiverId && success && (
+            <Tooltip
+              title="Voice Call"
+              arrow
+              TransitionComponent={Zoom}
+              placement="bottom"
+            >
+              <IconButton onClick={handleShowVoiceCall}>
+                <BiPhoneCall className="call-icon" size={28} />
+              </IconButton>
+            </Tooltip>
+          )}
+          {isSmallScreen && (
+            <Tooltip
+              title="Back"
+              arrow
+              TransitionComponent={Zoom}
+              placement="bottom"
+            >
+              <IconButton onClick={() => setShowUserChat(false)}>
+                <FaArrowAltCircleLeft size={30} className="back-icon" />
+              </IconButton>
+            </Tooltip>
+          )}
+        </div>
         <ChatMessages
           receiverId={receiverId}
           userId={userId}

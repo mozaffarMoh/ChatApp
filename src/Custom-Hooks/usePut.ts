@@ -1,6 +1,6 @@
 
 import React from "react";
-import baseApi from "./baseApi";
+import baseApi from "../api/baseApi";
 
 const usePut = (endPoint: string, body: any) => {
     const [loading, setLoading] = React.useState(false);

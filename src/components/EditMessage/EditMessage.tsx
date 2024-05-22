@@ -1,6 +1,6 @@
 import React from "react";
 import { endPoint } from "../../api/endPoint";
-import usePut from "../../api/usePut";
+import { usePut } from "../../Custom-Hooks";
 import "./EditMessage.scss";
 import Loading from "../Loading/Loading";
 import { ToastContainer, toast } from "react-toastify";

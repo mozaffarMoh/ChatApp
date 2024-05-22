@@ -10,20 +10,26 @@
         width: 100%;
         height: 100%;
 
-        .back-icon-button {
+        .header-tools {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 18px;
+            right: 20px;
+        }
 
-            .back-icon {
-                cursor: pointer;
-                color: rgb(212, 205, 205);
-                transition: all .5s ease;
+        .back-icon,
+        .call-icon {
+            cursor: pointer;
+            color: rgb(212, 205, 205);
+            transition: all .5s ease;
 
-                &:hover {
-                    color: rgb(243, 234, 234);
-                }
+            &:hover {
+                color: rgb(234, 240, 243);
             }
+
+        }
+
+        .call-icon:hover {
+            color: rgb(33, 162, 194);
         }
     }
 

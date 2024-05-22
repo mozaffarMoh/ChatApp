@@ -2,7 +2,7 @@ import { Avatar, CircularProgress } from "@mui/material";
 import "./ChatMessages.scss";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropleft } from "react-icons/io";
-import useGet from "../../api/useGet";
+import { useGet } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
 import React from "react";
 import EditMessage from "../EditMessage/EditMessage";

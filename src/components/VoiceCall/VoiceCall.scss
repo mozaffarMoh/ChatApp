@@ -1,0 +1,103 @@
+.voice-call {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	background-color: rgb(28, 67, 100);
+	color: white;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	overflow-y: auto;
+
+
+
+
+	.video-container {
+		margin-top: 50px;
+		width: 100%;
+
+		transition: all 1s ease;
+
+		.user-video,
+		.my-video {
+			border: 2px solid rgb(141, 190, 245);
+			border-radius: 10px;
+			cursor: pointer;
+			width: 80%;
+			height: 80%;
+		}
+
+		.my-video {
+			border: 2px solid rgb(105, 153, 235);
+			position: absolute;
+			width: 150px;
+			height: 150px;
+			bottom: 50px;
+			right: 50px;
+		}
+	}
+
+	button {
+		width: 150px;
+		height: 65px;
+		margin-top: 20px;
+	}
+
+	.caller {
+		width: 400px;
+		height: 300px;
+		border-radius: 20px;
+		border: 1px solid white;
+		box-shadow: 1px 1px 30px rgb(128, 169, 202);
+
+		.caller-name {
+			height: 50px;
+
+			h1 {
+				animation: callAnimation 1s infinite alternate;
+			}
+		}
+
+		.leave-call {
+			margin-top: 40px;
+		}
+	}
+
+
+
+
+
+}
+
+
+
+
+@keyframes callAnimation {
+	0% {
+		font-size: 30px;
+		color: white;
+	}
+
+	100% {
+		font-size: 30.5px;
+		color: #a6a6a7;
+	}
+}
+
+
+
+
+@media (max-width : 700px) {
+	.voice-call {
+		.video-container {
+
+			.my-video {
+				position: absolute;
+				width: 100px;
+				height: 100px;
+				bottom: 300px;
+				right: 15px;
+			}
+		}
+	}
+}

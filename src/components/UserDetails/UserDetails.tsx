@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootType } from "../../store";
 import React from "react";
 import UpdateProfile from "../UpdateProfile/UpdateProfile";
-import 'lazysizes'
+import "lazysizes";
 
 const UserDetails = ({
   handleShowUserChat,
@@ -75,11 +75,11 @@ const UserDetails = ({
           className="myData-loading"
         />
       )}
-      <div className="user-text">
+      <div className="user-info" style={{ width: myData ? "100%" : "" }}>
         {item && userId === item?._id ? (
           <p>My Account</p>
         ) : (
-          <div>
+          <div className="user-info-text" style={{ width: myData ? "40%" : "" }}>
             <p>{myData ? myData?.username : item?.username}</p>
             <span>{myData ? myData?.email : item?.email}</span>
           </div>

@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { Loading } from "../../components";
 import { ToastContainer, toast } from "react-toastify";
 import React from "react";
-import usePost from "../../api/usePost";
-import useInput from "../../api/useInput";
+import { useInput, usePost } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
 import Base64 from "../../assets/constants/Base64";
 import { IoMdEye } from "react-icons/io";
@@ -36,6 +35,7 @@ const Register = () => {
       placeholder: "Username",
       name: "username",
       type: "text",
+      value: inputFormData?.username || "",
       validation: {
         ...register("username", {
           required: "Username required!!",
@@ -46,6 +46,7 @@ const Register = () => {
       placeholder: "Email",
       name: "email",
       type: "text",
+      value: inputFormData?.email || "",
       validation: {
         ...register("email", {
           required: "Email required!!",
@@ -60,6 +61,7 @@ const Register = () => {
       placeholder: "Password",
       name: "password",
       type: isPasswordVisible ? "text" : "password",
+      value: inputFormData?.password || "",
       validation: {
         ...register("password", {
           required: "Password required!!",
@@ -107,7 +109,10 @@ const Register = () => {
 
   React.useEffect(() => {
     if (!loading) {
-      success && loginSuccess();
+      if (success) {
+        setInputFormData({});
+        loginSuccess();
+      }
       errorMessage && loginFail();
     }
   }, [success, errorMessage]);
@@ -162,12 +167,12 @@ const Register = () => {
         )}
         {inputArray.map((item: any, index: number) => {
           return (
-            <div className="input-fields">
+            <div className="input-fields" key={index}>
               <input
-                key={index}
                 placeholder={item.placeholder}
                 name={item.name}
                 type={item.type}
+                value={item.value}
                 {...item?.validation}
                 onChange={(e: any) => handleChangeInputData(e.target)}
                 onKeyDown={handleRegisterEnterKey}

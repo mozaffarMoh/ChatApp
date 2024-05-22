@@ -1,7 +1,7 @@
 import React from "react";
-import baseApi from "./baseApi";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import baseApi from "../api/baseApi";
 
 const useGet = (endPoint: string) => {
     const navigate = useNavigate()
