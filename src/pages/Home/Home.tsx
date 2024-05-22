@@ -36,12 +36,12 @@ const Home = () => {
           setShowUserChat={setShowUserChat}
         />
       )}
-      {(!isSmallScreen || (isSmallScreen && showUserChat)) && (
-        <ChatSection
-          setShowUserChat={setShowUserChat}
-          isSmallScreen={isSmallScreen}
-        />
-      )}
+
+      <ChatSection
+        showUserChat={showUserChat}
+        setShowUserChat={setShowUserChat}
+        isSmallScreen={isSmallScreen}
+      />
     </div>
   ) : (
     <></>

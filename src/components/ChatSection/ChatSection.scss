@@ -79,7 +79,14 @@
     }
 }
 
-
+.hide-chat-section {
+    width: 0px !important;
+    height: 0px !important;
+    overflow: hidden;
+    position: absolute;
+    top: -999999px;
+    left: -999999px;
+}
 
 
 @media (max-width : 700px) {

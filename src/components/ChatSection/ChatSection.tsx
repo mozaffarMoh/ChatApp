@@ -19,10 +19,10 @@ import sendMessageSoundFile from "../../assets/sounds/sendMessage.mp3";
 import receiveMessageSoundFile from "../../assets/sounds/receiveMessage.mp3";
 import { io } from "socket.io-client";
 import { setRefreshUsers } from "../../Slices/refreshUsers";
-import VoiceCall from "../VoiceCall/VoiceCall";
 import { BiPhoneCall, BiVideo } from "react-icons/bi";
+import CallSection from "../CallSection/CallSection";
 
-const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
+const ChatSection = ({ showUserChat, setShowUserChat, isSmallScreen }: any) => {
   const dispatch = useDispatch();
   const userId: any = Cookies.get("userId");
   const emojiRef: any = React.useRef(null);
@@ -138,6 +138,7 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
 
     const handleReceiveCall = (data: any) => {
       if (userId == data.userToCall) {
+        setShowUserChat(true);
         setIsVideoCall(data.video);
         setIsVoiceCall(data.voice);
         setIsReceiveCall(true);
@@ -177,9 +178,15 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
   };
 
   return (
-    <div className="chat-section flexStartColumnItemsCenter">
+    <div
+      className={`chat-section flexStartColumnItemsCenter ${
+        isSmallScreen == true && showUserChat == false
+          ? "hide-chat-section"
+          : ""
+      }`}
+    >
       {(isCallStart || isReceiveCall) && (
-        <VoiceCall
+        <CallSection
           stream={stream}
           isVoiceCall={isVoiceCall}
           setIsVoiceCall={setIsVoiceCall}
@@ -195,6 +202,7 @@ const ChatSection = ({ setShowUserChat, isSmallScreen }: any) => {
           callerSignal={callerSignal}
           isReceiveCall={isReceiveCall}
           setIsReceiveCall={setIsReceiveCall}
+          setShowUserChat={setShowUserChat}
         />
       )}
 

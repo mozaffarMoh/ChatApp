@@ -1,4 +1,4 @@
-import "./VoiceCall.scss";
+import "./CallSection.scss";
 import React, { useEffect, useRef, useState } from "react";
 import Peer from "simple-peer";
 import { Button, Typography } from "@mui/material";
@@ -6,7 +6,7 @@ import { IoCallSharp } from "react-icons/io5";
 import { BiBlock } from "react-icons/bi";
 import { io } from "socket.io-client";
 
-function VoiceCall({
+function CallSection({
   stream,
   isVoiceCall,
   setIsVoiceCall,
@@ -257,4 +257,4 @@ function VoiceCall({
   );
 }
 
-export default VoiceCall;
+export default CallSection;

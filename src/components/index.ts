@@ -5,4 +5,4 @@ export { default as ChatMessages } from './ChatMessages/ChatMessages';
 export { default as UserDetails } from './UserDetails/UserDetails';
 export { default as EditMessage } from './EditMessage/EditMessage';
 export { default as UpdateProfile } from './UpdateProfile/UpdateProfile';
-export { default as VoiceCall } from './VoiceCall/VoiceCall';
+export { default as CallSection } from './CallSection/CallSection';
