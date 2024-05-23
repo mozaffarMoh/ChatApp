@@ -13,26 +13,32 @@ import { Footer } from "../../sections";
 import UserDetails from "../UserDetails/UserDetails";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useGet } from "../../Custom-Hooks";
+import { useDelete, useGet } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
 import { useDispatch, useSelector } from "react-redux";
 import { setReceiverId } from "../../Slices/receiverIdSlice";
 import { RootType } from "../../store";
 import { setCallerName } from "../../Slices/callerNameSlice";
 import { UsersProps } from "../../Types/components/Users";
-import LogoutAlert from "../LogoutAlert/LogoutAlert";
+import { MdNoAccounts } from "react-icons/md";
+import Loading from "../Loading/Loading";
+import { ToastContainer, toast } from "react-toastify";
+import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 
 const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const router = useNavigate();
   const dispatch = useDispatch();
   const [users, setUsers] = React.useState<any>([]);
-  const [showLogoutAlert, setShowLogoutAlert] = React.useState<boolean>(false);
+  const [showAlert, setShowAlert] = React.useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = React.useState<string>("");
   const isProfileUpdated: any = useSelector(
     (state: RootType) => state.refreshUsers.value
   );
   const [name, setName] = React.useState<string>("");
   const userId = Cookies.get("userId");
   const [data, loading, getAllUsers] = useGet(endPoint.allUsers);
+  const [handelDeleteUser, deleteUserLoading, errorMessage, successMessage] =
+    useDelete(endPoint.deleteUser + userId);
 
   /* Choose user */
   const handleShowUserChat = (id: string) => {
@@ -92,30 +98,79 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
     }
   }, [isProfileUpdated]);
 
+  /* Check confirm before logout */
+  const handleConfirmLogout = () => {
+    setShowAlert(true);
+    setAlertMessage("Are you sure you want to Logout ??");
+  };
+
+  /* Check confirm before delete account */
+  const handleConfirmDeleteAccount = () => {
+    setShowAlert(true);
+    setAlertMessage("Are you sure you want to delete your account ??");
+  };
+
+  /* Close confirm dialog */
+  const onCloseConfirm = () => {
+    setShowAlert(false);
+    setAlertMessage("");
+  };
+
+  /* show error or success message if delete account success or fail */
+  const DeleteSuccess = () => toast(successMessage);
+  const DeleteFail = () => toast(errorMessage);
+  React.useEffect(() => {
+    if (!deleteUserLoading) {
+      if (successMessage) {
+        DeleteSuccess();
+        setShowAlert(false);
+      }
+      errorMessage && DeleteFail();
+    }
+  }, [successMessage, errorMessage]);
+
   return (
     <div className="users flexStartColumnItemsCenter">
+      <ToastContainer />
+      {deleteUserLoading && <Loading />}
       <div className="header-container flexBetween">
         <Tooltip
-          title="Logout"
+          title="Delete Account"
           arrow
           TransitionComponent={Zoom}
-          placement="right"
+          placement="bottom"
         >
           <IconButton
             className="logout-icon-button"
-            onClick={() => setShowLogoutAlert(true)}
+            onClick={handleConfirmDeleteAccount}
           >
-            <BiLogOut className="logout-icon" size={30} />
+            <MdNoAccounts className="logout-icon" size={30} />
           </IconButton>
         </Tooltip>
-        <LogoutAlert
-          open={showLogoutAlert}
-          onClose={() => setShowLogoutAlert(false)}
+
+        <ConfirmDialog
+          open={showAlert}
+          onClose={onCloseConfirm}
           handleLogout={handleLogout}
+          handelDeleteUser={handelDeleteUser}
+          alertMessage={alertMessage}
         />
         <div className="header-container-text flexCenter">
           <h1>Users</h1>
         </div>
+        <Tooltip
+          title="Logout"
+          arrow
+          TransitionComponent={Zoom}
+          placement="bottom"
+        >
+          <IconButton
+            className="logout-icon-button"
+            onClick={handleConfirmLogout}
+          >
+            <BiLogOut className="logout-icon" size={30} />
+          </IconButton>
+        </Tooltip>
       </div>
       <div className="search-section flexCenter">
         <TextField

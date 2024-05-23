@@ -44,3 +44,12 @@ export type UsePut = [
     boolean,
     string
 ];
+
+
+/* Use Delete */
+export type UseDelete = [
+    () => void,
+    boolean,
+    string,
+    string
+];
