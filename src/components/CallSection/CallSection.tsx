@@ -5,6 +5,8 @@ import { Button, Typography } from "@mui/material";
 import { IoCallSharp } from "react-icons/io5";
 import { BiBlock } from "react-icons/bi";
 import { io } from "socket.io-client";
+import sendCallSoundFile from "../../assets/sounds/sendCall.mp3";
+import receiveCallSoundFile from "../../assets/sounds/receiveCall.mp3";
 
 function CallSection({
   stream,
@@ -32,6 +34,10 @@ function CallSection({
   const [callEnded, setCallEnded] = useState(false);
   const [switchCamera, setSwitchCamera] = useState(false);
   const [callTime, setCallTime]: any = useState({ minutes: 0, seconds: 0 });
+  const sendCallSound: any = useRef(new Howl({ src: [sendCallSoundFile] }));
+  const receiveCallSound: any = useRef(
+    new Howl({ src: [receiveCallSoundFile] })
+  );
 
   useEffect(() => {
     const socket = io("https://test-node-js-ze6q.onrender.com");
@@ -42,6 +48,10 @@ function CallSection({
     const handleLeaveCall = () => {
       leaveCall();
     };
+
+    if (isReceiveCall == true && !callAccepted) {
+      receiveCallSound.current.play();
+    }
 
     socket.on("leaveCall", handleLeaveCall);
 
@@ -86,6 +96,8 @@ function CallSection({
   };
 
   const answerCall = () => {
+    sendCallSound.current.stop();
+    receiveCallSound.current.stop();
     setCallAccepted(true);
     setCallTime({ minutes: 0, seconds: 0 });
 
@@ -112,6 +124,7 @@ function CallSection({
 
   useEffect(() => {
     if (isCallStart == true) {
+      sendCallSound.current.play();
       const cleanup = callUser();
       return cleanup; // Cleanup event listeners when call ends
     }
@@ -119,6 +132,8 @@ function CallSection({
 
   /* Leave the call */
   const leaveCall = () => {
+    sendCallSound.current.stop();
+    receiveCallSound.current.stop();
     setShowUserChat(false);
     setCallEnded(true);
     setIsCallStart(false);
@@ -144,13 +159,14 @@ function CallSection({
       userAudio.current.srcObject = null;
       userAudio.current = null;
     }
-
     connectionRef.current = null;
   };
 
   /* Start call timer when user accept the call */
   React.useEffect(() => {
     if (callAccepted) {
+      sendCallSound.current.stop();
+      receiveCallSound.current.stop();
       const intervalId = setInterval(() => {
         setCallTime((prevCallTime: any) => {
           let newMinutes = prevCallTime.minutes;
@@ -170,12 +186,14 @@ function CallSection({
   }, [callAccepted]);
 
   /* Switch camera */
-  React.useEffect(() => {
+  useEffect(() => {
     if (switchCamera && isVideoCall == true) {
+      const myStream = myAudio.current.srcObject;
       myAudio.current.srcObject = userAudio.current.srcObject;
-      userAudio.current.srcObject = myAudio.current.srcObject;
+      userAudio.current.srcObject = myStream;
+      setSwitchCamera(false);
     }
-  }, [switchCamera]);
+  }, [switchCamera, isVideoCall]);
 
   return (
     <div className="voice-call flexCenterColumn">
@@ -189,7 +207,7 @@ function CallSection({
             muted
             ref={myAudio}
             autoPlay
-            onClick={() => setSwitchCamera(!switchCamera)}
+            onClick={() => setSwitchCamera(true)}
             className="my-video"
           />
         )}
@@ -198,7 +216,7 @@ function CallSection({
             playsInline
             ref={userAudio}
             autoPlay
-            onClick={() => setSwitchCamera(!switchCamera)}
+            onClick={() => setSwitchCamera(true)}
             className="user-video"
           />
         )}
@@ -218,7 +236,7 @@ function CallSection({
             variant="h5"
             fontFamily={"revert-layer"}
           >
-            Call is start
+            The call has started
           </Typography>
           <Typography color={"#aaaae0"} variant="h3">
             {callTime.minutes < 60 &&
