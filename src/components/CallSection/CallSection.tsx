@@ -1,14 +1,15 @@
 import "./CallSection.scss";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import Peer from "simple-peer";
 import { Button, Typography } from "@mui/material";
 import { IoCallSharp } from "react-icons/io5";
 import { BiBlock } from "react-icons/bi";
-import { io } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
 import sendCallSoundFile from "../../assets/sounds/sendCall.mp3";
 import receiveCallSoundFile from "../../assets/sounds/receiveCall.mp3";
+import { CallSectionProps, CallTime } from "../../Types/components/CallSection";
 
-function CallSection({
+const CallSection: React.FC<CallSectionProps> = ({
   stream,
   isVoiceCall,
   setIsVoiceCall,
@@ -25,21 +26,26 @@ function CallSection({
   isReceiveCall,
   setIsReceiveCall,
   setShowUserChat,
-}: any) {
-  const myAudio: any = useRef();
-  const userAudio: any = useRef();
-  const connectionRef: any = useRef();
-  const socketRef: any = React.useRef();
-  const [callAccepted, setCallAccepted] = useState(false);
-  const [callEnded, setCallEnded] = useState(false);
-  const [switchCamera, setSwitchCamera] = useState(false);
-  const [callTime, setCallTime]: any = useState({ minutes: 0, seconds: 0 });
-  const sendCallSound: any = useRef(new Howl({ src: [sendCallSoundFile] }));
-  const receiveCallSound: any = useRef(
+}) => {
+  const myAudio = React.useRef<HTMLAudioElement | any>(null);
+  const userAudio = React.useRef<HTMLVideoElement | any>(null);
+  const connectionRef = React.useRef<Peer.Instance | any>(null);
+  const socketRef = React.useRef<Socket | any>(null);
+  const [callAccepted, setCallAccepted] = React.useState<boolean>(false);
+  const [callEnded, setCallEnded] = React.useState<boolean>(false);
+  const [switchCamera, setSwitchCamera] = React.useState<boolean>(false);
+  const [callTime, setCallTime] = React.useState<CallTime>({
+    minutes: 0,
+    seconds: 0,
+  });
+  const sendCallSound = React.useRef<any>(
+    new Howl({ src: [sendCallSoundFile] })
+  );
+  const receiveCallSound = React.useRef<any>(
     new Howl({ src: [receiveCallSoundFile] })
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     const socket = io("https://test-node-js-ze6q.onrender.com");
     socketRef.current = socket;
     setTimeout(() => {
@@ -122,7 +128,7 @@ function CallSection({
     connectionRef.current = peer;
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isCallStart == true) {
       sendCallSound.current.play();
       const cleanup = callUser();
@@ -186,7 +192,7 @@ function CallSection({
   }, [callAccepted]);
 
   /* Switch camera */
-  useEffect(() => {
+  React.useEffect(() => {
     if (switchCamera && isVideoCall == true) {
       const myStream = myAudio.current.srcObject;
       myAudio.current.srcObject = userAudio.current.srcObject;
@@ -273,6 +279,6 @@ function CallSection({
       </Button>{" "}
     </div>
   );
-}
+};
 
 export default CallSection;

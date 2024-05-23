@@ -1,17 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: any = {
-    value: "",
+interface ReceiverIdState {
+  value: string;
+}
+
+const initialState: ReceiverIdState = {
+  value: "",
 };
 
 export const receiverId = createSlice({
-    name: "receiverId",
-    initialState: initialState,
-    reducers: {
-        setReceiverId: (state, action) => {
-            state.value = action.payload;
-        },
+  name: "receiverId",
+  initialState,
+  reducers: {
+    setReceiverId: (state, action: PayloadAction<string>) => {
+      state.value = action.payload;
     },
+  },
 });
 
 export const { setReceiverId } = receiverId.actions;

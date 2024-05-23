@@ -4,16 +4,17 @@ import { usePut } from "../../Custom-Hooks";
 import "./EditMessage.scss";
 import Loading from "../Loading/Loading";
 import { ToastContainer, toast } from "react-toastify";
+import { EditMessageProps } from "../../Types/components/EditMessage";
 
-const EditMessage = ({
+const EditMessage: React.FC<EditMessageProps> = ({
   message,
   messageId,
   setShowEditMessage,
   setIsMessageEdited,
-}: any) => {
-  const [updatedMessage, setUpdatedMessage] = React.useState("");
-  const [editMessageForm, setEditMessageForm] = React.useState({});
-  const [editMessage, loading, success, errorMessage]: any = usePut(
+}) => {
+  const [updatedMessage, setUpdatedMessage] = React.useState<string>("");
+  const [editMessageForm, setEditMessageForm] = React.useState<object>({});
+  const [editMessage, loading, success, errorMessage] = usePut(
     endPoint.editMessage + messageId,
     editMessageForm
   );

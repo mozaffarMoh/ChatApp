@@ -6,25 +6,26 @@ import { useGet } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
 import React from "react";
 import EditMessage from "../EditMessage/EditMessage";
+import { ChatMessagesProps } from "../../Types/components/ChatMessages";
 
-const ChatMessages = ({
+const ChatMessages: React.FC<ChatMessagesProps> = ({
   receiverId,
   userId,
   loadingSendMessage,
-  successMessage,
+  isSuccessMessage,
   isMessageReceived,
   setIsMessageReceived,
   receiveMessageSound,
-}: any) => {
+}) => {
   const messageBoxRef: any = React.useRef(null);
-  const [showEditMessage, setShowEditMessage] = React.useState(false);
-  const [isMessageEdited, setIsMessageEdited] = React.useState(false);
-  const [currentMessageID, setCurrentMessageID] = React.useState("");
-  const [page, setPage] = React.useState(1);
-  const [data, loading, getData, success]: any = useGet(
+  const [showEditMessage, setShowEditMessage] = React.useState<boolean>(false);
+  const [isMessageEdited, setIsMessageEdited] = React.useState<boolean>(false);
+  const [currentMessageID, setCurrentMessageID] = React.useState<string>("");
+  const [page, setPage] = React.useState<number>(1);
+  const [data, loading, getData, success] = useGet(
     endPoint.allMessages + `/${userId}/${receiverId}?page=${page}`
   );
-  const [filteredLoading, setFilteredLoading]: any = React.useState(false);
+  const [filteredLoading, setFilteredLoading] = React.useState<boolean>(false);
 
   /* get data when page value change */
   React.useEffect(() => {
@@ -62,23 +63,23 @@ const ChatMessages = ({
 
   /* Get data when message sent success */
   React.useEffect(() => {
-    if (successMessage) {
+    if (isSuccessMessage) {
       getData();
     }
-  }, [successMessage]);
+  }, [isSuccessMessage]);
 
   /* Scroll to bottom */
   React.useEffect(() => {
     if (
       (success && page == 1 && messageBoxRef.current) ||
-      (successMessage && messageBoxRef.current)
+      (isSuccessMessage && messageBoxRef.current)
     ) {
       messageBoxRef.current.scrollTo({
         top: messageBoxRef.current.scrollHeight,
         behavior: "smooth",
       });
     }
-  }, [success, successMessage]);
+  }, [success, isSuccessMessage]);
 
   /* Get filtered data when scroll is go to top */
   React.useEffect(() => {

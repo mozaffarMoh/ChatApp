@@ -1,14 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: any = {
+interface CallerNameState {
+    value: string;
+}
+
+const initialState: CallerNameState = {
     value: "",
 };
 
 export const CallerName = createSlice({
     name: "CallerName",
-    initialState: initialState,
+    initialState,
     reducers: {
-        setCallerName: (state, action) => {
+        setCallerName: (state, action: PayloadAction<string>) => {
             state.value = action.payload;
         },
     },

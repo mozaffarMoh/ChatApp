@@ -9,22 +9,24 @@ import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { useInput, usePost } from "../../Custom-Hooks";
+import { LoginFormData } from "../../Types/Auth";
 
-const Login = () => {
-  const [inputFormData, handleChangeInputData, setInputFormData]: any =
-    useInput();
-  const [isPasswordVisible, setIsPasswordVisible]: any = React.useState(false);
-  const [isStartEnterKey, setStartEnterKey]: any = React.useState(false);
-  const [handleLoginPost, loading, success, errorMessage]: any = usePost(
+const Login: React.FC = () => {
+  const [inputFormData, handleChangeInputData, setInputFormData] = useInput();
+  const [isPasswordVisible, setIsPasswordVisible] =
+    React.useState<boolean>(false);
+  const [isStartEnterKey, setStartEnterKey] = React.useState<boolean>(false);
+  const [handleLoginPost, loading, success, errorMessage] = usePost(
     endPoint.login,
     inputFormData
   );
+
   let {
     register,
     handleSubmit,
     formState: { errors },
     trigger,
-  }: any = useForm();
+  }: any = useForm<LoginFormData>();
   const loginSuccess = () => toast("Login successful. Welcome!");
   const loginFail = () => toast(errorMessage);
 
@@ -97,7 +99,7 @@ const Login = () => {
   React.useEffect(() => {
     if (!loading) {
       if (success) {
-        setInputFormData(null);
+        setInputFormData({});
         loginSuccess();
       }
       errorMessage && loginFail();

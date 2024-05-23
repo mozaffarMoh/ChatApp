@@ -1,18 +1,19 @@
+import React from "react";
 import "./App.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Home, Login, Register, StartPage } from "./pages";
 
-function App() {
+const App: React.FC = () => {
   return (
     <Router basename="/ChatApp">
       <Routes>
-        <Route element={<Home />} path={"/"} />
-        <Route element={<StartPage />} path={"/start-page"} />
-        <Route element={<Login />} path="/login" />
-        <Route element={<Register />} path="/sign-up" />
+        <Route path="/" element={<Home />} />
+        <Route path="/start-page" element={<StartPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/sign-up" element={<Register />} />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

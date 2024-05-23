@@ -1,17 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: any = {
-    value: false,
+interface RefreshUsersState {
+  value: boolean;
+}
+
+const initialState: RefreshUsersState = {
+  value: false,
 };
 
 export const refreshUsers = createSlice({
-    name: "user",
-    initialState: initialState,
-    reducers: {
-        setRefreshUsers: (state, action) => {
-            state.value = action.payload;
-        },
+  name: "user",
+  initialState,
+  reducers: {
+    setRefreshUsers: (state, action: PayloadAction<boolean>) => {
+      state.value = action.payload;
     },
+  },
 });
 
 export const { setRefreshUsers } = refreshUsers.actions;

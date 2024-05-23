@@ -17,17 +17,17 @@ import { setRefreshUsers } from "../../Slices/refreshUsers";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { useForm } from "react-hook-form";
+import { UpdateProfileFormData } from "../../Types/Auth";
 
 const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
   const dispatch = useDispatch();
-  const [imgFile, setImgFile]: any = React.useState("");
-  const [isOldPasswordVisible, setIsOldPasswordVisible]: any =
-    React.useState(false);
-  const [isNewPasswordVisible, setIsNewPasswordVisible]: any =
-    React.useState(false);
-  const [inputFormData, handleChangeInputData, setInputFormData]: any =
-    useInput();
-  const [handleUpdateProfile, loading, success, errorMessage]: any = usePut(
+  const [imgFile, setImgFile]: any = React.useState<string>("");
+  const [isOldPasswordVisible, setIsOldPasswordVisible] =
+    React.useState<boolean>(false);
+  const [isNewPasswordVisible, setIsNewPasswordVisible] =
+    React.useState<boolean>(false);
+  const [inputFormData, handleChangeInputData, setInputFormData] = useInput();
+  const [handleUpdateProfile, loading, success, errorMessage] = usePut(
     endPoint.updateProfilePhoto + "/" + userId,
     inputFormData
   );
@@ -35,7 +35,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
     register,
     handleSubmit,
     formState: { errors },
-  }: any = useForm();
+  } = useForm<UpdateProfileFormData>();
 
   const inputArray = [
     {

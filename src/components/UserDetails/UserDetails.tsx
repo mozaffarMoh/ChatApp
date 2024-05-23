@@ -6,8 +6,9 @@ import { RootType } from "../../store";
 import React from "react";
 import UpdateProfile from "../UpdateProfile/UpdateProfile";
 import "lazysizes";
+import { UserDetailsProps } from "../../Types/components/UserDetails";
 
-const UserDetails = ({
+const UserDetails: React.FC<UserDetailsProps> = ({
   handleShowUserChat,
   myData,
   loading,
@@ -15,9 +16,10 @@ const UserDetails = ({
   isInChatSection,
 }: any) => {
   const userId = Cookies.get("userId");
-  const receiverId: any = useSelector((state: RootType) => state.id.value);
-  const [showUpdateProfile, setShowUpdateProfile] = React.useState(false);
-  const [isHover, setIsHover] = React.useState(false);
+  const receiverId = useSelector((state: RootType) => state.id.value);
+  const [showUpdateProfile, setShowUpdateProfile] =
+    React.useState<boolean>(false);
+  const [isHover, setIsHover] = React.useState<boolean>(false);
 
   const handleShowUpdateProfile = () => {
     if (myData && myData?._id == userId) {
@@ -79,7 +81,10 @@ const UserDetails = ({
         {item && userId === item?._id ? (
           <p>My Account</p>
         ) : (
-          <div className="user-info-text" style={{ width: myData ? "40%" : "" }}>
+          <div
+            className="user-info-text"
+            style={{ width: myData ? "40%" : "" }}
+          >
             <p>{myData ? myData?.username : item?.username}</p>
             <span>{myData ? myData?.email : item?.email}</span>
           </div>

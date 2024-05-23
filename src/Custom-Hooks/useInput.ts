@@ -1,20 +1,18 @@
 import React from "react";
+import { DomObjType, FormData, UseInput } from "../Types/CustomHooks";
 
-interface DomObjType {
-    name: string;
-    value: string | number;
-}
 
-const useInput = () => {
-    const [formData, setFormData] = React.useState({});
+const useInput = (): UseInput => {
+    const [formData, setFormData] = React.useState<FormData>({});
 
-    const handleCahnge = (domObj: DomObjType) => {
+    const handleChange = (domObj: DomObjType) => {
         const { name, value } = domObj;
-        setFormData((prev) => {
+        setFormData((prev: FormData) => {
             return { ...prev, [name]: value };
         });
     };
-    return [formData, handleCahnge,setFormData];
+
+    return [formData, handleChange, setFormData];
 };
 
 export default useInput;

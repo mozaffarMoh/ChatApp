@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 import startImage from "../../assets/images/start-page.png";
 import React from "react";
 
-const StartPage = () => {
+const StartPage: React.FC = () => {
   const navigate = useNavigate();
-  let speed = 60;
-  let text =
+  let speed: number = 60;
+  let text: string =
     "  Chat helps Workspace users connect and collaborate to get things done.";
-  const [displayedText, setDisplayedText] = React.useState("");
+  const [displayedText, setDisplayedText] = React.useState<string>("");
 
   React.useEffect(() => {
     if (displayedText.length !== text.length - 1) {
-      let index = 0;
+      let index: number = 0;
       const intervalId = setInterval(() => {
         setDisplayedText((prev) => prev + text.charAt(index));
         index += 1;
@@ -25,6 +25,7 @@ const StartPage = () => {
       return () => clearInterval(intervalId);
     }
   }, [text]);
+
   return (
     <div className="start-page flexCenter">
       <div className="action-section flexBetweenColumnItemsStart">

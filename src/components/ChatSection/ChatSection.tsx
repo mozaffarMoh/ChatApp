@@ -21,31 +21,42 @@ import { io } from "socket.io-client";
 import { setRefreshUsers } from "../../Slices/refreshUsers";
 import { BiPhoneCall, BiVideo } from "react-icons/bi";
 import CallSection from "../CallSection/CallSection";
+import { ChatSectionProps } from "../../Types/components/ChatSection";
 
-const ChatSection = ({ showUserChat, setShowUserChat, isSmallScreen }: any) => {
+const ChatSection: React.FC<ChatSectionProps> = ({
+  showUserChat,
+  setShowUserChat,
+  isSmallScreen,
+}) => {
   const dispatch = useDispatch();
-  const userId: any = Cookies.get("userId");
-  const emojiRef: any = React.useRef(null);
-  const socketRef: any = React.useRef();
-  const [message, setMessage] = React.useState("");
-  const [showEmojis, setShowEmojis] = React.useState(false);
-  const [isCallStart, setIsCallStart] = React.useState(false);
-  const [isVideoCall, setIsVideoCall] = React.useState(false);
-  const [isVoiceCall, setIsVoiceCall] = React.useState(false);
-  const [messageDetailsForm, setMessageDetailsForm] = React.useState({});
-  const [isMessageReceived, setIsMessageReceived] = React.useState({});
+  const userId = Cookies.get("userId");
+  const emojiRef = React.useRef<any>(null);
+  const socketRef = React.useRef<any>(null);
+  const [message, setMessage] = React.useState<string>("");
+  const [showEmojis, setShowEmojis] = React.useState<boolean>(false);
+  const [isCallStart, setIsCallStart] = React.useState<boolean>(false);
+  const [isVideoCall, setIsVideoCall] = React.useState<boolean>(false);
+  const [isVoiceCall, setIsVoiceCall] = React.useState<boolean>(false);
+  const [name, setName] = React.useState<string>("");
+  const [caller, setCaller] = React.useState<string>("");
+  const [callerSignal, setCallerSignal] = React.useState<object | null>(null);
+  const [stream, setStream]: any = React.useState<object | null>(null);
+  const [isReceiveCall, setIsReceiveCall] = React.useState<boolean>(false);
+  const [isMessageReceived, setIsMessageReceived] =
+    React.useState<boolean>(false);
+  const [messageDetailsForm, setMessageDetailsForm] = React.useState<object>(
+    {}
+  );
 
-  const receiverId: any = useSelector((state: RootType) => state.id.value);
-  const isProfileUpdated: any = useSelector(
+  const receiverId = useSelector((state: RootType) => state.id.value);
+  const isProfileUpdated = useSelector(
     (state: RootType) => state.refreshUsers.value
   );
-  const CallerName: any = useSelector(
-    (state: RootType) => state.CallerName.value
-  );
-  const [data, loading, getData, success, , setData]: any = useGet(
+  const CallerName = useSelector((state: RootType) => state.CallerName.value);
+  const [data, loading, getData, success, , setData] = useGet(
     endPoint.oneUser + receiverId
   );
-  const [sendMessagePost, loadingSendMessage, successMessage]: any = usePost(
+  const [sendMessagePost, loadingSendMessage, isSuccessMessage] = usePost(
     endPoint.sendMessage,
     messageDetailsForm
   );
@@ -55,6 +66,44 @@ const ChatSection = ({ showUserChat, setShowUserChat, isSmallScreen }: any) => {
   const receiveMessageSound = new Howl({
     src: [receiveMessageSoundFile],
   });
+
+  // Socket Code
+  React.useEffect(() => {
+    const socket = io("https://test-node-js-ze6q.onrender.com");
+    socketRef.current = socket;
+
+    const handleReceiveMessage = (messageReceiverID: string) => {
+      if (userId == messageReceiverID) {
+        setIsMessageReceived(true);
+      }
+    };
+
+    const handleReceiveCall = (data: any) => {
+      if (userId == data.userToCall) {
+        setShowUserChat(true);
+        setIsVideoCall(data.video);
+        setIsVoiceCall(data.voice);
+        setIsReceiveCall(true);
+        setCaller(data.from);
+        setName(data.name);
+        setCallerSignal(data.signal);
+      }
+    };
+
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        setStream(stream);
+      });
+
+    socket.on("receiveMessage", handleReceiveMessage);
+    socket.on("callUser", handleReceiveCall);
+
+    return () => {
+      socket.off("receiveMessage", handleReceiveMessage);
+      socket.disconnect();
+    };
+  }, []);
 
   /* refresh user details when receiverId changed */
   React.useEffect(() => {
@@ -116,50 +165,6 @@ const ChatSection = ({ showUserChat, setShowUserChat, isSmallScreen }: any) => {
     document.addEventListener("mousedown", hideEmojiesWhenClickOutside);
     return () => {
       document.removeEventListener("mousedown", hideEmojiesWhenClickOutside);
-    };
-  }, []);
-
-  // Socket Code
-  const [name, setName] = React.useState("");
-  const [caller, setCaller] = React.useState("");
-  const [callerSignal, setCallerSignal]: any = React.useState();
-  const [isReceiveCall, setIsReceiveCall] = React.useState(false);
-  const [stream, setStream]: any = React.useState();
-
-  React.useEffect(() => {
-    const socket = io("https://test-node-js-ze6q.onrender.com");
-    socketRef.current = socket;
-
-    const handleReceiveMessage = (messageReceiverID: string) => {
-      if (userId == messageReceiverID) {
-        setIsMessageReceived(true);
-      }
-    };
-
-    const handleReceiveCall = (data: any) => {
-      if (userId == data.userToCall) {
-        setShowUserChat(true);
-        setIsVideoCall(data.video);
-        setIsVoiceCall(data.voice);
-        setIsReceiveCall(true);
-        setCaller(data.from);
-        setName(data.name);
-        setCallerSignal(data.signal);
-      }
-    };
-
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        setStream(stream);
-      });
-
-    socket.on("receiveMessage", handleReceiveMessage);
-    socket.on("callUser", handleReceiveCall);
-
-    return () => {
-      socket.off("receiveMessage", handleReceiveMessage);
-      socket.disconnect();
     };
   }, []);
 
@@ -250,7 +255,7 @@ const ChatSection = ({ showUserChat, setShowUserChat, isSmallScreen }: any) => {
           receiverId={receiverId}
           userId={userId}
           loadingSendMessage={loadingSendMessage}
-          successMessage={successMessage}
+          isSuccessMessage={isSuccessMessage}
           isMessageReceived={isMessageReceived}
           setIsMessageReceived={setIsMessageReceived}
           receiveMessageSound={receiveMessageSound}

@@ -10,14 +10,15 @@ import Base64 from "../../assets/constants/Base64";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { useForm } from "react-hook-form";
+import { RegisterFormData } from "../../Types/Auth";
 
-const Register = () => {
-  const [inputFormData, handleChangeInputData, setInputFormData]: any =
-    useInput();
-  const [imgFile, setImgFile]: any = React.useState("");
-  const [isPasswordVisible, setIsPasswordVisible]: any = React.useState(false);
-  const [isStartEnterKey, setStartEnterKey]: any = React.useState(false);
-  const [handleRegisterPost, loading, success, errorMessage]: any = usePost(
+const Register: React.FC = () => {
+  const [inputFormData, handleChangeInputData, setInputFormData] = useInput();
+  const [imgFile, setImgFile]: any = React.useState<string>("");
+  const [isPasswordVisible, setIsPasswordVisible] =
+    React.useState<boolean>(false);
+  const [isStartEnterKey, setStartEnterKey] = React.useState<boolean>(false);
+  const [handleRegisterPost, loading, success, errorMessage] = usePost(
     endPoint.register,
     inputFormData
   );
@@ -26,7 +27,7 @@ const Register = () => {
     handleSubmit,
     trigger,
     formState: { errors },
-  }: any = useForm();
+  } = useForm<RegisterFormData>();
   const loginSuccess = () => toast("Account has been successfully created");
   const loginFail = () => toast(errorMessage);
 
@@ -157,7 +158,7 @@ const Register = () => {
           {!inputFormData?.profilePhoto ? (
             <Avatar className="avatar-section" />
           ) : (
-            <img src={inputFormData?.profilePhoto} alt="" />
+            <img src={inputFormData.profilePhoto} alt="" />
           )}{" "}
         </div>
         {inputFormData?.profilePhoto && (

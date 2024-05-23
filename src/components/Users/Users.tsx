@@ -19,18 +19,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { setReceiverId } from "../../Slices/receiverIdSlice";
 import { RootType } from "../../store";
 import { setCallerName } from "../../Slices/callerNameSlice";
+import { UsersProps } from "../../Types/components/Users";
+import LogoutAlert from "../LogoutAlert/LogoutAlert";
 
-const Users = ({ isSmallScreen, setShowUserChat }: any) => {
+const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const router = useNavigate();
   const dispatch = useDispatch();
-  const [users, setUsers]: any = React.useState([]);
-
+  const [users, setUsers] = React.useState<any>([]);
+  const [showLogoutAlert, setShowLogoutAlert] = React.useState<boolean>(false);
   const isProfileUpdated: any = useSelector(
     (state: RootType) => state.refreshUsers.value
   );
-  const [name, setName] = React.useState("");
+  const [name, setName] = React.useState<string>("");
   const userId = Cookies.get("userId");
-  const [data, loading, getAllUsers]: any = useGet(endPoint.allUsers);
+  const [data, loading, getAllUsers] = useGet(endPoint.allUsers);
 
   /* Choose user */
   const handleShowUserChat = (id: string) => {
@@ -99,10 +101,18 @@ const Users = ({ isSmallScreen, setShowUserChat }: any) => {
           TransitionComponent={Zoom}
           placement="right"
         >
-          <IconButton className="logout-icon-button" onClick={handleLogout}>
+          <IconButton
+            className="logout-icon-button"
+            onClick={() => setShowLogoutAlert(true)}
+          >
             <BiLogOut className="logout-icon" size={30} />
           </IconButton>
         </Tooltip>
+        <LogoutAlert
+          open={showLogoutAlert}
+          onClose={() => setShowLogoutAlert(false)}
+          handleLogout={handleLogout}
+        />
         <div className="header-container-text flexCenter">
           <h1>Users</h1>
         </div>
