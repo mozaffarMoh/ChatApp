@@ -31,9 +31,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   const dispatch = useDispatch();
   const userId = Cookies.get("userId");
   const emojiRef = React.useRef<any>(null);
+  const emojiIconRef = React.useRef<any>(null);
   const socketRef = React.useRef<any>(null);
   const [message, setMessage] = React.useState<string>("");
   const [showEmojis, setShowEmojis] = React.useState<boolean>(false);
+  const [emojiesHover, setEmojiesHover] = React.useState<boolean>(false);
   const [isCallStart, setIsCallStart] = React.useState<boolean>(false);
   const [isVideoCall, setIsVideoCall] = React.useState<boolean>(false);
   const [isVoiceCall, setIsVoiceCall] = React.useState<boolean>(false);
@@ -158,7 +160,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   /* Hide emojies if click outside */
   React.useEffect(() => {
     const hideEmojiesWhenClickOutside = (e: any) => {
-      if (emojiRef && !emojiRef.current?.contains(e.target)) {
+      if (
+        emojiRef &&
+        !emojiRef.current?.contains(e.target) &&
+        emojiIconRef &&
+        !emojiIconRef.current?.contains(e.target)
+      ) {
         setShowEmojis(false);
       }
     };
@@ -271,13 +278,26 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           />
           <div
             onClick={() => setShowEmojis(!showEmojis)}
-            className="emoji-icon"
+            onMouseEnter={() => setEmojiesHover(true)}
+            onMouseLeave={() => setEmojiesHover(false)}
+            className="emojis-icon"
+            ref={emojiIconRef}
           >
-            {!showEmojis ? (
-              <BsEmojiSmile size={25} color="#2db8db" />
-            ) : (
-              <BsEmojiSmileFill size={25} color="#2db8ff" />
-            )}
+            <BsEmojiSmile
+              size={25}
+              color="#2db8db"
+              className={`emoji-position  ${
+                !emojiesHover && !showEmojis ? "emoji-visible" : "emoji-hidden"
+              }`}
+            />
+
+            <BsEmojiSmileFill
+              size={25}
+              color="#2db8ff"
+              className={`emoji-position  ${
+                emojiesHover || showEmojis ? "emoji-visible" : "emoji-hidden"
+              }`}
+            />
           </div>
 
           {showEmojis && (

@@ -51,7 +51,7 @@
 
         .send-message-icon {
             position: absolute;
-            top: 22px;
+            top: 24px;
             right: 20px;
             cursor: pointer;
             color: rgb(137, 225, 247);
@@ -62,11 +62,28 @@
             color: #2db8db;
         }
 
-        .emoji-icon {
+        .emojis-icon {
             position: absolute;
-            top: 22px;
+            top: 24px;
             right: 60px;
             cursor: pointer;
+
+            .emoji-position {
+                transition: opacity .3s ease-in-out;
+                position: absolute;
+                top: 0px;
+                right: 0px;
+            }
+
+            .emoji-hidden {
+                opacity: 0;
+            }
+
+            .emoji-visible {
+                opacity: 1;
+            }
+
+
         }
     }
 
