@@ -27,9 +27,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   const [data, loading, getData, success] = useGet(
     endPoint.allMessages + `/${userId}/${receiverId}?page=${page}`
   );
-  const [senderData, senderLoading, getSenderData] = useGet(
-    endPoint.oneUser + userId
-  );
+  const [senderData, , getSenderData] = useGet(endPoint.oneUser + userId);
 
   /* Get sender Data when initial page */
   React.useEffect(() => {
