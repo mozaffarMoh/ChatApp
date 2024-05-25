@@ -9,6 +9,7 @@ import EditMessage from "../EditMessage/EditMessage";
 import { ChatMessagesProps } from "../../Types/components/ChatMessages";
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
+  receiverData,
   receiverId,
   userId,
   loadingSendMessage,
@@ -22,10 +23,18 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   const [isMessageEdited, setIsMessageEdited] = React.useState<boolean>(false);
   const [currentMessageID, setCurrentMessageID] = React.useState<string>("");
   const [page, setPage] = React.useState<number>(1);
+  const [filteredLoading, setFilteredLoading] = React.useState<boolean>(false);
   const [data, loading, getData, success] = useGet(
     endPoint.allMessages + `/${userId}/${receiverId}?page=${page}`
   );
-  const [filteredLoading, setFilteredLoading] = React.useState<boolean>(false);
+  const [senderData, senderLoading, getSenderData] = useGet(
+    endPoint.oneUser + userId
+  );
+
+  /* Get sender Data when initial page */
+  React.useEffect(() => {
+    getSenderData();
+  }, []);
 
   /* get data when page value change */
   React.useEffect(() => {
@@ -104,6 +113,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     }
   }, []);
 
+  /* Show Edit Message */
   const handleShowEditMessage = (isSender: Boolean, messageID: string) => {
     if (isSender) {
       !showEditMessage && setShowEditMessage(true);
@@ -127,7 +137,24 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
               dir={isSender ? "ltr" : "rtl"}
               key={index}
             >
-              <Avatar className="avatar-section" />
+              {isSender && senderData?.profilePhoto && (
+                <img
+                  className="profile-picture"
+                  src={senderData?.profilePhoto}
+                />
+              )}
+
+              {!isSender && receiverData?.profilePhoto && (
+                <img
+                  className="profile-picture"
+                  src={receiverData?.profilePhoto}
+                />
+              )}
+
+              {((isSender && !senderData?.profilePhoto) ||
+                (!isSender && !receiverData?.profilePhoto)) && (
+                <Avatar className="avatar-section" />
+              )}
 
               <div
                 className={`message-content ${

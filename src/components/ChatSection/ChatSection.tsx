@@ -259,6 +259,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           )}
         </div>
         <ChatMessages
+          receiverData={data}
           receiverId={receiverId}
           userId={userId}
           loadingSendMessage={loadingSendMessage}
