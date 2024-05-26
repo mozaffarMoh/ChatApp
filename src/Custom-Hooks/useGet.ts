@@ -21,6 +21,11 @@ const useGet = (endPoint: string): UseGet<any> => {
                 setSuccess(true);
                 setLoading(false);
                 setData(res.data);
+                if (endPoint.includes("logout")) {
+                    Cookies.remove("token");
+                    Cookies.remove("userId");
+                    navigate("/login");
+                }
             })
             .catch((err: any) => {
                 const message = err.response.data;
@@ -36,7 +41,9 @@ const useGet = (endPoint: string): UseGet<any> => {
     };
 
     React.useEffect(() => {
-        getData();
+        if (!endPoint.includes("logout")) {
+            getData();
+        }
     }, [endPoint]);
 
     return [data, loading, getData, success, errorMessage, setData];
