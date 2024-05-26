@@ -3,7 +3,6 @@ import { endPoint } from "../../api/endPoint";
 import { usePut } from "../../Custom-Hooks";
 import "./EditMessage.scss";
 import Loading from "../Loading/Loading";
-import { ToastContainer, toast } from "react-toastify";
 import { EditMessageProps } from "../../Types/components/EditMessage";
 
 const EditMessage: React.FC<EditMessageProps> = ({
@@ -11,6 +10,8 @@ const EditMessage: React.FC<EditMessageProps> = ({
   messageId,
   setShowEditMessage,
   setIsMessageEdited,
+  setErrorEditMessage,
+  setShowMessageSetting,
 }) => {
   const [updatedMessage, setUpdatedMessage] = React.useState<string>("");
   const [editMessageForm, setEditMessageForm] = React.useState<object>({});
@@ -18,8 +19,6 @@ const EditMessage: React.FC<EditMessageProps> = ({
     endPoint.editMessage + messageId,
     editMessageForm
   );
-
-  const EditMessageFail = () => toast(errorMessage);
 
   React.useEffect(() => {
     setEditMessageForm({ message: updatedMessage });
@@ -44,20 +43,21 @@ const EditMessage: React.FC<EditMessageProps> = ({
     if (success) {
       setIsMessageEdited(true);
       setShowEditMessage(false);
+      setShowMessageSetting(false);
     }
     if (errorMessage) {
-      EditMessageFail();
+      setErrorEditMessage(errorMessage);
     }
   }, [success, errorMessage]);
 
   const handleClose = () => {
     setShowEditMessage(false);
+    setShowMessageSetting(false);
   };
 
   return (
     <div className="edit-message">
       {loading && <Loading />}
-      <ToastContainer />
       <input
         value={updatedMessage}
         onChange={(e: any) => setUpdatedMessage(e.target.value)}

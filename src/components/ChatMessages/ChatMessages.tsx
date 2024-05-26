@@ -1,12 +1,17 @@
-import { Avatar, CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress, Stack } from "@mui/material";
 import "./ChatMessages.scss";
 import { IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropleft } from "react-icons/io";
-import { useGet } from "../../Custom-Hooks";
+import { useDelete, useGet } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
 import React from "react";
 import EditMessage from "../EditMessage/EditMessage";
 import { ChatMessagesProps } from "../../Types/components/ChatMessages";
+import { BiX } from "react-icons/bi";
+import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
+import Loading from "../Loading/Loading";
+import { ToastContainer, toast } from "react-toastify";
+import { BsThreeDots } from "react-icons/bs";
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
   receiverData,
@@ -19,14 +24,27 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   receiveMessageSound,
 }) => {
   const messageBoxRef: any = React.useRef(null);
+  const messageSettingRef: any = React.useRef(null);
   const [showEditMessage, setShowEditMessage] = React.useState<boolean>(false);
+  const [showDeleteMessage, setShowDeleteMessage] =
+    React.useState<boolean>(false);
+  const [showMessageSetting, setShowMessageSetting] =
+    React.useState<boolean>(false);
   const [isMessageEdited, setIsMessageEdited] = React.useState<boolean>(false);
+  const [errorEditMessage, setErrorEditMessage] = React.useState<string>("");
   const [currentMessageID, setCurrentMessageID] = React.useState<string>("");
   const [page, setPage] = React.useState<number>(1);
   const [filteredLoading, setFilteredLoading] = React.useState<boolean>(false);
   const [data, loading, getData, success] = useGet(
     endPoint.allMessages + `/${userId}/${receiverId}?page=${page}`
   );
+  const [
+    handleDeleteMessage,
+    deleteMessageLoading,
+    errorDeleteMessage,
+    successDeleteMessage,
+  ] = useDelete(endPoint.deleteMessage + currentMessageID);
+
   const [senderData, , getSenderData] = useGet(endPoint.oneUser + userId);
 
   /* Get sender Data when initial page */
@@ -59,14 +77,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     setPage(1);
     getData();
   }, [receiverId]);
-
-  /* get data when message edites success */
-  React.useEffect(() => {
-    if (isMessageEdited) {
-      getData();
-      setIsMessageEdited(false);
-    }
-  }, [isMessageEdited]);
 
   /* Get data when message sent success */
   React.useEffect(() => {
@@ -111,21 +121,92 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     }
   }, []);
 
-  /* Show Edit Message */
-  const handleShowEditMessage = (isSender: Boolean, messageID: string) => {
+  /* Show Message setting */
+  const handleShowMessageSetting = (
+    isSender: Boolean,
+    messageID: string,
+    e?: any
+  ) => {
+    e.preventDefault();
     if (isSender) {
-      !showEditMessage && setShowEditMessage(true);
       setCurrentMessageID(messageID);
+      !showMessageSetting && setShowMessageSetting(true);
     }
   };
 
+  /* Show Edit Message */
+  const handleShowEditMessage = () => {
+    setShowEditMessage(true);
+  };
+
+  /* Show Delete Message */
+  const handleShowDeleteMessage = () => {
+    setShowDeleteMessage(true);
+  };
+
+  /* show success message and get data if delete or edit message success or fail */
+  const DeleteMessageSuccess = () =>
+    toast("Your message has been deleted successfully.");
+  const EditSuccess = () =>
+    toast("Your message has been updated successfully.");
+
+  const EditMessageFail = () => toast(errorEditMessage);
+  const DeleteMessageFail = () => toast(errorDeleteMessage);
+
+  React.useEffect(() => {
+    if (isMessageEdited) {
+      EditSuccess();
+      getData();
+      setIsMessageEdited(false);
+    }
+    if (errorEditMessage) {
+      errorEditMessage && EditMessageFail();
+      setTimeout(() => {
+        setErrorEditMessage("");
+      }, 3000);
+    }
+    errorDeleteMessage && DeleteMessageFail();
+    if (successDeleteMessage) {
+      DeleteMessageSuccess();
+      getData();
+      setShowDeleteMessage(false);
+      setShowMessageSetting(false);
+    }
+  }, [successDeleteMessage, isMessageEdited]);
+
+  /* Hide message setting or message edit when click outside */
+  React.useEffect(() => {
+    const handelClickOutside = (e: any) => {
+      if (messageSettingRef && !messageSettingRef.current?.contains(e.target)) {
+        setShowMessageSetting(false);
+      }
+      if (messageSettingRef && !messageBoxRef.current?.contains(e.target)) {
+        setShowEditMessage(false);
+      }
+    };
+
+    addEventListener("mousedown", handelClickOutside);
+
+    return () => {
+      removeEventListener("mousedown", handelClickOutside);
+    };
+  }, []);
+
   return (
     <div className="chat-messages" ref={messageBoxRef}>
+      <ToastContainer />
       {filteredLoading && (
         <div className="flexCenter">
           <CircularProgress size={25} />{" "}
         </div>
       )}
+      {deleteMessageLoading && <Loading />}
+      <ConfirmDialog
+        onClose={() => setShowDeleteMessage(false)}
+        open={showDeleteMessage}
+        alertMessage="delete this message"
+        handleDeleteMessage={handleDeleteMessage}
+      />
       {data &&
         data.map((item: any, index: number) => {
           let isSender = item?.sender == userId;
@@ -158,21 +239,63 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 className={`message-content ${
                   isSender && "message-content-sender"
                 } ${isSender && !showEditMessage && "sender-hover"}`}
-                onClick={() => handleShowEditMessage(isSender, item?._id)}
+                onClick={(e: any) =>
+                  handleShowMessageSetting(isSender, item?._id, e)
+                }
+                onContextMenu={(e: any) =>
+                  handleShowMessageSetting(isSender, item?._id, e)
+                }
               >
+                {((isSender && !showEditMessage) ||
+                  (isSender &&
+                    showEditMessage &&
+                    currentMessageID !== item?._id)) && (
+                  <Stack height={1}>
+                    <BsThreeDots />
+                  </Stack>
+                )}
                 {isSender ? (
                   <IoMdArrowDropleft className="left-indicator" />
                 ) : (
                   <IoMdArrowDropright className="right-indicator" />
                 )}
                 {isSender &&
+                  showMessageSetting &&
+                  !showEditMessage &&
+                  currentMessageID === item?._id && (
+                    <div className="message-setting" ref={messageSettingRef}>
+                      <Stack
+                        alignItems={"end"}
+                        onClick={() => setShowMessageSetting(false)}
+                      >
+                        <BiX className="close-icon" size={20} />
+                      </Stack>
+
+                      <div
+                        className="message-setting-item"
+                        onClick={handleShowEditMessage}
+                      >
+                        Edit
+                      </div>
+                      <div
+                        className="message-setting-item"
+                        onClick={handleShowDeleteMessage}
+                      >
+                        Delete
+                      </div>
+                    </div>
+                  )}
+
+                {isSender &&
                 showEditMessage &&
                 currentMessageID === item?._id ? (
                   <EditMessage
                     message={item?.message}
-                    messageId={item?._id}
+                    messageId={currentMessageID}
                     setShowEditMessage={setShowEditMessage}
                     setIsMessageEdited={setIsMessageEdited}
+                    setErrorEditMessage={setErrorEditMessage}
+                    setShowMessageSetting={setShowMessageSetting}
                   />
                 ) : (
                   <div>

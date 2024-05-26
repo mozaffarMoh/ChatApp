@@ -95,13 +95,13 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   /* Check confirm before logout */
   const handleConfirmLogout = () => {
     setShowAlert(true);
-    setAlertMessage("Are you sure you want to Logout ??");
+    setAlertMessage("Logout");
   };
 
   /* Check confirm before delete account */
   const handleConfirmDeleteAccount = () => {
     setShowAlert(true);
-    setAlertMessage("Are you sure you want to delete your account ??");
+    setAlertMessage("delete your account");
   };
 
   /* Close confirm dialog */

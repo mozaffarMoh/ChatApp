@@ -7,15 +7,23 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   onClose,
   handleLogout,
   handelDeleteUser,
+  handleDeleteMessage,
   alertMessage,
 }) => {
   const handleConfirm = () => {
-    alertMessage.includes("delete") && handelDeleteUser();
-    alertMessage.includes("Logout") && handleLogout();
+    if (handleDeleteMessage && alertMessage.includes("message")) {
+      handleDeleteMessage();
+    }
+    if (handelDeleteUser && alertMessage.includes("account")) {
+      handelDeleteUser();
+    }
+    if (handleLogout && alertMessage.includes("Logout")) {
+      handleLogout();
+    }
   };
   return (
     <Dialog className="logout-alert" open={open} onClose={onClose}>
-      <DialogTitle>{alertMessage}</DialogTitle>
+      <DialogTitle>Are you sure you want to {alertMessage} ??</DialogTitle>
       <DialogActions>
         <Button variant="contained" color="error" onClick={onClose}>
           Cancel

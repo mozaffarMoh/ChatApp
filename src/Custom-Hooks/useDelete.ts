@@ -17,12 +17,15 @@ const useDelete = (endPoint: string): UseDelete => {
             .delete(endPoint)
             .then(() => {
                 setLoading(false);
-                setSuccessMessage("Delete account has been successful")
+                setSuccessMessage("Your account has been deleted successfully.")
                 setTimeout(() => {
-                    Cookies.remove("token");
-                    Cookies.remove("userId");
-                    navigate("/login");
-                }, 4000);
+                    if (endPoint.includes('users')) {
+                        Cookies.remove("token");
+                        Cookies.remove("userId");
+                        navigate("/login");
+                    }
+                    setSuccessMessage("")
+                }, 3000);
             })
             .catch((err) => {
                 setLoading(false);
@@ -36,13 +39,11 @@ const useDelete = (endPoint: string): UseDelete => {
 
                 if (err?.response?.data) {
                     setErrorMessage(err.response.data.error);
-
-                    setTimeout(() => {
-                        setErrorMessage("");
-                    }, 4000);
                 }
-
-                console.log(err);
+                
+                setTimeout(() => {
+                    setErrorMessage("");
+                }, 4000);
 
             });
     };
