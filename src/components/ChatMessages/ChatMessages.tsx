@@ -145,14 +145,13 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   };
 
   /* show success message and get data if delete or edit message success or fail */
-  const DeleteMessageSuccess = () =>
-    toast("Your message has been deleted successfully.");
-  const EditSuccess = () =>
-    toast("Your message has been updated successfully.");
-
-  const EditMessageFail = () => toast(errorEditMessage);
-  const DeleteMessageFail = () => toast(errorDeleteMessage);
   React.useEffect(() => {
+    const DeleteMessageSuccess = () =>
+      toast("Your message has been deleted successfully.");
+    const EditSuccess = () =>
+      toast("Your message has been updated successfully.");
+    const EditMessageFail = () => toast(errorEditMessage);
+    const DeleteMessageFail = () => toast(errorDeleteMessage);
     if (isMessageEdited) {
       EditSuccess();
       getData();
