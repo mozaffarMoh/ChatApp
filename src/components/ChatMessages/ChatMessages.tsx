@@ -13,6 +13,7 @@ import Loading from "../Loading/Loading";
 import { toast } from "react-toastify";
 import { BsThreeDots } from "react-icons/bs";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
   receiverData,
@@ -131,7 +132,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     e.preventDefault();
     if (isSender) {
       setCurrentMessageID(messageID);
-      !showMessageSetting && setShowMessageSetting(true);
+      !showMessageSetting &&
+        !messageSettingRef.current &&
+        setShowMessageSetting(true);
     }
   };
 
@@ -276,33 +279,41 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 ) : (
                   <IoMdArrowDropright className="right-indicator" />
                 )}
-                {isSender &&
-                  showMessageSetting &&
-                  !showEditMessage &&
-                  currentMessageID === item?._id && (
-                    <div className="message-setting" ref={messageSettingRef}>
-                      <Stack
-                        alignItems={"end"}
-                        onClick={() => setShowMessageSetting(false)}
+                <AnimatePresence>
+                  {isSender &&
+                    showMessageSetting &&
+                    !showEditMessage &&
+                    currentMessageID === item?._id && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="message-setting"
+                        ref={messageSettingRef}
                       >
-                        <BiX className="close-icon" size={20} />
-                      </Stack>
+                        <Stack
+                          alignItems={"end"}
+                          onClick={() => setShowMessageSetting(false)}
+                        >
+                          <BiX className="close-icon" size={20} />
+                        </Stack>
 
-                      <div
-                        className="message-setting-item"
-                        onClick={handleShowEditMessage}
-                      >
-                        Edit
-                      </div>
-                      <div
-                        className="message-setting-item"
-                        onClick={handleShowDeleteMessage}
-                      >
-                        Delete
-                      </div>
-                    </div>
-                  )}
-
+                        <div
+                          className="message-setting-item"
+                          onClick={handleShowEditMessage}
+                        >
+                          Edit
+                        </div>
+                        <div
+                          className="message-setting-item"
+                          onClick={handleShowDeleteMessage}
+                        >
+                          Delete
+                        </div>
+                      </motion.div>
+                    )}
+                </AnimatePresence>
                 {isSender &&
                 showEditMessage &&
                 currentMessageID === item?._id ? (
