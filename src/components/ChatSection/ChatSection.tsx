@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootType } from "../../store";
 import React from "react";
 import { usePost } from "../../Custom-Hooks";
-import getCurrentTime from "../../assets/constants/getCurrentTime";
 import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmile, BsEmojiSmileFill } from "react-icons/bs";
 import { Howl } from "howler";
@@ -130,7 +129,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       message,
       sender: userId,
       receiver: receiverId,
-      timestamp: getCurrentTime(),
     });
   }, [message]);
 
@@ -188,6 +186,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       setIsVoiceCall(true);
     }
   };
+
+
 
   return (
     <div

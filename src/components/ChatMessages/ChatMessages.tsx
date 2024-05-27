@@ -12,6 +12,7 @@ import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 import Loading from "../Loading/Loading";
 import { toast } from "react-toastify";
 import { BsThreeDots } from "react-icons/bs";
+import { format, isToday, isYesterday, parseISO } from "date-fns";
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
   receiverData,
@@ -190,6 +191,25 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     };
   }, []);
 
+  /* change time fromat to check time left message */
+  const formatTimestamp = (timestamp: any) => {
+    const isValidTimestamp = (timestamp: any) => {
+      const date = new Date(timestamp);
+      return !isNaN(date.getTime());
+    };
+    if (!isValidTimestamp(timestamp)) {
+      return "00:00";
+    }
+    const date = parseISO(timestamp);
+    if (isToday(date)) {
+      return format(date, "hh:mm a");
+    } else if (isYesterday(date)) {
+      return `Yesterday ${format(date, "hh:mm a")}`;
+    } else {
+      return format(date, "MM/dd/yyyy hh:mm a");
+    }
+  };
+
   return (
     <div className="chat-messages" ref={messageBoxRef}>
       {filteredLoading && (
@@ -304,7 +324,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                         marginRight: item?.sender !== userId ? "10px" : "",
                       }}
                     >
-                      {item.timestamp}
+                      {formatTimestamp(item.timestamp)}
                     </p>
                   </div>
                 )}
