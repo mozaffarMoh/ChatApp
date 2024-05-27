@@ -5,7 +5,7 @@ const baseApi = axios.create({
     baseURL: "https://test-node-js-ze6q.onrender.com",
     headers: {
         "Content-Type": "application/json",
-    },
+    }, 
 });
 
 //https://test-node-js-ze6q.onrender.com
