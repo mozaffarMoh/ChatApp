@@ -31,6 +31,7 @@ const Home: React.FC = () => {
 
   return token ? (
     <div className="home flexCenter">
+  
       {!showUserChat && (
         <Users
           isSmallScreen={isSmallScreen}

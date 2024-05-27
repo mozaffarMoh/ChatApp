@@ -2,7 +2,7 @@ import { Avatar, Button } from "@mui/material";
 import "./Register.scss";
 import { Link } from "react-router-dom";
 import { Loading } from "../../components";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import React from "react";
 import { useInput, usePost } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
@@ -139,7 +139,6 @@ const Register: React.FC = () => {
   return (
     <div className="register flexCenter">
       {loading && <Loading />}
-      <ToastContainer />
       <form
         className="register-field flexCenterColumn"
         onSubmit={handleSubmit(handleRegister)}

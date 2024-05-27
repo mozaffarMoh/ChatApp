@@ -21,7 +21,7 @@ import { setCallerName } from "../../Slices/callerNameSlice";
 import { UsersProps } from "../../Types/components/Users";
 import { MdNoAccounts } from "react-icons/md";
 import Loading from "../Loading/Loading";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 
 const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
@@ -127,7 +127,6 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
 
   return (
     <div className="users flexStartColumnItemsCenter">
-      <ToastContainer />
       {(deleteUserLoading || logoutLoading) && <Loading />}
       <div className="header-container flexBetween">
         <Tooltip

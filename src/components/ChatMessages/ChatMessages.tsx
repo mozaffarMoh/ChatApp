@@ -10,7 +10,7 @@ import { ChatMessagesProps } from "../../Types/components/ChatMessages";
 import { BiX } from "react-icons/bi";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 import Loading from "../Loading/Loading";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { BsThreeDots } from "react-icons/bs";
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -152,7 +152,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
   const EditMessageFail = () => toast(errorEditMessage);
   const DeleteMessageFail = () => toast(errorDeleteMessage);
-
   React.useEffect(() => {
     if (isMessageEdited) {
       EditSuccess();
@@ -194,7 +193,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
   return (
     <div className="chat-messages" ref={messageBoxRef}>
-      <ToastContainer />
       {filteredLoading && (
         <div className="flexCenter">
           <CircularProgress size={25} />{" "}

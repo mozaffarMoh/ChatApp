@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import "./Login.scss";
 import { Link } from "react-router-dom";
 import { Loading } from "../../components";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import React from "react";
 import { endPoint } from "../../api/endPoint";
 import { IoMdEye } from "react-icons/io";
@@ -109,7 +109,6 @@ const Login: React.FC = () => {
   return (
     <div className="login flexCenter">
       {loading && <Loading />}
-      <ToastContainer />
       <form
         className="login-field flexCenterColumn"
         onSubmit={handleSubmit(handleLogin)}
