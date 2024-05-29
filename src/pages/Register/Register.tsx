@@ -11,6 +11,7 @@ import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { RegisterFormData } from "../../Types/Auth";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
 const Register: React.FC = () => {
   const [inputFormData, handleChangeInputData, setInputFormData] = useInput();
@@ -21,6 +22,11 @@ const Register: React.FC = () => {
   const [handleRegisterPost, loading, success, errorMessage] = usePost(
     endPoint.register,
     inputFormData
+  );
+  const [gmailToken, setGmailToken] = React.useState<object>({});
+  const [handleRegisterWithGoogle] = usePost(
+    endPoint.registerGoogle,
+    gmailToken
   );
   const {
     register,
@@ -136,80 +142,109 @@ const Register: React.FC = () => {
     setInputFormData({ ...inputFormData, profilePhoto: "" });
   };
 
+  /* GOOGLE credential */
+  const handleGoogleSuccess = async (response: any) => {
+    setGmailToken({
+      token: response.credential,
+    });
+  };
+  React.useEffect(() => {
+    if (gmailToken) {
+      handleRegisterWithGoogle();
+    }
+  }, [gmailToken]);
+
+  const handleGoogleError = () => {
+    console.error("Google login failed");
+  };
+
   return (
-    <div className="register flexCenter">
-      {loading && <Loading />}
-      <form
-        className="register-field flexCenterColumn"
-        onSubmit={handleSubmit(handleRegister)}
-      >
-        <h1>SIGN-UP</h1>
-        <div className="profile-image-section">
-          <label className="upload-photo flexCenter " htmlFor="select-image-id">
-            <input
-              type="file"
-              id="select-image-id"
-              hidden
-              onChange={handleImage}
-            />
-            <p>{inputFormData?.profilePhoto ? "Update" : "Upload"} Photo</p>
-          </label>
-          {!inputFormData?.profilePhoto ? (
-            <Avatar className="avatar-section" />
-          ) : (
-            <img src={inputFormData.profilePhoto} alt="" />
-          )}{" "}
-        </div>
-        {inputFormData?.profilePhoto && (
-          <Button variant="outlined" color="error" onClick={handleRemovePhoto}>
-            Remove Photo
-          </Button>
-        )}
-        {inputArray.map((item: any, index: number) => {
-          return (
-            <div className="input-fields" key={index}>
-              <input
-                placeholder={item.placeholder}
-                name={item.name}
-                type={item.type}
-                value={item.value}
-                {...item?.validation}
-                onChange={(e: any) => handleChangeInputData(e.target)}
-                onKeyDown={handleRegisterEnterKey}
-              />
-              {item?.name == "password" && (
-                <div
-                  className="show-passord-control flexCenter"
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                >
-                  {isPasswordVisible ? (
-                    <IoMdEye size={30} color="#3543be" />
-                  ) : (
-                    <IoMdEyeOff size={30} color="#3543be" />
-                  )}
-                </div>
-              )}{" "}
-            </div>
-          );
-        })}{" "}
-        {(errors.username || errors.email || errors.password) && (
-          <div className="error-message-validation">
-            {errors.username?.message ||
-              errors.email?.message ||
-              errors.password?.message}
-          </div>
-        )}
-        <Button
-          type="submit"
-          variant="contained"
-          color="info"
-          className="register-button"
+    <GoogleOAuthProvider clientId="202948221783-m98hb00hfk2d0v73bqrrev24f0ubui74.apps.googleusercontent.com">
+      <div className="register flexCenter">
+        {loading && <Loading />}
+        <form
+          className="register-field flexCenterColumn"
+          onSubmit={handleSubmit(handleRegister)}
         >
-          Create account
-        </Button>
-        <Link to={"/login"}>Login</Link>
-      </form>
-    </div>
+          <h1>SIGN-UP</h1>
+          <div className="profile-image-section">
+            <label
+              className="upload-photo flexCenter "
+              htmlFor="select-image-id"
+            >
+              <input
+                type="file"
+                id="select-image-id"
+                hidden
+                onChange={handleImage}
+              />
+              <p>{inputFormData?.profilePhoto ? "Update" : "Upload"} Photo</p>
+            </label>
+            {!inputFormData?.profilePhoto ? (
+              <Avatar className="avatar-section" />
+            ) : (
+              <img src={inputFormData.profilePhoto} alt="" />
+            )}{" "}
+          </div>
+          {inputFormData?.profilePhoto && (
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleRemovePhoto}
+            >
+              Remove Photo
+            </Button>
+          )}
+          {inputArray.map((item: any, index: number) => {
+            return (
+              <div className="input-fields" key={index}>
+                <input
+                  placeholder={item.placeholder}
+                  name={item.name}
+                  type={item.type}
+                  value={item.value}
+                  {...item?.validation}
+                  onChange={(e: any) => handleChangeInputData(e.target)}
+                  onKeyDown={handleRegisterEnterKey}
+                />
+                {item?.name == "password" && (
+                  <div
+                    className="show-passord-control flexCenter"
+                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  >
+                    {isPasswordVisible ? (
+                      <IoMdEye size={30} color="#3543be" />
+                    ) : (
+                      <IoMdEyeOff size={30} color="#3543be" />
+                    )}
+                  </div>
+                )}{" "}
+              </div>
+            );
+          })}{" "}
+          {(errors.username || errors.email || errors.password) && (
+            <div className="error-message-validation">
+              {errors.username?.message ||
+                errors.email?.message ||
+                errors.password?.message}
+            </div>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="info"
+            className="register-button"
+          >
+            Create account
+          </Button>
+          <Link to={"/login"}>Login</Link>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+          />
+        </form>
+      </div>
+    </GoogleOAuthProvider>
   );
 };
 

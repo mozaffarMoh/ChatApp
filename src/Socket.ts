@@ -1,6 +1,6 @@
 // socket.ts
 import io from 'socket.io-client';
 
-const Socket = io('https://test-node-js-ze6q.onrender.com');
+const Socket = io('https://chatappapi-2w5v.onrender.com');
 
 export default Socket;

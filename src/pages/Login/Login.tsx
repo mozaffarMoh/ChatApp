@@ -10,6 +10,7 @@ import { IoMdEyeOff } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { useInput, usePost } from "../../Custom-Hooks";
 import { LoginFormData } from "../../Types/Auth";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
 const Login: React.FC = () => {
   const [inputFormData, handleChangeInputData, setInputFormData] = useInput();
@@ -20,7 +21,11 @@ const Login: React.FC = () => {
     endPoint.login,
     inputFormData
   );
-
+  const [gmailToken, setGmailToken] = React.useState<object>({});
+  const [handleRegisterWithGoogle] = usePost(
+    endPoint.registerGoogle,
+    gmailToken
+  );
   let {
     register,
     handleSubmit,
@@ -106,52 +111,74 @@ const Login: React.FC = () => {
     }
   }, [success, errorMessage]);
 
+  /* GOOGLE credential */
+  const handleGoogleSuccess = async (response: any) => {
+    setGmailToken({
+      token: response.credential,
+    });
+  };
+  React.useEffect(() => {
+    if (gmailToken) {
+      handleRegisterWithGoogle();
+    }
+  }, [gmailToken]);
+
+  const handleGoogleError = () => {
+    console.error("Google login failed");
+  };
+
   return (
-    <div className="login flexCenter">
-      {loading && <Loading />}
-      <form
-        className="login-field flexCenterColumn"
-        onSubmit={handleSubmit(handleLogin)}
-      >
-        <h1>Login</h1>
-        {inputArray.map((item: any, index: number) => {
-          return (
-            <div className="input-fields" key={index}>
-              <input
-                placeholder={item.placeholder}
-                name={item.name}
-                type={item.type}
-                value={item?.value}
-                {...item?.validation}
-                onChange={(e: any) => handleChangeInputData(e.target)}
-                onKeyDown={handleLoginEnterKey}
-              />
-              {item?.name == "password" && (
-                <div
-                  className="show-passord-control flexCenter"
-                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                >
-                  {isPasswordVisible ? (
-                    <IoMdEye size={30} color="#3543be" />
-                  ) : (
-                    <IoMdEyeOff size={30} color="#3543be" />
-                  )}
-                </div>
-              )}
+    <GoogleOAuthProvider clientId="202948221783-m98hb00hfk2d0v73bqrrev24f0ubui74.apps.googleusercontent.com">
+      <div className="login flexCenter">
+        {loading && <Loading />}
+        <form
+          className="login-field flexCenterColumn"
+          onSubmit={handleSubmit(handleLogin)}
+        >
+          <h1>Login</h1>
+          {inputArray.map((item: any, index: number) => {
+            return (
+              <div className="input-fields" key={index}>
+                <input
+                  placeholder={item.placeholder}
+                  name={item.name}
+                  type={item.type}
+                  value={item?.value}
+                  {...item?.validation}
+                  onChange={(e: any) => handleChangeInputData(e.target)}
+                  onKeyDown={handleLoginEnterKey}
+                />
+                {item?.name == "password" && (
+                  <div
+                    className="show-passord-control flexCenter"
+                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  >
+                    {isPasswordVisible ? (
+                      <IoMdEye size={30} color="#3543be" />
+                    ) : (
+                      <IoMdEyeOff size={30} color="#3543be" />
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}{" "}
+          {(errors.email || errors.password) && (
+            <div className="error-message-validation">
+              {errors.email?.message || errors.password?.message}
             </div>
-          );
-        })}{" "}
-        {(errors.email || errors.password) && (
-          <div className="error-message-validation">
-            {errors.email?.message || errors.password?.message}
-          </div>
-        )}
-        <Button type="submit" variant="contained" color="info">
-          Login
-        </Button>
-        <Link to={"/sign-up"}>Create account</Link>
-      </form>
-    </div>
+          )}
+          <Button type="submit" variant="contained" color="info">
+            Login
+          </Button>
+          <Link to={"/sign-up"}>Create account</Link>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+          />
+        </form>
+      </div>
+    </GoogleOAuthProvider>
   );
 };
 

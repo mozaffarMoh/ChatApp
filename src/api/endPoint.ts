@@ -1,6 +1,7 @@
 export const endPoint = {
     login: '/login',
     register: '/register',
+    registerGoogle: '/register/google',
     logout: '/logout',
     allUsers: '/users',
     oneUser: '/users/',

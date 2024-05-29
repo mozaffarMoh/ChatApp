@@ -2,13 +2,13 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 
 const baseApi = axios.create({
-    baseURL: "https://test-node-js-ze6q.onrender.com",
+    baseURL: "https://chatappapi-2w5v.onrender.com",
     headers: {
         "Content-Type": "application/json",
     }, 
 });
 
-//https://test-node-js-ze6q.onrender.com
+//https://chatappapi-2w5v.onrender.com
 //http://localhost:8080
 
 baseApi.interceptors.request.use(

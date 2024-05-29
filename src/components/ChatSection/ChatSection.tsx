@@ -70,7 +70,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
   // Socket Code
   React.useEffect(() => {
-    const socket = io("https://test-node-js-ze6q.onrender.com");
+    const socket = io("https://chatappapi-2w5v.onrender.com");
     socketRef.current = socket;
 
     const handleReceiveMessage = (messageReceiverID: string) => {

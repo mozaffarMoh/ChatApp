@@ -95,12 +95,21 @@
         .register-button {
             width: 100%;
             height: 50px;
-            margin-top: 20px;
+            margin: 20px 0px;
 
             background-color: #7b46dd;
 
             &:hover {
                 background-color: #7b46dd99;
+            }
+        }
+
+        div[aria-labelledby="button-label"] {
+            width: 250px;
+            height: 50px;
+
+            &:hover {
+                background-color: rgb(240, 236, 236);
             }
         }
 
@@ -110,7 +119,7 @@
             text-decoration: none;
             font-size: 18px;
             color: #12128a;
-            margin-top: 20px;
+            margin-bottom: 20px;
             font-weight: 800;
             transition: all .3s ease;
 
