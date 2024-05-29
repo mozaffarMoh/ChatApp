@@ -12,13 +12,16 @@ const usePost = <T,>(endPoint: string, body: object): UsePost<T> => {
     const [loading, setLoading] = React.useState<boolean>(false);
     const [errorMessage, setErrorMessage] = React.useState<string>("");
     const [success, setSuccess] = React.useState<boolean>(false);
+    const [successMessage, setSuccessMessage] = React.useState<string>("");
+
 
     const handlePost = () => {
         setLoading(true);
         setSuccess(false);
         baseApi
-            .post(endPoint, body)
-            .then((res) => {
+        .post(endPoint, body)
+        .then((res) => {
+                setSuccessMessage(res?.data?.message)
                 setLoading(false);
                 setData(res.data);
                 setSuccess(true);
@@ -57,7 +60,7 @@ const usePost = <T,>(endPoint: string, body: object): UsePost<T> => {
             });
     };
 
-    return [handlePost, loading, success, errorMessage, data];
+    return [handlePost, loading, success, errorMessage, data, successMessage];
 };
 
 export default usePost;

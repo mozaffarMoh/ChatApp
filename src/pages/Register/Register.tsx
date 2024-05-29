@@ -23,11 +23,15 @@ const Register: React.FC = () => {
     endPoint.register,
     inputFormData
   );
-  const [gmailToken, setGmailToken] = React.useState<object>({});
-  const [handleRegisterWithGoogle] = usePost(
-    endPoint.registerGoogle,
-    gmailToken
-  );
+  const [gmailToken, setGmailToken] = React.useState<object | any>(null);
+  const [
+    handleRegisterWithGoogle,
+    googleLoading,
+    googleSuccess,
+    ,
+    ,
+    googleSuccessMessage,
+  ] = usePost(endPoint.registerGoogle, gmailToken);
   const {
     register,
     handleSubmit,
@@ -153,6 +157,12 @@ const Register: React.FC = () => {
       handleRegisterWithGoogle();
     }
   }, [gmailToken]);
+  React.useEffect(() => {
+    const successGoogle = () => toast(googleSuccessMessage);
+    if (googleSuccess) {
+      successGoogle();
+    }
+  }, [googleSuccess, googleSuccessMessage]);
 
   const handleGoogleError = () => {
     console.error("Google login failed");
@@ -161,7 +171,7 @@ const Register: React.FC = () => {
   return (
     <GoogleOAuthProvider clientId="202948221783-m98hb00hfk2d0v73bqrrev24f0ubui74.apps.googleusercontent.com">
       <div className="register flexCenter">
-        {loading && <Loading />}
+        {(loading || googleLoading) && <Loading />}
         <form
           className="register-field flexCenterColumn"
           onSubmit={handleSubmit(handleRegister)}

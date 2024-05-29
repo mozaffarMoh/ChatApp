@@ -33,7 +33,8 @@ export type UsePost<T> = [
     boolean,
     boolean,
     string,
-    T
+    T,
+    string,
 ];
 
 
