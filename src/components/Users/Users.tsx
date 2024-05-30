@@ -60,8 +60,8 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   /* Store the first value of users to user details in chat section*/
   React.useEffect(() => {
     if (users.length > 0) {
-      dispatch(setReceiverId(users[0]?._id));
-      dispatch(setCallerName(users[0]?.username));
+      dispatch(setReceiverId(users[0]._id));
+      dispatch(setCallerName(users[0].username));
     }
   }, [users]);
 

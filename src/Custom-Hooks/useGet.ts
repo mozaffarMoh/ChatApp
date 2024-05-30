@@ -28,8 +28,8 @@ const useGet = (endPoint: string): UseGet<any> => {
                 }
             })
             .catch((err: any) => {
+                setLoading(false)
                 const message = err.response.data;
-
                 if (message === "Forbidden" || message === "Unauthorized") {
                     Cookies.remove("token");
                     Cookies.remove("userId");
@@ -41,7 +41,7 @@ const useGet = (endPoint: string): UseGet<any> => {
     };
 
     React.useEffect(() => {
-        if (!endPoint.includes("logout")) {
+        if (!endPoint.includes("logout" || "one-user")) {
             getData();
         }
     }, [endPoint]);

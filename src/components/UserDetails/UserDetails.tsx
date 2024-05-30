@@ -25,7 +25,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
     if (myData && myData?._id == userId) {
       !showUpdateProfile && setShowUpdateProfile(true);
     } else {
-      handleShowUserChat(item?._id);
+      item && handleShowUserChat(item?._id);
     }
   };
 
@@ -70,7 +70,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
         )}
       </div>
 
-      {loading && (
+      {loading && !myData && (
         <CircularProgress
           color="primary"
           size={20}

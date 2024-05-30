@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { BsThreeDots } from "react-icons/bs";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMessagesCache } from "../../Context/MessagesContext";
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
   receiverData,
@@ -25,6 +26,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   setIsMessageReceived,
   receiveMessageSound,
 }) => {
+  const { messagesCache, setMessagesCache }: any = useMessagesCache();
   const messageBoxRef: any = React.useRef(null);
   const messageSettingRef: any = React.useRef(null);
   const [showEditMessage, setShowEditMessage] = React.useState<boolean>(false);
@@ -36,7 +38,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   const [errorEditMessage, setErrorEditMessage] = React.useState<string>("");
   const [currentMessageID, setCurrentMessageID] = React.useState<string>("");
   const [page, setPage] = React.useState<number>(1);
-  const [filteredLoading, setFilteredLoading] = React.useState<boolean>(false);
+  //const [filteredLoading, setFilteredLoading] = React.useState<boolean>(false);
   const [data, loading, getData, success] = useGet(
     endPoint.allMessages + `/${userId}/${receiverId}?page=${page}`
   );
@@ -55,7 +57,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   }, []);
 
   /* get data when page value change */
-  React.useEffect(() => {
+  /*   React.useEffect(() => {
     if (page > 1) {
       setFilteredLoading(true);
       getData();
@@ -63,7 +65,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         setFilteredLoading(false);
       }, 2000);
     }
-  }, [page]);
+  }, [page]); */
 
   /* Get Data when message received by web stock */
   React.useEffect(() => {
@@ -74,10 +76,23 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     }
   }, [isMessageReceived]);
 
+  /* Scroll to bottom */
+  const scrollToBottom = () => {
+    if (messageBoxRef.current) {
+      messageBoxRef.current.scrollTo({
+        top: messageBoxRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
   /* get data when receiverId value change */
   React.useEffect(() => {
     setPage(1);
-    getData();
+    if (!messagesCache[receiverData]) {
+      getData();
+    } else {
+      scrollToBottom();
+    }
   }, [receiverId]);
 
   /* Get data when message sent success */
@@ -85,20 +100,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     if (isSuccessMessage) {
       getData();
     }
-  }, [isSuccessMessage]);
-
-  /* Scroll to bottom */
-  React.useEffect(() => {
-    if (
-      (success && page == 1 && messageBoxRef.current) ||
-      (isSuccessMessage && messageBoxRef.current)
-    ) {
-      messageBoxRef.current.scrollTo({
-        top: messageBoxRef.current.scrollHeight,
-        behavior: "smooth",
-      });
+    if ((success && page == 1) || isSuccessMessage) {
+      scrollToBottom();
     }
-  }, [success, isSuccessMessage]);
+  }, [isSuccessMessage, success]);
 
   /* Get filtered data when scroll is go to top */
   React.useEffect(() => {
@@ -213,9 +218,21 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     }
   };
 
+  React.useEffect(() => {
+    if (success && data) {
+      setMessagesCache((prevCache: any) => ({
+        ...prevCache,
+        [receiverId]: {
+          messages: data,
+          page,
+        },
+      }));
+    }
+  }, [success, data]);
+
   return (
     <div className="chat-messages" ref={messageBoxRef}>
-      {filteredLoading && (
+      {loading && page > 1 && (
         <div className="flexCenter">
           <CircularProgress size={25} />{" "}
         </div>
@@ -228,7 +245,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         handleDeleteMessage={handleDeleteMessage}
       />
       {data &&
-        data.map((item: any, index: number) => {
+        messagesCache[receiverId] &&
+        messagesCache[receiverId].messages.map((item: any, index: number) => {
           let isSender = item?.sender == userId;
           return (
             <div
@@ -326,7 +344,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     setShowMessageSetting={setShowMessageSetting}
                   />
                 ) : (
-                  <div>
+                  <div className="message-details">
                     <p>{item.message}</p>
                     <p
                       className="message-timestamp"
@@ -343,7 +361,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             </div>
           );
         })}
-      {data.length == 0 && page == 1 && !loadingSendMessage && (
+      {!messagesCache[receiverId] && page == 1 && !loadingSendMessage && (
         <div className="sub-container flexCenter">
           {loading && <CircularProgress />}
           {success && <h2>Start your first message</h2>}

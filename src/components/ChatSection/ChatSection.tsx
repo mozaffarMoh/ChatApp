@@ -21,12 +21,14 @@ import { setRefreshUsers } from "../../Slices/refreshUsers";
 import { BiPhoneCall, BiVideo } from "react-icons/bi";
 import CallSection from "../CallSection/CallSection";
 import { ChatSectionProps } from "../../Types/components/ChatSection";
+import { useUserDetails } from "../../Context/UserDetailsProvider";
 
 const ChatSection: React.FC<ChatSectionProps> = ({
   showUserChat,
   setShowUserChat,
   isSmallScreen,
 }) => {
+  const { userDetails, setUserDetails }: any = useUserDetails();
   const dispatch = useDispatch();
   const userId = Cookies.get("userId");
   const emojiRef = React.useRef<any>(null);
@@ -54,7 +56,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     (state: RootType) => state.refreshUsers.value
   );
   const CallerName = useSelector((state: RootType) => state.CallerName.value);
-  const [data, loading, getData, success, , setData] = useGet(
+  const [data, loading, getData, , , setData] = useGet(
     endPoint.oneUser + receiverId
   );
   const [sendMessagePost, loadingSendMessage, isSuccessMessage] = usePost(
@@ -108,9 +110,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
   /* refresh user details when receiverId changed */
   React.useEffect(() => {
-    setData({});
-    getData();
+    if (!userDetails[receiverId]) {
+      getData();
+    }
   }, [receiverId]);
+
+  /* store user details in context */
+  React.useEffect(() => {
+    if (!userDetails[receiverId] && data?._id == receiverId) {
+      setUserDetails((prevCache: any) => {
+        return { ...prevCache, [receiverId]: data };
+      });
+    }
+  }, [data]);
 
   /* refersh user data when profile updated */
   React.useEffect(() => {
@@ -187,8 +199,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }
   };
 
-
-
   return (
     <div
       className={`chat-section flexStartColumnItemsCenter ${
@@ -219,9 +229,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       )}
 
       <div className="user-section">
-        <UserDetails isInChatSection={true} myData={data} loading={loading} />
+        <UserDetails
+          isInChatSection={true}
+          myData={userDetails[receiverId]}
+          loading={loading}
+        />
         <div className="header-tools">
-          {userId !== receiverId && success && (
+          {userId !== receiverId && (
             <Tooltip
               title="Video Call"
               arrow
@@ -233,7 +247,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
               </IconButton>
             </Tooltip>
           )}
-          {userId !== receiverId && success && (
+          {userId !== receiverId && (
             <Tooltip
               title="Voice Call"
               arrow
