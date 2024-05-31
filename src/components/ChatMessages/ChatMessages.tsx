@@ -70,7 +70,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     if (messageBoxRef.current) {
       messageBoxRef.current.scrollTo({
         top: messageBoxRef.current.scrollHeight,
-        behavior: "smooth",
       });
     }
   };
@@ -87,7 +86,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     scrollToBottom();
   }, [receiverId]);
 
-
   React.useEffect(() => {
     if (
       (messagesCache[receiverId] &&
@@ -103,12 +101,15 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           messages: data?.messages,
           page,
           receiverId: receiverId,
+          total: data?.total,
         },
       }));
     }
-
-    page == 1 && loading && scrollToBottom();
   }, [data]);
+
+  React.useEffect(() => {
+    page == 1 && scrollToBottom();
+  }, [messagesCache[receiverId]]);
 
   /* Get data when message sent success */
   React.useEffect(() => {
@@ -224,7 +225,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
       )}
       {messagesCache[receiverId] &&
         messagesCache[receiverId]?.messages?.length > 0 &&
-        messagesCache[receiverId]?.messages?.length < data?.total &&
+        messagesCache[receiverId]?.messages?.length <
+          messagesCache[receiverId]?.total &&
         !loading && (
           <Stack alignItems={"center"}>
             <IoIosArrowDropup
