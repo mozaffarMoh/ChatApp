@@ -1,6 +1,6 @@
 import { Avatar, CircularProgress, Stack } from "@mui/material";
 import "./ChatMessages.scss";
-import { IoMdArrowDropright } from "react-icons/io";
+import { IoIosArrowDropup, IoMdArrowDropright } from "react-icons/io";
 import { IoMdArrowDropleft } from "react-icons/io";
 import { useDelete, useGet } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
@@ -38,9 +38,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   const [errorEditMessage, setErrorEditMessage] = React.useState<string>("");
   const [currentMessageID, setCurrentMessageID] = React.useState<string>("");
   const [page, setPage] = React.useState<number>(1);
-  //const [filteredLoading, setFilteredLoading] = React.useState<boolean>(false);
   const [data, loading, getData, success] = useGet(
-    endPoint.allMessages + `/${userId}/${receiverId}?page=${page}`
+    endPoint.allMessages +
+      `/${userId}/${receiverId}?page=${!messagesCache[receiverId] ? 1 : page}`
   );
   const [
     handleDeleteMessage,
@@ -55,17 +55,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   React.useEffect(() => {
     getSenderData();
   }, []);
-
-  /* get data when page value change */
-  /*   React.useEffect(() => {
-    if (page > 1) {
-      setFilteredLoading(true);
-      getData();
-      setTimeout(() => {
-        setFilteredLoading(false);
-      }, 2000);
-    }
-  }, [page]); */
 
   /* Get Data when message received by web stock */
   React.useEffect(() => {
@@ -85,48 +74,54 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
       });
     }
   };
+
   /* get data when receiverId value change */
   React.useEffect(() => {
-    setPage(1);
-    if (!messagesCache[receiverData]) {
+    if (!messagesCache[receiverId]) {
+      setPage(1);
       getData();
     } else {
-      scrollToBottom();
+      setPage(messagesCache[receiverId].page);
     }
+
+    scrollToBottom();
   }, [receiverId]);
+
+  React.useEffect(() => {
+    if (
+      (messagesCache[receiverId] &&
+        messagesCache[receiverId].receiverId == receiverId) ||
+      (!messagesCache[receiverId] &&
+        data &&
+        (data[0]?.sender == receiverId || data[0]?.receiver == receiverId))
+    ) {
+      setMessagesCache((prevCache: any) => ({
+        ...prevCache,
+        [receiverId]: {
+          messages: data,
+          page,
+          receiverId: receiverId,
+        },
+      }));
+    }
+
+    page == 1 && loading && scrollToBottom();
+  }, [data]);
 
   /* Get data when message sent success */
   React.useEffect(() => {
-    if (isSuccessMessage) {
+    isSuccessMessage && getData();
+  }, [isSuccessMessage]);
+
+  const handleShowMore = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  React.useEffect(() => {
+    if (messagesCache[receiverId] && page > messagesCache[receiverId]?.page) {
       getData();
     }
-    if ((success && page == 1) || isSuccessMessage) {
-      scrollToBottom();
-    }
-  }, [isSuccessMessage, success]);
-
-  /* Get filtered data when scroll is go to top */
-  React.useEffect(() => {
-    if (messageBoxRef && messageBoxRef?.current) {
-      const current = messageBoxRef.current;
-      const handleScroll = () => {
-        if (messageBoxRef?.current?.scrollTop == 0) {
-          setPage((prev) => prev + 1);
-        }
-      };
-
-      if (current) {
-        current.addEventListener("scroll", handleScroll);
-      }
-
-      // Clean up the event listener on component unmount
-      return () => {
-        if (current) {
-          current.removeEventListener("scroll", handleScroll);
-        }
-      };
-    }
-  }, []);
+  }, [page]);
 
   /* Show Message setting */
   const handleShowMessageSetting = (
@@ -218,18 +213,6 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     }
   };
 
-  React.useEffect(() => {
-    if (success && data) {
-      setMessagesCache((prevCache: any) => ({
-        ...prevCache,
-        [receiverId]: {
-          messages: data,
-          page,
-        },
-      }));
-    }
-  }, [success, data]);
-
   return (
     <div className="chat-messages" ref={messageBoxRef}>
       {loading && page > 1 && (
@@ -237,6 +220,17 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           <CircularProgress size={25} />{" "}
         </div>
       )}
+      {messagesCache[receiverId] &&
+        messagesCache[receiverId].messages.length > 0 &&
+        !loading && (
+          <Stack alignItems={"center"}>
+            <IoIosArrowDropup
+              size={35}
+              className="show-more-icon"
+              onClick={handleShowMore}
+            />
+          </Stack>
+        )}
       {deleteMessageLoading && <Loading />}
       <ConfirmDialog
         onClose={() => setShowDeleteMessage(false)}
@@ -244,8 +238,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         alertMessage="delete this message"
         handleDeleteMessage={handleDeleteMessage}
       />
-      {data &&
-        messagesCache[receiverId] &&
+      {messagesCache[receiverId] &&
         messagesCache[receiverId].messages.map((item: any, index: number) => {
           let isSender = item?.sender == userId;
           return (

@@ -7,6 +7,25 @@
     padding: 20px;
     overflow-y: auto;
 
+    .show-more-icon {
+        cursor: pointer;
+        animation: showMoreAnimation 3s alternate infinite;
+
+        &:hover {
+            color: #aceb38 !important;
+        }
+    }
+
+    @keyframes showMoreAnimation {
+        0% {
+            color: #aceb38;
+        }
+
+        100% {
+            color: rgb(40, 46, 85);
+        }
+    }
+
     .message-content-container {
         position: relative;
         width: 100%;
@@ -61,7 +80,7 @@
             box-shadow: 4px 4px 20px rgb(102, 100, 218);
             transition: padding .5s ease;
 
-            .message-details{
+            .message-details {
                 cursor: default;
             }
 

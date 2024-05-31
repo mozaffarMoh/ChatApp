@@ -144,21 +144,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     });
   }, [message]);
 
-  /* Send message when enter key */
-  const handleEnterKey = (e: any) => {
-    if (e.key == "Enter") {
+  /* Handle send message */
+  const handleSendMessage = () => {
+    if (message && data?._id == receiverId) {
       setMessage("");
-      handleSendMessage();
+      socketRef.current.emit("sendMessage", receiverId);
+      sendMessageSound.play();
+      sendMessagePost();
     }
   };
 
-  /* Handle send message */
-  const handleSendMessage = () => {
-    if (message) {
-      socketRef.current.emit("sendMessage", receiverId);
-      sendMessageSound.play();
-      setMessage("");
-      sendMessagePost();
+  /* Send message when enter key */
+  const handleEnterKey = (e: any) => {
+    if (e.key == "Enter") {
+      handleSendMessage();
     }
   };
 
@@ -273,7 +272,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           )}
         </div>
         <ChatMessages
-          receiverData={data}
+          receiverData={userDetails[receiverId]}
           receiverId={receiverId}
           userId={userId}
           loadingSendMessage={loadingSendMessage}
@@ -325,7 +324,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           )}
           <IoSend
             size={25}
-            className={`send-message-icon ${message ? "send-active" : ""}`}
+            className={`send-message-icon ${
+              message && data?._id == receiverId ? "send-active" : ""
+            }`}
             onClick={handleSendMessage}
           />
         </div>
