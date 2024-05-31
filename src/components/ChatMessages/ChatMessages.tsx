@@ -81,24 +81,26 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
       setPage(1);
       getData();
     } else {
-      setPage(messagesCache[receiverId].page);
+      setPage(messagesCache[receiverId]?.page);
     }
 
     scrollToBottom();
   }, [receiverId]);
 
+
   React.useEffect(() => {
     if (
       (messagesCache[receiverId] &&
-        messagesCache[receiverId].receiverId == receiverId) ||
+        messagesCache[receiverId]?.receiverId == receiverId) ||
       (!messagesCache[receiverId] &&
-        data &&
-        (data[0]?.sender == receiverId || data[0]?.receiver == receiverId))
+        data?.messages &&
+        (data.messages[0]?.sender == receiverId ||
+          data.messages[0]?.receiver == receiverId))
     ) {
       setMessagesCache((prevCache: any) => ({
         ...prevCache,
         [receiverId]: {
-          messages: data,
+          messages: data?.messages,
           page,
           receiverId: receiverId,
         },
@@ -221,7 +223,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         </div>
       )}
       {messagesCache[receiverId] &&
-        messagesCache[receiverId].messages.length > 0 &&
+        messagesCache[receiverId]?.messages?.length > 0 &&
+        messagesCache[receiverId]?.messages?.length < data?.total &&
         !loading && (
           <Stack alignItems={"center"}>
             <IoIosArrowDropup
@@ -239,7 +242,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         handleDeleteMessage={handleDeleteMessage}
       />
       {messagesCache[receiverId] &&
-        messagesCache[receiverId].messages.map((item: any, index: number) => {
+        messagesCache[receiverId]?.messages?.map((item: any, index: number) => {
           let isSender = item?.sender == userId;
           return (
             <div

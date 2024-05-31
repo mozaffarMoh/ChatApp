@@ -50,7 +50,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
         }),
       },
     },
-    {
+    !myData?.isGoogle && {
       placeholder: "Old password",
       name: "oldPassword",
       type: isOldPasswordVisible ? "text" : "password",
@@ -65,7 +65,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
         }),
       },
     },
-    {
+    !myData?.isGoogle && {
       placeholder: "New password",
       name: "newPassword",
       type: isNewPasswordVisible ? "text" : "password",
@@ -80,7 +80,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
         }),
       },
     },
-  ];
+  ].filter(Boolean);
 
   /* Message for success or fail */
   const updateSuccessMessage = () =>
