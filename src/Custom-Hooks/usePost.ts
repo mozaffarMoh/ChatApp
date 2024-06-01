@@ -19,8 +19,8 @@ const usePost = <T,>(endPoint: string, body: object): UsePost<T> => {
         setLoading(true);
         setSuccess(false);
         baseApi
-        .post(endPoint, body)
-        .then((res) => {
+            .post(endPoint, body)
+            .then((res) => {
                 setSuccessMessage(res?.data?.message)
                 setLoading(false);
                 setData(res.data);
@@ -42,6 +42,12 @@ const usePost = <T,>(endPoint: string, body: object): UsePost<T> => {
             })
             .catch((err) => {
                 setLoading(false);
+                const message = err.response.data.message;
+                if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
+                    Cookies.remove("token");
+                    Cookies.remove("userId");
+                    navigate("/login");
+                }
                 if (err?.message && err?.message === "Network Error") {
                     setErrorMessage("Server cannot respond, check internet connection");
                 }

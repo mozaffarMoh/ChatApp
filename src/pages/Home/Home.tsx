@@ -1,14 +1,12 @@
 import "./Home.scss";
 import { ChatSection, Users } from "../../components";
 import React from "react";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import withAuth from "../../WithAuth";
 
 const Home: React.FC = () => {
   const [isSmallScreen, setIsSmallScreen] = React.useState<boolean>(false);
   const [showUserChat, setShowUserChat] = React.useState<boolean>(false);
-  const token = Cookies.get("token");
-  const navigate = useNavigate();
+
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -23,15 +21,8 @@ const Home: React.FC = () => {
     };
   }, []);
 
-  React.useEffect(() => {
-    if (!token) {
-      navigate("/start-page");
-    }
-  }, [token, navigate]);
-
-  return token ? (
+  return (
     <div className="home flexCenter">
-  
       {!showUserChat && (
         <Users
           isSmallScreen={isSmallScreen}
@@ -44,9 +35,7 @@ const Home: React.FC = () => {
         isSmallScreen={isSmallScreen}
       />
     </div>
-  ) : (
-    <></>
   );
 };
 
-export default Home;
+export default withAuth(Home);

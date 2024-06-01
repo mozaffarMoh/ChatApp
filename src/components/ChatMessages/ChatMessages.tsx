@@ -216,6 +216,22 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     }
   };
 
+  /* Icon show more */
+  const ShowMoreIcon = () =>
+    messagesCache[receiverId] &&
+    messagesCache[receiverId]?.messages?.length > 0 &&
+    messagesCache[receiverId]?.messages?.length <
+      messagesCache[receiverId]?.total &&
+    !loading && (
+      <Stack alignItems={"center"}>
+        <IoIosArrowDropup
+          size={35}
+          className="show-more-icon"
+          onClick={handleShowMore}
+        />
+      </Stack>
+    );
+
   return (
     <div className="chat-messages" ref={messageBoxRef}>
       {loading && page > 1 && (
@@ -223,19 +239,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           <CircularProgress size={25} />{" "}
         </div>
       )}
-      {messagesCache[receiverId] &&
-        messagesCache[receiverId]?.messages?.length > 0 &&
-        messagesCache[receiverId]?.messages?.length <
-          messagesCache[receiverId]?.total &&
-        !loading && (
-          <Stack alignItems={"center"}>
-            <IoIosArrowDropup
-              size={35}
-              className="show-more-icon"
-              onClick={handleShowMore}
-            />
-          </Stack>
-        )}
+      <ShowMoreIcon />
       {deleteMessageLoading && <Loading />}
       <ConfirmDialog
         onClose={() => setShowDeleteMessage(false)}

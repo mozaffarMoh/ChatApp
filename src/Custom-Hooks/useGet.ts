@@ -29,8 +29,8 @@ const useGet = (endPoint: string): UseGet<any> => {
             })
             .catch((err: any) => {
                 setLoading(false)
-                const message = err.response.data;
-                if (message === "Forbidden" || message === "Unauthorized") {
+                const message = err.response.data.message;
+                if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
                     Cookies.remove("token");
                     Cookies.remove("userId");
                     navigate("/login");
