@@ -23,19 +23,18 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   };
 
   const handleExit = () => {
-    if (handleConfirm) {
-      handleConfirm();
+    if (onClose) {
+      onClose();
     }
   };
-
   return (
-    <Dialog className="logout-alert" open={open} onClose={onClose}>
+    <Dialog className="logout-alert" open={open} onClose={handleExit}>
       <DialogTitle>Are you sure you want to {alertMessage} ??</DialogTitle>
       <DialogActions>
-        <Button variant="contained" color="error" onClick={onClose}>
+        <Button variant="contained" color="error" onClick={handleExit}>
           Cancel
         </Button>
-        <Button variant="contained" color="secondary" onClick={handleExit}>
+        <Button variant="contained" color="secondary" onClick={handleConfirm}>
           OK
         </Button>
       </DialogActions>
