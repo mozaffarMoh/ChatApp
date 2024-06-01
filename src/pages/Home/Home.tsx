@@ -8,6 +8,10 @@ const Home: React.FC = () => {
   const [showUserChat, setShowUserChat] = React.useState<boolean>(false);
   const isSmallScreen = useMediaQuery("(max-width:700px)");
 
+  React.useEffect(() => {
+    !isSmallScreen && setShowUserChat(false);
+  }, [isSmallScreen]);
+  
   return (
     <div className="home flexCenter">
       {!showUserChat && (

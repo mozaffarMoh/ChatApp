@@ -201,9 +201,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   return (
     <div
       className={`chat-section flexStartColumnItemsCenter ${
-        isSmallScreen == true && showUserChat == false
-          ? "hide-chat-section"
-          : ""
+        isSmallScreen && !showUserChat ? "hide-chat-section" : "chat-section"
       }`}
     >
       {(isCallStart || isReceiveCall) && (
