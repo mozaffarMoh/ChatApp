@@ -325,7 +325,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           <IoSend
             size={25}
             className={`send-message-icon ${
-              message && data?._id == receiverId ? "send-active" : ""
+              message &&
+              userDetails[receiverId] &&
+              userDetails[receiverId]?._id == receiverId
+                ? "send-active"
+                : ""
             }`}
             onClick={handleSendMessage}
           />
