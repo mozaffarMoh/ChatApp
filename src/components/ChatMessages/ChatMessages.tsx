@@ -76,7 +76,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
   /* get data when receiverId value change */
   React.useEffect(() => {
-    if (!messagesCache[receiverId]) {
+    if (!messagesCache[receiverId] && receiverId) {
       setPage(1);
       getData();
     } else {

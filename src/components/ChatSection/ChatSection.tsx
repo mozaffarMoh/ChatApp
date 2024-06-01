@@ -110,7 +110,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
   /* refresh user details when receiverId changed */
   React.useEffect(() => {
-    if (!userDetails[receiverId]) {
+    if (!userDetails[receiverId] && receiverId) {
       getData();
     }
   }, [receiverId]);
@@ -146,7 +146,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
   /* Handle send message */
   const handleSendMessage = () => {
-    if (message && data?._id == receiverId) {
+    if (message) {
       setMessage("");
       socketRef.current.emit("sendMessage", receiverId);
       sendMessageSound.play();

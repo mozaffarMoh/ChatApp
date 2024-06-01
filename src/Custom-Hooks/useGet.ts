@@ -41,7 +41,7 @@ const useGet = (endPoint: string): UseGet<any> => {
     };
 
     React.useEffect(() => {
-        if (!endPoint.includes("logout") && !endPoint.includes("page") && !endPoint.includes("one-user")) {
+        if (!endPoint.includes("logout") && !endPoint.includes("messages") && !endPoint.includes("one-user")) {
             getData();
         }
     }, [endPoint]);

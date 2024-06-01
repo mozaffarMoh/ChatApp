@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 const withAuth = (Component: React.FC<any>) => {
-  const WithAuthComponent: any = (props: any) => {
+  const WithAuthComponent: React.FC<any> = (props: any) => {
     const navigate = useNavigate();
     const token = Cookies.get("token");
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
@@ -28,17 +28,19 @@ const withAuth = (Component: React.FC<any>) => {
       }
     }, [token]);
 
+    useEffect(() => {
+      if (isAuthenticated === false) {
+        Cookies.remove("token");
+        Cookies.remove("userId");
+        navigate("/start-page");
+      }
+    }, [isAuthenticated, navigate]);
+
     if (isAuthenticated === null) {
       return <Loading />;
     }
 
-    const handleLeave = () => {
-      Cookies.remove("token");
-      Cookies.remove("userId");
-      navigate("/start-page");
-    };
-
-    return isAuthenticated ? <Component {...props} /> : handleLeave();
+    return isAuthenticated ? <Component {...props} /> : null;
   };
 
   return WithAuthComponent;
