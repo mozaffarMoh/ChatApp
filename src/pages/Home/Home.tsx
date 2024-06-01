@@ -8,9 +8,11 @@ const Home: React.FC = () => {
   const [showUserChat, setShowUserChat] = React.useState<boolean>(false);
 
   const handleResize = React.useCallback(() => {
-    setIsSmallScreen(window.innerWidth <= 700);
+    setTimeout(() => {
+      setIsSmallScreen(window.innerWidth <= 700);
+    }, 100);
   }, []);
-  
+
   React.useLayoutEffect(() => {
     handleResize();
 
