@@ -2,26 +2,11 @@ import "./Home.scss";
 import { ChatSection, Users } from "../../components";
 import React from "react";
 import withAuth from "../../WithAuth";
+import { useMediaQuery } from "@mui/material";
 
 const Home: React.FC = () => {
-  const [isSmallScreen, setIsSmallScreen] = React.useState<boolean>(false);
   const [showUserChat, setShowUserChat] = React.useState<boolean>(false);
-
-  const handleResize = React.useCallback(() => {
-    setTimeout(() => {
-      setIsSmallScreen(window.innerWidth <= 700);
-    }, 100);
-  }, []);
-
-  React.useLayoutEffect(() => {
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [handleResize]);
+  const isSmallScreen = useMediaQuery("(max-width:700px)");
 
   return (
     <div className="home flexCenter">
