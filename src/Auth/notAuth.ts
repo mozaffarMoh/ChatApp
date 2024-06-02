@@ -8,17 +8,16 @@ const notAuth = () => {
     const navigate = useNavigate();
     const { messagesCache, setMessagesCache }: any = useMessagesCache();
     const { userDetails, setUserDetails }: any = useUserDetails();
-
+    const token = Cookies.get("token")
 
     const notAuthenticated = () => {
         messagesCache && setMessagesCache({});
         userDetails && setUserDetails({});
         Cookies.remove("token");
         Cookies.remove("userId");
-        navigate("/login");
-
+        navigate(!token ? "start-page" : "/login");
     }
-    
+
     return notAuthenticated
 }
 
