@@ -64,7 +64,7 @@ const usePost = <T,>(endPoint: string, body: object): UsePost<T> => {
             });
     };
 
-    return [handlePost, loading, success, errorMessage, data, successMessage];
+    return [handlePost, loading, success, errorMessage, data, successMessage, setData];
 };
 
 export default usePost;

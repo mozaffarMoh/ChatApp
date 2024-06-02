@@ -35,6 +35,7 @@ export type UsePost<T> = [
     string,
     T,
     string,
+    React.Dispatch<React.SetStateAction<any>>
 ];
 
 

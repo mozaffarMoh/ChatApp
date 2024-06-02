@@ -43,8 +43,15 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const [, logoutLoading, handleLogout, , errorMessageLogout] = useGet(
     endPoint.logout
   );
-  const [handleSearchPost, filteredUsersLoading, , , filteredUsers]: any =
-    usePost(endPoint.searchUsers, { name: name });
+  const [
+    handleSearchPost,
+    filteredUsersLoading,
+    ,
+    ,
+    filteredUsers,
+    ,
+    setFilteredUsersData,
+  ]: any = usePost(endPoint.searchUsers, { name: name });
   const [handelDeleteUser, deleteUserLoading, errorMessage, successMessage] =
     useDelete(endPoint.deleteUser + userId);
 
@@ -56,7 +63,9 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
 
   /* Store data in users array when first initial page */
   React.useEffect(() => {
-    if ((data?.users && users.length == 0) || (data?.users && !name)) {
+    if (data?.users) {
+      setName("");
+      setFilteredUsersData([]);
       setUsers(data?.users);
     }
   }, [data]);
@@ -181,6 +190,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
         <TextField
           onKeyDown={handleSearchByEnterKey}
           placeholder="Search"
+          value={name}
           onChange={(e: any) => setName(e.target.value)}
         />
         <FaSearch className="search-icon" onClick={handleSearch} />
