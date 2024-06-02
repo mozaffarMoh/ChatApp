@@ -5,6 +5,7 @@ export const endPoint = {
     checkToken: '/check-token',
     logout: '/logout',
     allUsers: '/users/',
+    searchUsers: '/users/search-users',
     oneUser: '/users/one-user/',
     deleteUser: '/users/',
     updateProfilePhoto: '/users/update-profile',

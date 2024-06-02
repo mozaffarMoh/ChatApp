@@ -13,7 +13,7 @@ import { BiLogOut } from "react-icons/bi";
 import { Footer } from "../../sections";
 import UserDetails from "../UserDetails/UserDetails";
 import Cookies from "js-cookie";
-import { useDelete, useGet } from "../../Custom-Hooks";
+import { useDelete, useGet, usePost } from "../../Custom-Hooks";
 import { endPoint } from "../../api/endPoint";
 import { useDispatch, useSelector } from "react-redux";
 import { setReceiverId } from "../../Slices/receiverIdSlice";
@@ -43,6 +43,8 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const [, logoutLoading, handleLogout, , errorMessageLogout] = useGet(
     endPoint.logout
   );
+  const [handleSearchPost, filteredUsersLoading, , , filteredUsers]: any =
+    usePost(endPoint.searchUsers, { name: name });
   const [handelDeleteUser, deleteUserLoading, errorMessage, successMessage] =
     useDelete(endPoint.deleteUser + userId);
 
@@ -55,12 +57,15 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   /* Store data in users array when first initial page */
   React.useEffect(() => {
     if ((data?.users && users.length == 0) || (data?.users && !name)) {
-      const srotedUsers = data.users.sort((item: any) =>
-        item._id == userId ? -1 : 1
-      );
-      setUsers([...srotedUsers]);
+      setUsers(data?.users);
     }
-  }, [data, name, page]);
+  }, [data]);
+
+  React.useEffect(() => {
+    if (filteredUsers?.users) {
+      setUsers(filteredUsers.users);
+    }
+  }, [filteredUsers]);
 
   /* Store the first value of users to user details in chat section*/
   React.useEffect(() => {
@@ -72,19 +77,9 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
 
   /* Handle search for users */
   const handleSearch = () => {
-    if (data?.users) {
-      const filteredUsers = data.users.filter((item: any) => {
-        const username = item?.username.toLocaleLowerCase();
-        const searchValue = name.toLocaleLowerCase();
-
-        if (username?.startsWith(searchValue)) {
-          return item;
-        }
-      });
-
-      setUsers([...filteredUsers]);
-    }
+    name ? handleSearchPost() : getAllUsers();
   };
+
   React.useEffect(() => {
     let count = (page - 1) * 10;
     if (page > 1 && users.length == count) {
@@ -139,7 +134,10 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
 
   return (
     <div className="users flexStartColumnItemsCenter">
-      {(deleteUserLoading || logoutLoading) && <Loading />}
+      {(deleteUserLoading ||
+        logoutLoading ||
+        filteredUsersLoading ||
+        (filteredUsers?.users && loading)) && <Loading />}
       <div className="header-container flexBetween">
         <Tooltip
           title="Delete Account"
@@ -198,9 +196,9 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
       })}
 
       {data?.users &&
+        users.length >= 10 &&
         data?.users.length < data?.total &&
-        !loading &&
-        users.length >= 10 && (
+        !loading && (
           <Stack>
             <IoIosArrowDropdownCircle
               onClick={() => setPage((prev) => prev + 1)}
@@ -209,7 +207,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
             />
           </Stack>
         )}
-      {loading && (
+      {loading && !filteredUsers?.users && (
         <CircularProgress color="info" className="circle-progress-loading" />
       )}
       <Footer />
