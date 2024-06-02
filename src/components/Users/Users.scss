@@ -65,7 +65,7 @@
     }
 
     .circle-progress-loading {
-        margin-top: 50px;
+        margin-top: 20px;
     }
 
     .user-section {
@@ -97,6 +97,19 @@
             background-color: rgb(223, 216, 216);
         }
     }
+
+    .show-more-users-icon {
+        color: #8080fd;
+        transition: all .7s ease;
+        cursor: pointer;
+        margin-top: 20px;
+
+        &:hover {
+            color: #cecefc;
+        }
+    }
+
+
 
 }
 

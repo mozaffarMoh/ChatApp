@@ -1,6 +1,7 @@
 import {
   CircularProgress,
   IconButton,
+  Stack,
   TextField,
   Tooltip,
   Zoom,
@@ -23,18 +24,22 @@ import { MdNoAccounts } from "react-icons/md";
 import Loading from "../Loading/Loading";
 import { toast } from "react-toastify";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
+import { IoIosArrowDropdownCircle } from "react-icons/io";
 
 const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const dispatch = useDispatch();
   const [users, setUsers] = React.useState<any>([]);
   const [showAlert, setShowAlert] = React.useState<boolean>(false);
   const [alertMessage, setAlertMessage] = React.useState<string>("");
+  const [page, setPage] = React.useState<number>(1);
   const isProfileUpdated: any = useSelector(
     (state: RootType) => state.refreshUsers.value
   );
   const [name, setName] = React.useState<string>("");
   const userId = Cookies.get("userId");
-  const [data, loading, getAllUsers] = useGet(endPoint.allUsers);
+  const [data, loading, getAllUsers] = useGet(
+    endPoint.allUsers + "?page=" + page
+  );
   const [, logoutLoading, handleLogout, , errorMessageLogout] = useGet(
     endPoint.logout
   );
@@ -49,13 +54,13 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
 
   /* Store data in users array when first initial page */
   React.useEffect(() => {
-    if ((data && users.length == 0) || (data && !name)) {
-      const srotedUsers = data.sort((item: any) =>
+    if ((data?.users && users.length == 0) || (data?.users && !name)) {
+      const srotedUsers = data.users.sort((item: any) =>
         item._id == userId ? -1 : 1
       );
       setUsers([...srotedUsers]);
     }
-  }, [data, name]);
+  }, [data, name, page]);
 
   /* Store the first value of users to user details in chat section*/
   React.useEffect(() => {
@@ -67,18 +72,27 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
 
   /* Handle search for users */
   const handleSearch = () => {
-    const filteredUsers = data.filter((item: any) => {
-      const username = item?.username.toLocaleLowerCase();
-      const searchValue = name.toLocaleLowerCase();
+    if (data?.users) {
+      const filteredUsers = data.users.filter((item: any) => {
+        const username = item?.username.toLocaleLowerCase();
+        const searchValue = name.toLocaleLowerCase();
 
-      if (username?.startsWith(searchValue)) {
-        return item;
-      }
-    });
+        if (username?.startsWith(searchValue)) {
+          return item;
+        }
+      });
 
-    setUsers([...filteredUsers]);
+      setUsers([...filteredUsers]);
+    }
   };
-
+  React.useEffect(() => {
+    let count = (page - 1) * 10;
+    console.log(count);
+    if (page > 1 && users.length > count) {
+      getAllUsers();
+      console.log("start getting");
+    }
+  }, [page]);
   /* Handle search for users by pressing enter*/
   const handleSearchByEnterKey = (e: any) => {
     e.key == "Enter" && handleSearch();
@@ -175,9 +189,6 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
         />
         <FaSearch className="search-icon" onClick={handleSearch} />
       </div>
-      {loading && (
-        <CircularProgress color="info" className="circle-progress-loading" />
-      )}
       {users.map((item: any, index: number) => {
         return (
           <UserDetails
@@ -187,6 +198,22 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
           />
         );
       })}
+
+      {data?.users &&
+        data?.users.length < data?.total &&
+        !loading &&
+        users.length >= 10 && (
+          <Stack>
+            <IoIosArrowDropdownCircle
+              onClick={() => setPage((prev) => prev + 1)}
+              size={40}
+              className="show-more-users-icon"
+            />
+          </Stack>
+        )}
+      {loading && (
+        <CircularProgress color="info" className="circle-progress-loading" />
+      )}
       <Footer />
     </div>
   );
