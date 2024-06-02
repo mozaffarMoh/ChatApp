@@ -38,7 +38,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const [name, setName] = React.useState<string>("");
   const userId = Cookies.get("userId");
   const [data, loading, getAllUsers] = useGet(
-    endPoint.allUsers + "?page=" + page
+    endPoint.allUsers + userId + "?page=" + page
   );
   const [, logoutLoading, handleLogout, , errorMessageLogout] = useGet(
     endPoint.logout
@@ -87,10 +87,8 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   };
   React.useEffect(() => {
     let count = (page - 1) * 10;
-    console.log(count);
-    if (page > 1 && users.length > count) {
+    if (page > 1 && users.length == count) {
       getAllUsers();
-      console.log("start getting");
     }
   }, [page]);
   /* Handle search for users by pressing enter*/

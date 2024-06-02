@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 
 const baseApi = axios.create({
-    baseURL: "https://chatappapi-2w5v.onrender.com",
+    baseURL: "http://localhost:8080",
     headers: {
         "Content-Type": "application/json",
     }, 

@@ -4,7 +4,7 @@ export const endPoint = {
     registerGoogle: '/register/google',
     checkToken: '/check-token',
     logout: '/logout',
-    allUsers: '/users',
+    allUsers: '/users/',
     oneUser: '/users/one-user/',
     deleteUser: '/users/',
     updateProfilePhoto: '/users/update-profile',
