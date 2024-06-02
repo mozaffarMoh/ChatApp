@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import { Loading } from "./components";
-import baseApi from "./api/baseApi";
-import { endPoint } from "./api/endPoint";
+import { Loading } from "../components";
+import baseApi from "../api/baseApi";
+import { endPoint } from "../api/endPoint";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
-
+import notAuth from "./notAuth";
 const withAuth = (Component: React.FC<any>) => {
   const WithAuthComponent: React.FC<any> = (props: any) => {
-    const navigate = useNavigate();
+    const notAuthenticated = notAuth();
     const token = Cookies.get("token");
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
       null
@@ -30,11 +29,9 @@ const withAuth = (Component: React.FC<any>) => {
 
     useEffect(() => {
       if (isAuthenticated === false) {
-        Cookies.remove("token");
-        Cookies.remove("userId");
-        navigate("/start-page");
+        notAuthenticated();
       }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated]);
 
     if (isAuthenticated === null) {
       return <Loading />;

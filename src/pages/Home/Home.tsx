@@ -1,7 +1,7 @@
 import "./Home.scss";
 import { ChatSection, Users } from "../../components";
 import React from "react";
-import withAuth from "../../WithAuth";
+import withAuth from "../../Auth/WithAuth";
 import { useMediaQuery } from "@mui/material";
 
 const Home: React.FC = () => {
@@ -11,7 +11,7 @@ const Home: React.FC = () => {
   React.useEffect(() => {
     !isSmallScreen && setShowUserChat(false);
   }, [isSmallScreen]);
-  
+
   return (
     <div className="home flexCenter">
       {!showUserChat && (

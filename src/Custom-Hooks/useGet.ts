@@ -1,17 +1,14 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import baseApi from "../api/baseApi";
 import { UseGet } from "../Types/CustomHooks";
-
+import notAuth from "../Auth/notAuth";
 
 const useGet = (endPoint: string): UseGet<any> => {
-    const navigate = useNavigate();
+    const notAuthenticated = notAuth();
     const [data, setData] = React.useState<any>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [success, setSuccess] = React.useState<boolean>(false);
     const [errorMessage, setErrorMessage] = React.useState<string>("");
-
     const getData = () => {
         setSuccess(false);
         setLoading(true);
@@ -22,18 +19,14 @@ const useGet = (endPoint: string): UseGet<any> => {
                 setLoading(false);
                 setData(res.data);
                 if (endPoint.includes("logout")) {
-                    Cookies.remove("token");
-                    Cookies.remove("userId");
-                    navigate("/login");
+                    notAuthenticated()
                 }
             })
             .catch((err: any) => {
                 setLoading(false)
                 const message = err.response.data.message;
                 if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
-                    Cookies.remove("token");
-                    Cookies.remove("userId");
-                    navigate("/login");
+                    notAuthenticated()
                 }
                 setLoading(false);
                 setErrorMessage(err.response.data);

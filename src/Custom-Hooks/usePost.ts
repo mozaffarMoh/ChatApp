@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import baseApi from "../api/baseApi";
 import { UsePost } from "../Types/CustomHooks";
-
-
+import notAuth from "../Auth/notAuth";
 
 const usePost = <T,>(endPoint: string, body: object): UsePost<T> => {
+    const notAuthenticated = notAuth();
     const navigate = useNavigate();
     const [data, setData] = React.useState<T>({} as T);
     const [loading, setLoading] = React.useState<boolean>(false);
@@ -44,9 +44,7 @@ const usePost = <T,>(endPoint: string, body: object): UsePost<T> => {
                 setLoading(false);
                 const message = err.response.data.message;
                 if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
-                    Cookies.remove("token");
-                    Cookies.remove("userId");
-                    navigate("/login");
+                    notAuthenticated()
                 }
                 if (err?.message && err?.message === "Network Error") {
                     setErrorMessage("Server cannot respond, check internet connection");
