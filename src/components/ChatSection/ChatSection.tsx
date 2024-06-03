@@ -60,7 +60,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     endPoint.oneUser + receiverId
   );
   const [sendMessagePost, loadingSendMessage, isSuccessMessage] = usePost(
-    endPoint.sendMessage,
+    `${endPoint.sendMessage}?userId=${userId}&receiverId=${receiverId}`,
     messageDetailsForm
   );
   const sendMessageSound = new Howl({
@@ -139,8 +139,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   React.useEffect(() => {
     setMessageDetailsForm({
       message,
-      sender: userId,
-      receiver: receiverId,
     });
   }, [message]);
 

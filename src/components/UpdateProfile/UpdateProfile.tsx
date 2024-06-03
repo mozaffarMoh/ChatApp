@@ -29,7 +29,7 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
     React.useState<boolean>(false);
   const [inputFormData, handleChangeInputData, setInputFormData] = useInput();
   const [handleUpdateProfile, loading, success, errorMessage] = usePut(
-    endPoint.updateProfilePhoto + "/" + userId,
+    endPoint.updateProfilePhoto + "?userId=" + userId,
     inputFormData
   );
   const {

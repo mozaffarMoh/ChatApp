@@ -40,7 +40,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   const [page, setPage] = React.useState<number>(1);
   const [data, loading, getData, success] = useGet(
     endPoint.allMessages +
-      `/${userId}/${receiverId}?page=${!messagesCache[receiverId] ? 1 : page}`
+      `?userId=${userId}&receiverId=${receiverId}&page=${
+        !messagesCache[receiverId] ? 1 : page
+      }`
   );
   const [
     handleDeleteMessage,

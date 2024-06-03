@@ -53,7 +53,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
     setFilteredUsersData,
   ]: any = usePost(endPoint.searchUsers, { name: name });
   const [handelDeleteUser, deleteUserLoading, errorMessage, successMessage] =
-    useDelete(endPoint.deleteUser + userId);
+    useDelete(endPoint.deleteUser + "?userId=" + userId);
 
   /* Choose user */
   const handleShowUserChat = (id: string) => {
