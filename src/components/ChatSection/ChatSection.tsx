@@ -230,7 +230,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           loading={loading}
         />
         <div className="header-tools">
-          {userId !== receiverId && (
+          {userId !== receiverId && receiverId && (
             <Tooltip
               title="Video Call"
               arrow
@@ -242,7 +242,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
               </IconButton>
             </Tooltip>
           )}
-          {userId !== receiverId && (
+          {userId !== receiverId && receiverId && (
             <Tooltip
               title="Voice Call"
               arrow

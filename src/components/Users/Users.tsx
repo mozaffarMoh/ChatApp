@@ -89,12 +89,22 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
     name ? handleSearchPost() : getAllUsers();
   };
 
+  const handleIncreasePage = () => {
+    let count = page * 10;
+    if ((page > 1 && users.length == count) || page == 1) {
+      setPage((prev) => prev + 1);
+    } else {
+      getAllUsers();
+    }
+  };
+  
   React.useEffect(() => {
     let count = (page - 1) * 10;
     if (page > 1 && users.length == count) {
       getAllUsers();
     }
   }, [page]);
+
   /* Handle search for users by pressing enter*/
   const handleSearchByEnterKey = (e: any) => {
     e.key == "Enter" && handleSearch();
@@ -211,7 +221,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
         !loading && (
           <Stack>
             <IoIosArrowDropdownCircle
-              onClick={() => setPage((prev) => prev + 1)}
+              onClick={handleIncreasePage}
               size={40}
               className="show-more-users-icon"
             />

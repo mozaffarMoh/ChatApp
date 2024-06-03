@@ -119,7 +119,15 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   }, [isSuccessMessage]);
 
   const handleShowMore = () => {
-    setPage((prev) => prev + 1);
+    let count = page * 10;
+    if (
+      (page > 1 && messagesCache[receiverId]?.messages?.length == count) ||
+      page == 1
+    ) {
+      setPage((prev) => prev + 1);
+    } else {
+      getData();
+    }
   };
 
   React.useEffect(() => {
