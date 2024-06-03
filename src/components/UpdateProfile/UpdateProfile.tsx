@@ -4,6 +4,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Typography,
 } from "@mui/material";
 import { endPoint } from "../../api/endPoint";
 import { usePut, useInput } from "../../Custom-Hooks";
@@ -170,10 +171,14 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
       <Button variant="outlined" color="error" onClick={handleRemovePhoto}>
         Remove Photo
       </Button>
+
       <form
         className="update-profile-field flexCenterColumn"
         onSubmit={handleSubmit(handleUpdate)}
       >
+        <Typography variant="h5" color={"#c2c2e3"} marginTop={1}>
+          {myData?.email}
+        </Typography>
         {inputArray.map((item: any, index: number) => {
           return (
             <TextField
@@ -213,6 +218,11 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
               errors.newPassword?.message}
           </div>
         )}{" "}
+        {myData?.isGoogle && (
+          <Typography variant="subtitle1" color={"#c2c2e3"} marginTop={1}>
+            You can't change your password when using Gmail account
+          </Typography>
+        )}
         <div className="buttons-field flexBetween ">
           <Button type="submit" variant="contained" color="info">
             Update

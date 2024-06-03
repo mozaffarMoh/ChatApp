@@ -10,6 +10,7 @@
     border-radius: 10px;
 
 
+
     .profile-image-section {
         position: relative;
         border-radius: 50%;
@@ -66,7 +67,7 @@
         input {
             border-radius: 5px;
             background-color: white;
-            padding-right: 45px;
+
         }
 
         .show-password {
@@ -91,5 +92,19 @@
     .update-profile {
         width: 90%;
         left: 20px;
+
+        .update-profile-field {
+
+            .MuiTypography-h5 {
+                font-size: 17px;
+                text-align: center;
+            }
+
+            .MuiTypography-subtitle1 {
+                font-size: 13px;
+                text-align: center;
+                padding: 0px 10px;
+            }
+        }
     }
 }

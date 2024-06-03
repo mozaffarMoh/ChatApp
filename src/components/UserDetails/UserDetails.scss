@@ -19,7 +19,7 @@
         }
 
         p {
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 700;
             margin-bottom: 5px;
             color: rgb(229, 229, 250);
@@ -56,4 +56,19 @@
         }
     }
 
+}
+
+
+
+@media (max-width : 700px) {
+    .user-details {
+        .user-info {
+
+
+            p {
+                font-size: 15px !important;
+            }
+
+        }
+    }
 }
