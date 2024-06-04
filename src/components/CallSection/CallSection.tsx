@@ -25,7 +25,7 @@ const CallSection: React.FC<CallSectionProps> = ({
   callerSignal,
   isReceiveCall,
   setIsReceiveCall,
-  setShowUserChat
+  setShowUserChat,
 }) => {
   const myAudio = React.useRef<HTMLAudioElement | any>(null);
   const userAudio = React.useRef<HTMLVideoElement | any>(null);
@@ -195,8 +195,9 @@ const CallSection: React.FC<CallSectionProps> = ({
   React.useEffect(() => {
     if (switchCamera && isVideoCall == true) {
       if (myAudio.current?.srcObject && userAudio.current?.srcObject) {
+        const myStream = myAudio.current.srcObject;
         myAudio.current.srcObject = userAudio.current.srcObject;
-        userAudio.current.srcObject = myAudio.current.srcObject;
+        userAudio.current.srcObject = myStream;
         setSwitchCamera(false);
       }
     }
