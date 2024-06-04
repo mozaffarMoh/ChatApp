@@ -228,30 +228,34 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           loading={loading}
         />
         <div className="header-tools">
-          {userId !== receiverId && receiverId && receiverId == data?._id && (
-            <Tooltip
-              title="Video Call"
-              arrow
-              TransitionComponent={Zoom}
-              placement="bottom"
-            >
-              <IconButton onClick={handleShowVideoCall}>
-                <BiVideo className="call-icon" size={30} />
-              </IconButton>
-            </Tooltip>
-          )}
-          {userId !== receiverId && receiverId && receiverId == data?._id && (
-            <Tooltip
-              title="Voice Call"
-              arrow
-              TransitionComponent={Zoom}
-              placement="bottom"
-            >
-              <IconButton onClick={handleShowVoiceCall}>
-                <BiPhoneCall className="call-icon" size={28} />
-              </IconButton>
-            </Tooltip>
-          )}
+          {userId !== receiverId &&
+            receiverId &&
+            receiverId == userDetails[receiverId]?._id && (
+              <Tooltip
+                title="Video Call"
+                arrow
+                TransitionComponent={Zoom}
+                placement="bottom"
+              >
+                <IconButton onClick={handleShowVideoCall}>
+                  <BiVideo className="call-icon" size={30} />
+                </IconButton>
+              </Tooltip>
+            )}
+          {userId !== receiverId &&
+            receiverId &&
+            receiverId == userDetails[receiverId]?._id && (
+              <Tooltip
+                title="Voice Call"
+                arrow
+                TransitionComponent={Zoom}
+                placement="bottom"
+              >
+                <IconButton onClick={handleShowVoiceCall}>
+                  <BiPhoneCall className="call-icon" size={28} />
+                </IconButton>
+              </Tooltip>
+            )}
           {isSmallScreen && (
             <Tooltip
               title="Back"
