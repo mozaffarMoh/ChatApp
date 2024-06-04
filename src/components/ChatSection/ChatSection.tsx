@@ -50,15 +50,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   const [messageDetailsForm, setMessageDetailsForm] = React.useState<object>(
     {}
   );
-
   const receiverId = useSelector((state: RootType) => state.id.value);
   const isProfileUpdated = useSelector(
     (state: RootType) => state.refreshUsers.value
   );
   const CallerName = useSelector((state: RootType) => state.CallerName.value);
-  const [data, loading, getData, , , setData] = useGet(
-    endPoint.oneUser + receiverId
-  );
+  const [data, loading, getData] = useGet(endPoint.oneUser + receiverId);
   const [sendMessagePost, loadingSendMessage, isSuccessMessage] = usePost(
     `${endPoint.sendMessage}?userId=${userId}&receiverId=${receiverId}`,
     messageDetailsForm
@@ -83,13 +80,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     const handleReceiveCall = (data: any) => {
       if (userId == data.userToCall) {
-        setShowUserChat(true);
         setIsVideoCall(data.video);
         setIsVoiceCall(data.voice);
         setIsReceiveCall(true);
         setCaller(data.from);
         setName(data.name);
         setCallerSignal(data.signal);
+        setShowUserChat(true);
       }
     };
 
@@ -117,7 +114,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
   /* store user details in context */
   React.useEffect(() => {
-    if (!userDetails[receiverId] && data?._id == receiverId) {
+    if (
+      (!userDetails[receiverId] && data?._id == receiverId) ||
+      isProfileUpdated
+    ) {
+      isProfileUpdated && dispatch(setRefreshUsers(false));
       setUserDetails((prevCache: any) => {
         return { ...prevCache, [receiverId]: data };
       });
@@ -127,11 +128,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   /* refersh user data when profile updated */
   React.useEffect(() => {
     if (isProfileUpdated) {
-      setData({});
+      userDetails[receiverId] = {};
       getData();
-      setTimeout(() => {
-        dispatch(setRefreshUsers(false));
-      }, 1000);
     }
   }, [isProfileUpdated]);
 
@@ -230,7 +228,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           loading={loading}
         />
         <div className="header-tools">
-          {userId !== receiverId && receiverId && (
+          {userId !== receiverId && receiverId && receiverId == data?._id && (
             <Tooltip
               title="Video Call"
               arrow
@@ -242,7 +240,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
               </IconButton>
             </Tooltip>
           )}
-          {userId !== receiverId && receiverId && (
+          {userId !== receiverId && receiverId && receiverId == data?._id && (
             <Tooltip
               title="Voice Call"
               arrow

@@ -30,7 +30,7 @@ const useDelete = (endPoint: string): UseDelete => {
             })
             .catch((err) => {
                 setLoading(false);
-                const message = err.response.data.message;
+                const message = err.response?.data?.message;
                 if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
                     notAuthenticated()
                 }

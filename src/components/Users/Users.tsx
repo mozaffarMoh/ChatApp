@@ -25,20 +25,20 @@ import Loading from "../Loading/Loading";
 import { toast } from "react-toastify";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { useUsersContext } from "../../Context/UsersProvider";
 
 const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const dispatch = useDispatch();
-  const [users, setUsers] = React.useState<any>([]);
+  const { users, setUsers }: any = useUsersContext();
   const [showAlert, setShowAlert] = React.useState<boolean>(false);
   const [alertMessage, setAlertMessage] = React.useState<string>("");
-  const [page, setPage] = React.useState<number>(1);
   const isProfileUpdated: any = useSelector(
     (state: RootType) => state.refreshUsers.value
   );
   const [name, setName] = React.useState<string>("");
   const userId = Cookies.get("userId");
   const [data, loading, getAllUsers] = useGet(
-    endPoint.allUsers + userId + "?page=" + page
+    endPoint.allUsers + userId + "?page=" + users.page
   );
   const [, logoutLoading, handleLogout, , errorMessageLogout] = useGet(
     endPoint.logout
@@ -66,23 +66,27 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
     if (data?.users) {
       setName("");
       setFilteredUsersData([]);
-      setUsers(data?.users);
+      setUsers((prevCache: any) => {
+        return { ...prevCache, users: data?.users };
+      });
     }
   }, [data]);
 
   React.useEffect(() => {
     if (filteredUsers?.users) {
-      setUsers(filteredUsers.users);
+      setUsers((prevCache: any) => {
+        return { ...prevCache, users: filteredUsers?.users };
+      });
     }
   }, [filteredUsers]);
 
   /* Store the first value of users to user details in chat section*/
   React.useEffect(() => {
-    if (users.length > 0) {
-      dispatch(setReceiverId(users[0]._id));
-      dispatch(setCallerName(users[0].username));
+    if (users?.users && users.users.length > 0) {
+      dispatch(setReceiverId(users.users[0]._id));
+      dispatch(setCallerName(users.users[0].username));
     }
-  }, [users]);
+  }, [users?.users]);
 
   /* Handle search for users */
   const handleSearch = () => {
@@ -90,20 +94,22 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   };
 
   const handleIncreasePage = () => {
-    let count = page * 10;
-    if ((page > 1 && users.length == count) || page == 1) {
-      setPage((prev) => prev + 1);
+    let count = users.page * 10;
+    if ((users.page > 1 && users.length == count) || users.page == 1) {
+      setUsers((prevCache: any) => {
+        return { ...prevCache, page: users.page + 1 };
+      });
     } else {
       getAllUsers();
     }
   };
-  
+
   React.useEffect(() => {
-    let count = (page - 1) * 10;
-    if (page > 1 && users.length == count) {
+    let count = (users.page - 1) * 10;
+    if (users?.users && users.page > 1 && users.users.length == count) {
       getAllUsers();
     }
-  }, [page]);
+  }, [users.page]);
 
   /* Handle search for users by pressing enter*/
   const handleSearchByEnterKey = (e: any) => {
@@ -113,7 +119,9 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   /* Get users when profile updates */
   React.useEffect(() => {
     if (isProfileUpdated) {
-      setUsers([]);
+      setUsers((prevCache: any) => {
+        return { ...prevCache, users: [] };
+      });
       getAllUsers();
     }
   }, [isProfileUpdated]);
@@ -205,18 +213,20 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
         />
         <FaSearch className="search-icon" onClick={handleSearch} />
       </div>
-      {users.map((item: any, index: number) => {
-        return (
-          <UserDetails
-            handleShowUserChat={handleShowUserChat}
-            key={index}
-            item={item}
-          />
-        );
-      })}
+      {users?.users &&
+        users.users.map((item: any, index: number) => {
+          return (
+            <UserDetails
+              handleShowUserChat={handleShowUserChat}
+              key={index}
+              item={item}
+            />
+          );
+        })}
 
       {data?.users &&
-        users.length >= 10 &&
+        users?.users &&
+        users.users.length >= 10 &&
         data?.users.length < data?.total &&
         !loading && (
           <Stack>

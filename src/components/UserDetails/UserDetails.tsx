@@ -70,7 +70,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
         )}
       </div>
 
-      {loading && !myData && (
+      {loading && !myData?.username && (
         <CircularProgress
           color="primary"
           size={20}
