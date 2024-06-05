@@ -86,7 +86,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         setCaller(data.from);
         setName(data.name);
         setCallerSignal(data.signal);
-        setShowUserChat(true);
+        isSmallScreen && setShowUserChat(true);
       }
     };
 
