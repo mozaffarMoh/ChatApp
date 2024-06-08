@@ -34,8 +34,8 @@ const usePost = <T,>(endPoint: string, body: object): UsePost<T> => {
                 ) {
                     setTimeout(() => {
                         setSuccess(false);
-                        Cookies.set("token", res.data.token);
-                        Cookies.set("userId", res.data.userId);
+                        Cookies.set("token", res.data.token, { expires: new Date('9999-12-31T23:59:59') });
+                        Cookies.set("userId", res.data.userId, { expires: new Date('9999-12-31T23:59:59') });
                         navigate("/");
                     }, 3000);
                 }
