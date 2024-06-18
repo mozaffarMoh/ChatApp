@@ -22,22 +22,20 @@ const usePut = (endPoint: string, body: any): UsePut => {
             .catch((err) => {
                 setLoading(false);
                 const message = err.response?.data?.message;
-                if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
+                if (!err.response) {
+                    setErrorMessage("Network error: Please check your internet connection.");
+                } else if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
                     notAuthenticated()
-                }
-                if (err?.message && err?.message === "Network Error") {
+                } else if (err?.message && err?.message === "Network Error") {
                     setErrorMessage("Server cannot respond, check internet connection");
-                }
-                if (err?.response?.data) {
+                } else if (err?.response?.status === 500) {
+                    setErrorMessage("Server cannot respond, check internet connection");
+                } else if (err?.response?.data) {
                     setErrorMessage(err.response.data);
-
-                    setTimeout(() => {
-                        setErrorMessage("");
-                    }, 4000);
                 }
-                if (err?.response?.status === 500) {
-                    setErrorMessage("Server cannot respond, check internet connection");
-                }
+                setTimeout(() => {
+                    errorMessage && setErrorMessage("");
+                }, 4000);
             });
     };
 

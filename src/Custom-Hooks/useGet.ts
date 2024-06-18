@@ -33,14 +33,17 @@ const useGet = (endPoint: string): UseGet<any> => {
             })
             .catch((err: any) => {
                 if (axios.isCancel(err)) {
-                    console.log("Request canceled:", err.message);
+                    return;
                 } else {
                     setLoading(false);
                     const message = err.response?.data?.message;
-                    if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
+                    if (!err.response) {
+                        setErrorMessage("Network error: Please check your internet connection.");
+                    } else if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
                         notAuthenticated();
+                    } else {
+                        setErrorMessage(err.response?.data);
                     }
-                    setErrorMessage(err.response?.data);
                 }
             })
             .finally(() => {

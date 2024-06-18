@@ -31,23 +31,20 @@ const useDelete = (endPoint: string): UseDelete => {
             .catch((err) => {
                 setLoading(false);
                 const message = err.response?.data?.message;
-                if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
+
+                if (!err.response) {
+                    setErrorMessage("Network error: Please check your internet connection.");
+                } else if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
                     notAuthenticated()
-                }
-                if (err?.message && err?.message === "Network Error") {
+                } else if (err?.message && err?.message === "Network Error") {
                     setErrorMessage("Server cannot respond, check internet connection");
-                }
-
-                if (err?.response?.status === 500) {
+                } else if (err?.response?.status === 500) {
                     setErrorMessage("Server cannot respond, check internet connection");
-                }
-
-                if (err?.response?.data) {
+                } else if (err?.response?.data) {
                     setErrorMessage(err.response.data.error);
                 }
-
                 setTimeout(() => {
-                    setErrorMessage("");
+                    errorMessage && setErrorMessage("");
                 }, 4000);
 
             });
