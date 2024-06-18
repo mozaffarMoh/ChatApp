@@ -17,11 +17,11 @@ import { Howl } from "howler";
 import sendMessageSoundFile from "../../assets/sounds/sendMessage.mp3";
 import receiveMessageSoundFile from "../../assets/sounds/receiveMessage.mp3";
 import { io } from "socket.io-client";
-import { setRefreshUsers } from "../../Slices/refreshUsers";
 import { BiPhoneCall, BiVideo } from "react-icons/bi";
 import CallSection from "../CallSection/CallSection";
 import { ChatSectionProps } from "../../Types/components/ChatSection";
 import { useUserDetails } from "../../Context/UserDetailsProvider";
+import { setIsProfileUpdated } from "../../Slices/isProfileUpdated";
 
 const ChatSection: React.FC<ChatSectionProps> = ({
   showUserChat,
@@ -52,7 +52,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   );
   const receiverId = useSelector((state: RootType) => state.id.value);
   const isProfileUpdated = useSelector(
-    (state: RootType) => state.refreshUsers.value
+    (state: RootType) => state.isProfileUpdated.value
   );
   const CallerName = useSelector((state: RootType) => state.CallerName.value);
   const [data, loading, getData] = useGet(endPoint.oneUser + receiverId);
@@ -118,7 +118,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       (!userDetails[receiverId] && data?._id == receiverId) ||
       isProfileUpdated
     ) {
-      isProfileUpdated && dispatch(setRefreshUsers(false));
+      isProfileUpdated && dispatch(setIsProfileUpdated(false));
       setUserDetails((prevCache: any) => {
         return { ...prevCache, [receiverId]: data };
       });

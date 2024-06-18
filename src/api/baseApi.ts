@@ -8,8 +8,8 @@ const baseApi = axios.create({
     }, 
 });
 
-//https://chatappapi-2w5v.onrender.com
 //http://localhost:8080
+//https://chatappapi-2w5v.onrender.com
 
 baseApi.interceptors.request.use(
     (config: any) => {

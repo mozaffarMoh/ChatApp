@@ -12,11 +12,11 @@ export const refreshUsers = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setRefreshUsers: (state, action: PayloadAction<boolean>) => {
+    setIsUsersRefresh: (state, action: PayloadAction<boolean>) => {
       state.value = action.payload;
     },
   },
 });
 
-export const { setRefreshUsers } = refreshUsers.actions;
+export const { setIsUsersRefresh } = refreshUsers.actions;
 export default refreshUsers.reducer;

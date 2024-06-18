@@ -1,5 +1,5 @@
 export interface ChatMessagesProps {
-  receiverData : any;
+  receiverData: any;
   receiverId: string;
   userId: string | any;
   loadingSendMessage: Boolean;

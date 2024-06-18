@@ -15,6 +15,8 @@ import { BsThreeDots } from "react-icons/bs";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMessagesCache } from "../../Context/MessagesContext";
+import { setIsUsersRefresh } from "../../Slices/refreshUsers";
+import { useDispatch } from "react-redux";
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
   receiverData,
@@ -26,6 +28,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   setIsMessageReceived,
   receiveMessageSound,
 }) => {
+  const dispatch = useDispatch();
   const { messagesCache, setMessagesCache }: any = useMessagesCache();
   const messageBoxRef: any = React.useRef(null);
   const messageSettingRef: any = React.useRef(null);
@@ -80,34 +83,30 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   React.useEffect(() => {
     if (!messagesCache[receiverId] && receiverId) {
       setPage(1);
-      getData();
     } else {
       setPage(messagesCache[receiverId]?.page);
     }
 
+    getData();
     scrollToBottom();
   }, [receiverId]);
 
   React.useEffect(() => {
-    if (
-      (messagesCache[receiverId] &&
-        messagesCache[receiverId]?.receiverId == receiverId) ||
-      (!messagesCache[receiverId] &&
-        data?.messages &&
-        (data.messages[0]?.sender == receiverId ||
-          data.messages[0]?.receiver == receiverId))
-    ) {
-      setMessagesCache((prevCache: any) => ({
-        ...prevCache,
-        [receiverId]: {
-          messages: data?.messages,
-          page,
-          receiverId: receiverId,
-          total: data?.total,
-        },
-      }));
+    if (success) {
+      dispatch(setIsUsersRefresh(true));
+      if (data && data?.messages) {
+        setMessagesCache((prevCache: any) => ({
+          ...prevCache,
+          [receiverId]: {
+            messages: data?.messages,
+            page,
+            receiverId: receiverId,
+            total: data?.total,
+          },
+        }));
+      }
     }
-  }, [data]);
+  }, [success]);
 
   React.useEffect(() => {
     page == 1 && scrollToBottom();
@@ -373,12 +372,15 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             </div>
           );
         })}
-      {!messagesCache[receiverId] && page == 1 && !loadingSendMessage && (
-        <div className="sub-container flexCenter">
-          {loading && <CircularProgress />}
-          {success && <h2>Start your first message</h2>}
-        </div>
-      )}
+      {(!messagesCache[receiverId] ||
+        messagesCache[receiverId]?.messages.length == 0) &&
+        page == 1 &&
+        !loadingSendMessage && (
+          <div className="sub-container flexCenter">
+            {loading && <CircularProgress />}
+            {success && <h2>Start your first message</h2>}
+          </div>
+        )}
       {loadingSendMessage && (
         <div className="flexCenter">
           <CircularProgress size={25} />{" "}

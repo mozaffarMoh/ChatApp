@@ -26,18 +26,20 @@ import { toast } from "react-toastify";
 import ConfirmDialog from "../ConfirmDialog/ConfirmDialog";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { useUsersContext } from "../../Context/UsersProvider";
+import { setIsUsersRefresh } from "../../Slices/refreshUsers";
 
 const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const dispatch = useDispatch();
   const { users, setUsers }: any = useUsersContext();
   const [showAlert, setShowAlert] = React.useState<boolean>(false);
   const [alertMessage, setAlertMessage] = React.useState<string>("");
-  const isProfileUpdated: any = useSelector(
+  const isUsersRefresh: any = useSelector(
     (state: RootType) => state.refreshUsers.value
   );
   const [name, setName] = React.useState<string>("");
+  const receiverId = useSelector((state: RootType) => state.id.value);
   const userId = Cookies.get("userId");
-  const [data, loading, getAllUsers] = useGet(
+  const [data, loading, getAllUsers, success] = useGet(
     endPoint.allUsers + userId + "?page=" + users.page
   );
   const [, logoutLoading, handleLogout, , errorMessageLogout] = useGet(
@@ -73,6 +75,17 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   }, [data]);
 
   React.useEffect(() => {
+    isUsersRefresh && dispatch(setIsUsersRefresh(false));
+  }, [success]);
+
+  /* Get users when profile updates */
+  React.useEffect(() => {
+    if (isUsersRefresh) {
+      getAllUsers();
+    }
+  }, [isUsersRefresh]);
+
+  React.useEffect(() => {
     if (filteredUsers?.users) {
       setUsers((prevCache: any) => {
         return { ...prevCache, users: filteredUsers?.users };
@@ -83,7 +96,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   /* Store the first value of users to user details in chat section*/
   React.useEffect(() => {
     if (users?.users && users.users.length > 0) {
-      dispatch(setReceiverId(users.users[0]._id));
+      !receiverId && dispatch(setReceiverId(users.users[0]._id));
       dispatch(setCallerName(users.users[0].username));
     }
   }, [users?.users]);
@@ -115,16 +128,6 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
   const handleSearchByEnterKey = (e: any) => {
     e.key == "Enter" && handleSearch();
   };
-
-  /* Get users when profile updates */
-  React.useEffect(() => {
-    if (isProfileUpdated) {
-      setUsers((prevCache: any) => {
-        return { ...prevCache, users: [] };
-      });
-      getAllUsers();
-    }
-  }, [isProfileUpdated]);
 
   /* Check confirm before logout */
   const handleConfirmLogout = () => {

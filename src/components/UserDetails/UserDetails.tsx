@@ -15,7 +15,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   item,
   isInChatSection,
 }: any) => {
-  const userId = Cookies.get("userId");
+  const userId: any = Cookies.get("userId");
   const receiverId = useSelector((state: RootType) => state.id.value);
   const [showUpdateProfile, setShowUpdateProfile] =
     React.useState<boolean>(false);
@@ -58,6 +58,11 @@ const UserDetails: React.FC<UserDetailsProps> = ({
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
+      {item && item.unReadMessages[userId] && (
+        <div className="unread-notify flexCenter">
+          {item.unReadMessages[userId]}
+        </div>
+      )}
       <div className="profile-section">
         {!item?.profilePhoto && !myData?.profilePhoto ? (
           <Avatar className="avatar-section" />

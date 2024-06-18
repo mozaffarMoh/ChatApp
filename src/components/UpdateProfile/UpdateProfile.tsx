@@ -10,15 +10,16 @@ import { endPoint } from "../../api/endPoint";
 import { usePut, useInput } from "../../Custom-Hooks";
 import "./UpdateProfile.scss";
 import React from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Loading from "../Loading/Loading";
 import Base64 from "../../assets/constants/Base64";
 import { useDispatch } from "react-redux";
-import { setRefreshUsers } from "../../Slices/refreshUsers";
+import { setIsUsersRefresh } from "../../Slices/refreshUsers";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { UpdateProfileFormData } from "../../Types/Auth";
+import { setIsProfileUpdated } from "../../Slices/isProfileUpdated";
 
 const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
   const dispatch = useDispatch();
@@ -110,7 +111,8 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
     if (!loading) {
       if (success) {
         updateSuccessMessage();
-        dispatch(setRefreshUsers(true));
+        dispatch(setIsUsersRefresh(true));
+        dispatch(setIsProfileUpdated(true));
         setTimeout(() => {
           setShowUpdateProfile(false);
         }, 2000);
@@ -149,7 +151,6 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
     <div className="update-profile flexCenterColumn">
       {loading && <Loading />}
       <h1>Update profile</h1>
-      <ToastContainer />
       <div className="profile-image-section">
         {!imgFile && (
           <label className="upload-photo flexCenter " htmlFor="select-image-id">
