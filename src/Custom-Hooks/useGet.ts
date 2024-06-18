@@ -1,42 +1,62 @@
-import React from "react";
+import { useEffect, useState, useRef } from "react";
+import axios, { CancelTokenSource } from "axios";
 import baseApi from "../api/baseApi";
 import { UseGet } from "../Types/CustomHooks";
 import notAuth from "../Auth/notAuth";
 
 const useGet = (endPoint: string): UseGet<any> => {
     const notAuthenticated = notAuth();
-    const [data, setData] = React.useState<any>([]);
-    const [loading, setLoading] = React.useState<boolean>(false);
-    const [success, setSuccess] = React.useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = React.useState<string>("");
+    const [data, setData] = useState<any>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const cancelTokenRef = useRef<{ [key: string]: CancelTokenSource | null }>({});
+
     const getData = () => {
+        if (cancelTokenRef.current[endPoint]) {
+            cancelTokenRef.current[endPoint]!.cancel("Operation canceled by the user.");
+        }
+        const cancelTokenSource = axios.CancelToken.source();
+        cancelTokenRef.current[endPoint] = cancelTokenSource;
+
         setSuccess(false);
         setLoading(true);
         baseApi
-            .get(endPoint)
+            .get(endPoint, { cancelToken: cancelTokenSource.token })
             .then((res) => {
                 setSuccess(true);
                 setLoading(false);
                 setData(res.data);
                 if (endPoint.includes("logout")) {
-                    notAuthenticated()
+                    notAuthenticated();
                 }
             })
             .catch((err: any) => {
-                setLoading(false)
-                const message = err.response?.data?.message;
-                if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
-                    notAuthenticated()
+                if (axios.isCancel(err)) {
+                    console.log("Request canceled:", err.message);
+                } else {
+                    setLoading(false);
+                    const message = err.response?.data?.message;
+                    if (message === "Token is blacklisted" || message === "Token has expired" || message === "Invalid token") {
+                        notAuthenticated();
+                    }
+                    setErrorMessage(err.response?.data);
                 }
-                setLoading(false);
-                setErrorMessage(err.response.data);
+            })
+            .finally(() => {
+                cancelTokenRef.current[endPoint] = null;
             });
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!endPoint.includes("logout") && !endPoint.includes("messages") && !endPoint.includes("one-user")) {
             getData();
         }
+        return () => {
+            if (cancelTokenRef.current[endPoint]) {
+                cancelTokenRef.current[endPoint]!.cancel("Operation canceled by the user.");
+            }
+        };
     }, [endPoint]);
 
     return [data, loading, getData, success, errorMessage, setData];
