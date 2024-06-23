@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.scss";
 import "react-toastify/dist/ReactToastify.css";
+import "react-h5-audio-player/lib/styles.css";
 import { Provider } from "react-redux";
 import store from "./store.ts";
 import { ToastContainer } from "react-toastify";

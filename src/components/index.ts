@@ -7,3 +7,4 @@ export { default as EditMessage } from './EditMessage/EditMessage';
 export { default as UpdateProfile } from './UpdateProfile/UpdateProfile';
 export { default as CallSection } from './CallSection/CallSection';
 export { default as ConfirmDialog } from './ConfirmDialog/ConfirmDialog';
+export { default as CustomAudio } from './CustomAudio/CustomAudio';

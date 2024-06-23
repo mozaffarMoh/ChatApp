@@ -7,4 +7,6 @@ export interface ChatMessagesProps {
   isMessageReceived: Boolean;
   setIsMessageReceived: React.Dispatch<React.SetStateAction<boolean>>;
   receiveMessageSound: any;
+  refreshSenderData: Boolean;
+  setRefreshSenderData: React.Dispatch<React.SetStateAction<boolean>>;
 }

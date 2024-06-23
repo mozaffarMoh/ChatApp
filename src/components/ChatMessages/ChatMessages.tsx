@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useMessagesCache } from "../../Context/MessagesContext";
 import { setIsUsersRefresh } from "../../Slices/refreshUsers";
 import { useDispatch } from "react-redux";
+import CustomAudio from "../CustomAudio/CustomAudio";
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
   receiverData,
@@ -27,6 +28,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   isMessageReceived,
   setIsMessageReceived,
   receiveMessageSound,
+  refreshSenderData,
+  setRefreshSenderData,
 }) => {
   const dispatch = useDispatch();
   const { messagesCache, setMessagesCache }: any = useMessagesCache();
@@ -60,6 +63,13 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   React.useEffect(() => {
     getSenderData();
   }, []);
+
+  React.useEffect(() => {
+    if (refreshSenderData) {
+      getSenderData();
+      setRefreshSenderData(false);
+    }
+  }, [refreshSenderData]);
 
   /* Get Data when message received by web stock */
   React.useEffect(() => {
@@ -239,7 +249,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           onClick={handleShowMore}
         />
       </Stack>
-    );
+  );
 
   return (
     <div className="chat-messages" ref={messageBoxRef}>
@@ -288,18 +298,20 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 className={`message-content ${
                   isSender && "message-content-sender"
                 } ${isSender && !showEditMessage && "sender-hover"}`}
-                onClick={(e: any) =>
-                  handleShowMessageSetting(isSender, item?._id, e)
-                }
-                onContextMenu={(e: any) =>
-                  handleShowMessageSetting(isSender, item?._id, e)
-                }
               >
                 {((isSender && !showEditMessage) ||
                   (isSender &&
                     showEditMessage &&
                     currentMessageID !== item?._id)) && (
-                  <Stack height={1}>
+                  <Stack
+                    height={15}
+                    onClick={(e: any) =>
+                      handleShowMessageSetting(isSender, item?._id, e)
+                    }
+                    onContextMenu={(e: any) =>
+                      handleShowMessageSetting(isSender, item?._id, e)
+                    }
+                  >
                     <BsThreeDots />
                   </Stack>
                 )}
@@ -327,13 +339,14 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                         >
                           <BiX className="close-icon" size={20} />
                         </Stack>
-
-                        <div
-                          className="message-setting-item"
-                          onClick={handleShowEditMessage}
-                        >
-                          Edit
-                        </div>
+                        {!item?.isAudio && (
+                          <div
+                            className="message-setting-item"
+                            onClick={handleShowEditMessage}
+                          >
+                            Edit
+                          </div>
+                        )}
                         <div
                           className="message-setting-item"
                           onClick={handleShowDeleteMessage}
@@ -356,7 +369,15 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                   />
                 ) : (
                   <div className="message-details">
-                    <p>{item.message}</p>
+                    {item.isAudio ? (
+                      <CustomAudio
+                        volumeFile={item?.message}
+                        itemID={item?._id}
+                        duration={item?.duration}
+                      />
+                    ) : (
+                      <p>{item.message}</p>
+                    )}
                     <p
                       className="message-timestamp"
                       style={{

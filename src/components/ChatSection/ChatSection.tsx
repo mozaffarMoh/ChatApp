@@ -22,6 +22,7 @@ import CallSection from "../CallSection/CallSection";
 import { ChatSectionProps } from "../../Types/components/ChatSection";
 import { useUserDetails } from "../../Context/UserDetailsProvider";
 import { setIsProfileUpdated } from "../../Slices/isProfileUpdated";
+import VoiceRecorder from "../VoiceRecorder/VoiceRecorder";
 
 const ChatSection: React.FC<ChatSectionProps> = ({
   showUserChat,
@@ -45,6 +46,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   const [callerSignal, setCallerSignal] = React.useState<object | null>(null);
   const [stream, setStream]: any = React.useState<object | null>(null);
   const [isReceiveCall, setIsReceiveCall] = React.useState<boolean>(false);
+  const [refreshSenderData, setRefreshSenderData] =
+    React.useState<boolean>(false);
+
   const [isMessageReceived, setIsMessageReceived] =
     React.useState<boolean>(false);
   const [messageDetailsForm, setMessageDetailsForm] = React.useState<object>(
@@ -119,6 +123,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       isProfileUpdated
     ) {
       isProfileUpdated && dispatch(setIsProfileUpdated(false));
+      setRefreshSenderData(true);
       setUserDetails((prevCache: any) => {
         return { ...prevCache, [receiverId]: data };
       });
@@ -193,6 +198,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       setIsVoiceCall(true);
     }
   };
+
+  /* clear message details when success */
+  React.useEffect(() => {
+    if (isSuccessMessage) {
+      setMessageDetailsForm({ message: "" });
+    }
+  }, [isSuccessMessage]);
 
   return (
     <div
@@ -278,8 +290,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           isMessageReceived={isMessageReceived}
           setIsMessageReceived={setIsMessageReceived}
           receiveMessageSound={receiveMessageSound}
+          refreshSenderData={refreshSenderData}
+          setRefreshSenderData={setRefreshSenderData}
         />
         <div className="message-input-field">
+          <VoiceRecorder
+            sendMessage={sendMessagePost}
+            setMessageDetailsForm={setMessageDetailsForm}
+            messageDetailsForm={messageDetailsForm}
+            setMessage={setMessage}
+            message={message}
+          />
           <TextField
             variant="outlined"
             className="message-input"

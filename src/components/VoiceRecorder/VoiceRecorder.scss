@@ -1,0 +1,52 @@
+.voice-recorder {
+    position: absolute;
+    top: 25px;
+    left: 6px;
+    z-index: 1;
+
+    audio {
+        width: 100px;
+        height: 50px;
+        background-color: red;
+    }
+
+    svg {
+        cursor: pointer;
+        font-size: 23px;
+        margin-left: 2px;
+        transition: all .5s ease;
+
+        &:hover {
+            color: rgb(69, 136, 151) !important;
+        }
+    }
+
+    .recording-actions {
+        width: 160px;
+        height: 55px;
+        position: absolute;
+        top: -15px;
+        left: 23px;
+        border-radius: 10px;
+        background-color: rgb(26, 35, 53);
+
+        .delete-icon {
+            color: rgb(160, 23, 23);
+            font-size: 20px;
+        }
+
+        .recording-image {
+            width: 35px;
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 7px;
+        }
+
+        .send-icon {
+            font-size: 25px;
+            color: #89e1f7;
+        }
+    }
+}
