@@ -154,9 +154,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     e.preventDefault();
     if (isSender) {
       setCurrentMessageID(messageID);
-      !showMessageSetting &&
-        !messageSettingRef.current &&
+      if (!showMessageSetting && !messageSettingRef.current) {
         setShowMessageSetting(true);
+      }
     }
   };
 
@@ -304,7 +304,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     showEditMessage &&
                     currentMessageID !== item?._id)) && (
                   <Stack
-                    height={15}
+                    height={17}
                     onClick={(e: any) =>
                       handleShowMessageSetting(isSender, item?._id, e)
                     }
@@ -312,7 +312,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                       handleShowMessageSetting(isSender, item?._id, e)
                     }
                   >
-                    <BsThreeDots />
+                    <BsThreeDots className="three-dots-edit-icon" />
                   </Stack>
                 )}
                 {isSender ? (
