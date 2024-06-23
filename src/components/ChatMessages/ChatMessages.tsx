@@ -249,7 +249,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           onClick={handleShowMore}
         />
       </Stack>
-  );
+    );
 
   return (
     <div className="chat-messages" ref={messageBoxRef}>
@@ -271,7 +271,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           let isSender = item?.sender == userId;
           return (
             <div
-              className="message-content-container flexStart"
+              className="message-content-container flexStartItemsStart"
               dir={isSender ? "ltr" : "rtl"}
               key={index}
             >
@@ -374,6 +374,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                         volumeFile={item?.message}
                         itemID={item?._id}
                         duration={item?.duration}
+                        isSender={isSender}
                       />
                     ) : (
                       <p>{item.message}</p>

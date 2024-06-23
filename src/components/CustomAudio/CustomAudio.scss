@@ -1,12 +1,10 @@
        /* Custom play button */
        .rhap_container {
-           width: 250px !important;
+           width: 190px !important;
            height: 50px;
            background-color: whitesmoke;
            border-radius: 10px;
            margin: 5px 0px;
-
-
 
            /* Custom time display */
            #rhap_current-time,
@@ -18,23 +16,37 @@
                width: 0px;
                height: 0px;
 
-
                .custom-play-button,
                .custom-pause-button {
                    position: absolute;
+               }
+
+               .sender-position-play {
                    top: 48px;
                    left: 70px;
                }
 
-               .custom-pause-button {
+               .sender-position-pause {
                    top: 43px;
                    left: 63px;
+               }
+
+
+               .not-sender-position-play {
+                   top: 34px;
+                   right: 220px;
+               }
+
+               .not-sender-position-pause {
+                   top: 29px;
+                   right: 215px;
                }
            }
 
            /* Custom progress bar */
            .rhap_progress-container {
                margin-left: 20px;
+               direction: ltr;
 
                .rhap_progress-indicator {
                    background-color: #5252ae;
@@ -56,4 +68,14 @@
            left: 100px;
            font-size: 15px;
            color: #5252ae;
+       }
+
+       .time-display-sender {
+           bottom: 35px;
+           left: 100px;
+       }
+
+       .time-display-not-sender {
+           bottom: 35px;
+           right: 170px;
        }

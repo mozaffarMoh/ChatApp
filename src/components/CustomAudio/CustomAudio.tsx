@@ -4,7 +4,7 @@ import AudioPlayer from "react-h5-audio-player";
 import { IoPause } from "react-icons/io5";
 import { FaPlay } from "react-icons/fa";
 
-const CustomAudio = ({ volumeFile, itemID, duration }: any) => {
+const CustomAudio = ({ volumeFile, itemID, duration, isSender }: any) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const audioRef = useRef<any>(null);
@@ -54,18 +54,30 @@ const CustomAudio = ({ volumeFile, itemID, duration }: any) => {
         onPause={handlePause}
         customIcons={{
           play: (
-            <FaPlay className="custom-play-button" size={23} color="#6664da" />
+            <FaPlay
+              className={`custom-play-button ${
+                isSender ? "sender-position-play" : "not-sender-position-play"
+              }`}
+              size={23}
+              color="#6664da"
+            />
           ),
           pause: (
             <IoPause
-              className="custom-pause-button"
+              className={`custom-pause-button ${
+                isSender ? "sender-position-pause" : "not-sender-position-pause"
+              }`}
               size={35}
               color="#6664da"
             />
           ),
         }}
       />
-      <div className="time-display">
+      <div
+        className={`time-display ${
+          isSender ? "time-display-sender" : "time-display-not-sender"
+        }`}
+      >
         {isPlaying ? (
           <p>{formatTime(currentTime)}</p>
         ) : (
