@@ -379,13 +379,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     ) : (
                       <p>{item.message}</p>
                     )}
-                    <p
-                      className="message-timestamp"
-                      style={{
-                        marginLeft: isSender ? "10px" : "",
-                        marginRight: item?.sender !== userId ? "10px" : "",
-                      }}
-                    >
+                    <p className="message-timestamp" dir="ltr">
                       {formatTimestamp(item.timestamp)}
                     </p>
                   </div>
