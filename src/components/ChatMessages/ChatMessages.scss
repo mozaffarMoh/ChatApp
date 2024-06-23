@@ -84,7 +84,9 @@
                 background-color: transparent;
                 border-radius: 3px;
                 width: 22px;
-                transition: all .5s ease;
+                transition: all .4s ease;
+                position: relative;
+                right: 4px;
 
                 &:hover {
                     background-color: #223641;
@@ -94,7 +96,7 @@
             .message-details {
                 cursor: default;
                 user-select: auto;
-                
+
                 ::selection {
                     background-color: rgb(118, 106, 245);
                 }
