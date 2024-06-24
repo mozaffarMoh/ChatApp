@@ -58,7 +58,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      {item && item.unReadMessages[userId] && (
+      {item && item?.unReadMessages && item?.unReadMessages[userId] && (
         <div className="unread-notify flexCenter">
           {item.unReadMessages[userId]}
         </div>

@@ -122,7 +122,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
     if (users?.users && users.page > 1 && users.users.length == count) {
       getAllUsers();
     }
-  }, [users.page]);
+  }, [users?.page]);
 
   /* Handle search for users by pressing enter*/
   const handleSearchByEnterKey = (e: any) => {
@@ -162,6 +162,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
     }
   }, [successMessage, errorMessage, errorMessageLogout]);
 
+  
   return (
     <div className="users flexStartColumnItemsCenter">
       {(deleteUserLoading ||
@@ -229,8 +230,7 @@ const Users: React.FC<UsersProps> = ({ isSmallScreen, setShowUserChat }) => {
 
       {data?.users &&
         users?.users &&
-        users.users.length >= 10 &&
-        data?.users.length < data?.total &&
+        users?.users.length < data?.total &&
         !loading && (
           <Stack>
             <IoIosArrowDropdownCircle
