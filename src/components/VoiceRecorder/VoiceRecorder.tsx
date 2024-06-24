@@ -12,6 +12,8 @@ const VoiceRecorder = ({
   messageDetailsForm,
   setMessage,
   message,
+  isStopRecording,
+  setIsStopRecording,
 }: any) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioData, setAudioData]: any = useState(null);
@@ -116,14 +118,15 @@ const VoiceRecorder = ({
   const closeRecording = () => {
     setAudioData(null);
     setIsRecording(false);
+    setIsStopRecording(false);
     setRecordingTime({ minutes: 0, seconds: 0 });
   };
 
   useEffect(() => {
-    if (message !== "") {
+    if (message !== "" || isStopRecording) {
       closeRecording();
     }
-  }, [message]);
+  }, [message, isStopRecording]);
 
   return (
     <div className="voice-recorder">

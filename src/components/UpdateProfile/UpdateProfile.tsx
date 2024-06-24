@@ -148,95 +148,102 @@ const UpdateProfile = ({ myData, setShowUpdateProfile, userId }: any) => {
   };
 
   return (
-    <div className="update-profile flexCenterColumn">
-      {loading && <Loading />}
-      <h1>Update profile</h1>
-      <div className="profile-image-section">
-        {!imgFile && (
-          <label className="upload-photo flexCenter " htmlFor="select-image-id">
-            <input
-              type="file"
-              id="select-image-id"
-              hidden
-              onChange={handleImage}
-            />
-            <p>Upload Photo</p>
-          </label>
-        )}
-        {!inputFormData?.profilePhoto ? (
-          <Avatar className="avatar-section" />
-        ) : (
-          <img src={inputFormData?.profilePhoto} alt="" />
-        )}
-      </div>
-      <Button variant="outlined" color="error" onClick={handleRemovePhoto}>
-        Remove Photo
-      </Button>
-
-      <form
-        className="update-profile-field flexCenterColumn"
-        onSubmit={handleSubmit(handleUpdate)}
-      >
-        <Typography variant="h5" color={"#c2c2e3"} marginTop={1}>
-          {myData?.email}
-        </Typography>
-        {inputArray.map((item: any, index: number) => {
-          return (
-            <TextField
-              autoFocus={item?.focus}
-              key={index}
-              placeholder={item.placeholder}
-              name={item.name}
-              defaultValue={item?.value}
-              type={item.type}
-              value={item?.value}
-              {...item?.validation}
-              onChange={(e: any) => handleChangeInputData(e.target)}
-              InputProps={{
-                endAdornment: item?.name !== "username" && (
-                  <InputAdornment position="end" className="show-password">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => handleClickShowPassword(item?.name)}
-                    >
-                      {(isOldPasswordVisible && item?.name == "oldPassword") ||
-                      (isNewPasswordVisible && item?.name == "newPassword") ? (
-                        <IoMdEye />
-                      ) : (
-                        <IoMdEyeOff />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          );
-        })}
-        {(errors.username || errors.oldPassword || errors.newPassword) && (
-          <div className="error-message-validation-profile">
-            {errors.username?.message ||
-              errors.oldPassword?.message ||
-              errors.newPassword?.message}
-          </div>
-        )}{" "}
-        {myData?.isGoogle && (
-          <Typography variant="subtitle1" color={"#c2c2e3"} marginTop={1}>
-            You can't change your password when using Gmail account
-          </Typography>
-        )}
-        <div className="buttons-field flexBetween ">
-          <Button type="submit" variant="contained" color="info">
-            Update
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => setShowUpdateProfile(false)}
-          >
-            Cancel
-          </Button>
+    <div className="update-profile-container flexCenter">
+      <div className="update-profile flexCenterColumn">
+        {loading && <Loading />}
+        <h1>Update profile</h1>
+        <div className="profile-image-section">
+          {!imgFile && (
+            <label
+              className="upload-photo flexCenter "
+              htmlFor="select-image-id"
+            >
+              <input
+                type="file"
+                id="select-image-id"
+                hidden
+                onChange={handleImage}
+              />
+              <p>Upload Photo</p>
+            </label>
+          )}
+          {!inputFormData?.profilePhoto ? (
+            <Avatar className="avatar-section" />
+          ) : (
+            <img src={inputFormData?.profilePhoto} alt="" />
+          )}
         </div>
-      </form>
+        <Button variant="outlined" color="error" onClick={handleRemovePhoto}>
+          Remove Photo
+        </Button>
+
+        <form
+          className="update-profile-field flexCenterColumn"
+          onSubmit={handleSubmit(handleUpdate)}
+        >
+          <Typography variant="h5" color={"#c2c2e3"} marginTop={1}>
+            {myData?.email}
+          </Typography>
+          {inputArray.map((item: any, index: number) => {
+            return (
+              <TextField
+                autoFocus={item?.focus}
+                key={index}
+                placeholder={item.placeholder}
+                name={item.name}
+                defaultValue={item?.value}
+                type={item.type}
+                value={item?.value}
+                {...item?.validation}
+                onChange={(e: any) => handleChangeInputData(e.target)}
+                InputProps={{
+                  endAdornment: item?.name !== "username" && (
+                    <InputAdornment position="end" className="show-password">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() => handleClickShowPassword(item?.name)}
+                      >
+                        {(isOldPasswordVisible &&
+                          item?.name == "oldPassword") ||
+                        (isNewPasswordVisible &&
+                          item?.name == "newPassword") ? (
+                          <IoMdEye />
+                        ) : (
+                          <IoMdEyeOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            );
+          })}
+          {(errors.username || errors.oldPassword || errors.newPassword) && (
+            <div className="error-message-validation-profile">
+              {errors.username?.message ||
+                errors.oldPassword?.message ||
+                errors.newPassword?.message}
+            </div>
+          )}{" "}
+          {myData?.isGoogle && (
+            <Typography variant="subtitle1" color={"#c2c2e3"} marginTop={1}>
+              You can't change your password when using Gmail account
+            </Typography>
+          )}
+          <div className="buttons-field flexBetween ">
+            <Button type="submit" variant="contained" color="info">
+              Update
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => setShowUpdateProfile(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

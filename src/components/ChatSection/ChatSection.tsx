@@ -41,6 +41,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   const [isCallStart, setIsCallStart] = React.useState<boolean>(false);
   const [isVideoCall, setIsVideoCall] = React.useState<boolean>(false);
   const [isVoiceCall, setIsVoiceCall] = React.useState<boolean>(false);
+  const [isStopRecording, setIsStopRecording] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>("");
   const [caller, setCaller] = React.useState<string>("");
   const [callerSignal, setCallerSignal] = React.useState<object | null>(null);
@@ -114,6 +115,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     if (!userDetails[receiverId] && receiverId) {
       getData();
     }
+    setIsStopRecording(true);
   }, [receiverId]);
 
   /* store user details in context */
@@ -300,6 +302,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             messageDetailsForm={messageDetailsForm}
             setMessage={setMessage}
             message={message}
+            isStopRecording={isStopRecording}
+            setIsStopRecording={setIsStopRecording}
           />
           <TextField
             variant="outlined"
