@@ -49,7 +49,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   const [isReceiveCall, setIsReceiveCall] = React.useState<boolean>(false);
   const [refreshSenderData, setRefreshSenderData] =
     React.useState<boolean>(false);
-
   const [isMessageReceived, setIsMessageReceived] =
     React.useState<boolean>(false);
   const [messageDetailsForm, setMessageDetailsForm] = React.useState<object>(
@@ -304,6 +303,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             message={message}
             isStopRecording={isStopRecording}
             setIsStopRecording={setIsStopRecording}
+            socketRef={socketRef}
+            receiverId={receiverId}
           />
           <TextField
             variant="outlined"

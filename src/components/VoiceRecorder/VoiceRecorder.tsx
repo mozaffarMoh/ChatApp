@@ -14,6 +14,8 @@ const VoiceRecorder = ({
   message,
   isStopRecording,
   setIsStopRecording,
+  socketRef,
+  receiverId
 }: any) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioData, setAudioData]: any = useState(null);
@@ -88,6 +90,7 @@ const VoiceRecorder = ({
   /* start send message */
   useEffect(() => {
     if (messageDetailsForm?.message !== "" && isRecording) {
+      socketRef.current.emit("sendMessage", receiverId);
       sendMessage();
       closeRecording();
     }
