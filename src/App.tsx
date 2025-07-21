@@ -49,9 +49,12 @@ const App: React.FC = () => {
     setShowInstallButton(false);
   };
 
+  const pathname = window.location.pathname;
+  const isStartPage = pathname?.split("/")?.[2] === "start-page";
+
   return (
     <>
-      {showInstallButton && (
+      {showInstallButton && isStartPage && (
         <button onClick={handleInstallClick} className="downlaod-app-button">
           <MdDownload size={20} /> Donwload App
         </button>
